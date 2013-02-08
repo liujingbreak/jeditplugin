@@ -1,0 +1,79 @@
+package com.successfactors.admin.ui.controller.XXX;
+
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Create;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+import org.apache.log4j.Logger;
+import java.io.Serializable;
+import com.successfactors.platform.bean.ParamBean;
+import com.successfactors.xi.ui.messages.SFMessages;
+import com.successfactors.legacy.util.json.JSONObjectOutput;
+import com.successfactors.sca.ServiceCommandHandler;
+import com.successfactors.ajaxservice.annotation.AjaxService;
+import com.successfactors.rcmcommon.ui.controller.AjaxServiceStatus;
+import com.successfactors.sca.ServiceApplicationException;
+import com.successfactors.ajaxservice.annotation.AjaxMethod;
+import com.successfactors.ajaxservice.ui.controller.util.AjaxServiceException;
+/**
+ XXX
+ @author Break(Jing) Liu
+*/
+@AjaxService
+@Name("XXX")
+@Scope(ScopeType.EVENT)
+public class XXX implements Serializable{
+    /** log */
+    private static final Logger log = Logger.getLogger(XXX.class);
+
+    /** SFMessages. */
+    @In
+    private SFMessages msgs;
+
+    /** params **/
+    @In
+    private ParamBean params;
+
+    /** Service command handler    */
+    @In
+    private transient ServiceCommandHandler scaHandler;
+
+    /**  construct XXX
+    */
+    public XXX(){
+    }
+
+    /**  init
+     @throws AjaxServiceException if AjaxServiceException occurs
+    */
+    @Create
+    public void init() throws AjaxServiceException {
+        log.info("XXX.init");
+    }
+
+    /**  yyy
+     @return JSONObjectOutput
+     @throws AjaxServiceException if AjaxServiceException occurs
+    */
+    @AjaxMethod
+    public JSONObjectOutput yyy() throws AjaxServiceException {
+
+        log.info("yyy called.");
+        AjaxServiceStatus serviceStatus = new AjaxServiceStatus();
+
+        try {
+            //ratingScaleListVO = scaHandler.execute(cmd);
+            serviceStatus.setPayload(zzz);
+            serviceStatus.setOKFlag(true);
+            //serviceStatus.setStatusMsg(DATA_AVALIABLE);
+        } catch (ServiceApplicationException ex) {
+            log.error("Exception caught:" + ex.getMessage(), ex);
+            serviceStatus.setError("Failed to yyy" + ex.getMessage());
+        }
+        return serviceStatus;
+    }
+}
+
+
+

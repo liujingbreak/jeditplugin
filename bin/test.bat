@@ -1,0 +1,2 @@
+java -cp lib\mylib.jar;loader.jar -Dclasspath=build\myjedit;build\testmyjedit -Dlibdir=lib -Djava.util.logging.config.file=testsrc\logging.properties util.LittleClassLoader test.JavaScriptParserTest
+@rem java -cp lib\mylib.jar -Dclasspath=build\myjedit;build\testmyjedit -Dlibdir=lib -Djava.util.logging.config.file=testsrc\logging.properties -jar loader.jar test.JavaScriptParserTest

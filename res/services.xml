@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE SERVICES SYSTEM "services.dtd">
+
+<SERVICES>
+	<SERVICE CLASS="sidekick.SideKickParser" NAME="my JS">
+		new org.liujing.parser.JsParser("my JS");
+	</SERVICE>
+	
+	<SERVICE CLASS="sidekick.SideKickParser" NAME="my CSS">
+		new org.liujing.parser.CSSParser("my CSS");
+	</SERVICE>
+<!--
+	<SERVICE CLASS="sidekick.SideKickParser" NAME="ljHTML">
+		new org.liujing.parser.JsParser("ljHTML");
+	</SERVICE>
+	-->
+	<SERVICE CLASS="sidekick.SideKickParser" NAME="antlr3">
+		new org.liujing.parser.Antlr3SideKickParser("ANTLR3");
+	</SERVICE>
+	
+	<SERVICE CLASS="sidekick.SideKickParser" NAME="python">
+		new org.liujing.parser.PythonSideKickParser("python");
+	</SERVICE>
+</SERVICES>

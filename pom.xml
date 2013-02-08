@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <parent>
+    <artifactId>liujing</artifactId>
+    <groupId>org.liujing.tool</groupId>
+    <version>0.1</version>
+    <relativePath>../all/pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.liujing.tool</groupId>
+  <artifactId>myJeditPlugin</artifactId>
+  <name>Jedit Plugin</name>
+  <dependencies>
+  	
+  	<dependency>
+  		<groupId>org.liujing.tool</groupId>
+		<artifactId>mylib</artifactId>
+		<version>0.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.liujing.tool</groupId>
+		<artifactId>mytool</artifactId>
+		<version>0.1</version>
+  	</dependency>
+  	<dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.5.8</version>
+    </dependency>
+  	<dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jcl</artifactId>
+      <version>1.5.8</version>
+    </dependency>
+  	<dependency>
+  		<groupId>commons-logging</groupId>
+		<artifactId>commons-logging</artifactId>
+		<version>1.1.1</version>
+		<scope>provided</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>sql</groupId>
+		<artifactId>sql</artifactId>
+		<version>1</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/lib/sql.jar</systemPath>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.jedit</groupId>
+		<artifactId>jedit</artifactId>
+		<version>1</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/lib/jedit.jar</systemPath>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.jedit</groupId>
+		<artifactId>SideKick</artifactId>
+		<version>1</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/lib/SideKick.jar</systemPath>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.jedit</groupId>
+		<artifactId>ErrorList</artifactId>
+		<version>1</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/lib/ErrorList.jar</systemPath>
+  	</dependency>
+  </dependencies>
+  <build>
+  	<defaultGoal>verify</defaultGoal>
+  	<testSourceDirectory>${basedir}/testsrc</testSourceDirectory>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.codehaus.mojo</groupId>
+  			<artifactId>javacc-maven-plugin</artifactId>
+  			<executions>
+  				<execution>
+					<configuration>
+						<sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+						<!--<outputDirectory>${project.build.outputDirectory}</outputDirectory>-->
+					</configuration>
+					<goals>
+						<goal>javacc</goal>
+					</goals>
+  				</execution>
+  			</executions>
+  		</plugin>
+  		<plugin>
+			<artifactId>maven-assembly-plugin</artifactId>
+			<configuration>
+				<descriptors>
+					<descriptor>assembly.xml</descriptor>
+				</descriptors>
+			</configuration>
+			<executions>
+				<execution>
+					<phase>pre-integration-test</phase>
+					<goals>
+						<goal>directory-single</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+  		<plugin>
+  			<artifactId>maven-antrun-plugin</artifactId>
+  			<executions>      
+				<execution>
+					<phase>pre-integration-test</phase>
+					<configuration>
+						<tasks>
+							<echo>--------- start to copy -----------</echo>
+							<copy todir="\Program Files\jEdit\jars"  includeEmptyDirs="no">
+								<fileset dir="${project.build.directory}/${artifactId}-${version}-bin.dir/${artifactId}-${version}">
+									<include name="*.jar" />
+								</fileset>
+							</copy>
+							<echo>${artifactId} copied to \Program Files\jEdit\jars</echo>
+							<!--<javacc target="${project.build.sourceDirectory}/org/liujing/jj/JavascriptParser.jj" javacchome="${env.JAVACC_HOME}"/>-->
+						</tasks>
+					</configuration>
+					<goals>
+						<goal>run</goal>
+					</goals>
+				</execution>
+			</executions>
+  		</plugin>
+		
+  	</plugins>
+  </build>
+  <profiles>
+  </profiles>
+
+</project>

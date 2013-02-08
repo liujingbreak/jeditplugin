@@ -1,0 +1,33 @@
+package com.successfactors.admin.service.competency;
+
+import com.successfactors.sca.ServiceApplicationException;
+import com.successfactors.sca.ServiceRollback;
+
+/**
+    XXX
+    @author Break (Jing) Liu
+*/
+@ServiceRollback
+public class XXX extends ServiceApplicationException{
+
+    /**  construct XXX
+    */
+    public XXX(){
+
+    }
+
+    /**  construct XXX
+     @param msg msg
+    */
+    public XXX(String msg){
+        super(msg);
+    }
+
+    /**  construct XXX
+     @param msg msg
+     @param cause cause
+    */
+    public XXX(String msg, Throwable cause){
+        super(msg, cause);
+    }
+}

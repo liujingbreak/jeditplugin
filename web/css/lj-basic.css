@@ -1,0 +1,366 @@
+body {
+    background:url('/img/ironman3imaxrelease.jpg') #202020;
+    color:#c9c9c9;
+}
+/** HorBox Horizontal layout box*/
+.yui3-skin-sam .skin-lj .yui3-horbox-border{
+    border: 1px solid #606060;
+    padding: 4px 2px;
+    -moz-border-radius:     6px 6px 6px 6px;
+    -webkit-border-radius:  6px 6px 6px 6px;
+    border-radius:          6px 6px 6px 6px;
+}
+.yui3-skin-sam .yui3-horbox-child{
+    display: inline-block;
+}
+/** VerBox Vertical layout box*/
+.yui3-skin-sam .skin-lj .yui3-verbox-border{
+    border: 1px solid #606060;
+    padding: 4px 2px;
+    -moz-border-radius:     6px 6px 6px 6px;
+    -webkit-border-radius:  6px 6px 6px 6px;
+    border-radius:          6px 6px 6px 6px;
+}
+/** MyEditableGrid */
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td{
+    background: rgba(30, 255, 255, .9);
+    -webkit-box-shadow: 0px 0px 10px 0px   rgba(30, 255, 255, .9);
+    -moz-box-shadow:    0px 0px 10px 0px   rgba(30, 255, 255, .9);
+    box-shadow:         0px 0px 10px 0px   rgba(30, 255, 255, .9);
+    color: black;
+}
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-selItem td{
+    background: rgba(30, 255, 255, .9);
+    color: black;
+}
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-bottom .yui3-button{
+    height:25px;
+    font-size:12px;
+}
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-bottom{
+    padding: 0px 5px;
+    font-size: 12px;
+}
+/** text_field */
+.yui3-skin-sam .skin-lj .yui3-mytextfield input[type=text]{
+    width: 15em;
+    margin-left:4px;
+}
+.yui3-skin-sam .skin-lj input[type='text']{
+    background:black;
+    color: #1effff;
+    border: 1px solid #666666;
+    font-size: 13px;
+    -webkit-text-shadow: 0px 0px 8px   rgba(30, 255, 255, .9);
+    -moz-text-shadow:    0px 0px 8px   rgba(30, 255, 255, .9);
+    text-shadow:         0px 0px 8px   rgba(30, 255, 255, .9);
+    /*-webkit-box-shadow: inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);
+    -moz-box-shadow:    inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);
+    box-shadow:         inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);*/
+}
+.yui3-skin-sam .skin-lj .yui3-mytextfield{
+    padding-right: 10px;
+    display: inline-block;
+}
+/** button */
+.yui3-skin-sam .skin-lj .yui3-button{
+    background-color:#303030;
+    -webkit-text-shadow: 0px 0px 8px   rgba(30, 255, 255, .9);
+    -moz-text-shadow:    0px 0px 8px   rgba(30, 255, 255, .9);
+    text-shadow:         0px 0px 8px   rgba(30, 255, 255, .9);
+    color:#1effff;
+    margin: 3px 1px;
+}
+.yui3-skin-sam .skin-lj .yui3-buttongroup .yui3-button-selected{
+    background-color:#1effff;
+    color: black;
+    -webkit-box-shadow: 0px 0px 14px 0px   rgba(30, 255, 255, .9);
+    -moz-box-shadow:    0px 0px 14px 0px   rgba(30, 255, 255, .9);
+    box-shadow:         0px 0px 14px 0px   rgba(30, 255, 255, .9);
+    -webkit-text-shadow: none;
+    -moz-text-shadow:    none;
+    text-shadow:         none;
+}
+.yui3-skin-sam .skin-lj .yui3-buttongroup .yui3-button{
+    -moz-border-radius:     none;
+    -webkit-border-radius:  none;
+    border-radius:          none;
+}
+    
+/** panel */
+.yui3-skin-sam .skin-lj .yui3-panel .yui3-widget-hd{
+    background: transparent;
+    font-size:large;
+}
+.yui3-skin-sam .skin-lj .yui3-panel-content{
+    margin: 2px;
+    -moz-border-radius:     6px 6px 6px 6px;
+    -webkit-border-radius:  6px 6px 6px 6px;
+    border-radius:          6px 6px 6px 6px;
+    border:2px solid #666666;
+    padding:0px;
+    background: rgb(32, 32, 32) transparent; /* default fallback */
+    background: rgba(0, 0, 0, 0.8);
+    -ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000)"; /* IE8 */
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000); /* IE 6/7 */
+}
+.yui3-skin-sam .skin-lj .yui3-panel .yui3-widget-ft{
+    background: transparent;
+}
+.yui3-skin-sam .skin-lj .yui3-panel-hidden{
+    display: none;
+}
+.yui3-skin-sam .skin-lj .yui3-panel-focused .yui3-panel-content{
+    -webkit-box-shadow: 0px 0px 15px 1px   rgba(30, 255, 255, .9);
+    -moz-box-shadow:    0px 0px 15px 1px   rgba(30, 255, 255, .9);
+    box-shadow:         0px 0px 15px 1px   rgba(30, 255, 255, .9);
+    border:2px solid rgb(30, 255, 255);
+}
+/**--------- Scrollable Grid's skin ----------*/
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-0 .flag{
+    background: white;
+    width:10px;
+    height:20px;
+    margin-right: 4px;
+    float:left;
+}
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-1 .flag{
+    background: yellow;
+    width:10px;
+    height:20px;
+    margin-right: 1em;
+    float:left;
+}
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-2 .flag{
+    background: green;
+    width:10px;
+    height:20px;
+    margin-right: 2em;
+    float:left;
+}
+/*.yui3-skin-sam .skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-0 td{
+    
+}
+
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-1 td{
+    padding-left: 1em;
+}
+
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-2 td{
+    padding-left: 2em;
+}*/
+
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-hover td{
+    color:#1effff;
+}
+ .yui3-skin-sam .skin-lj .yui3-scrollgrid-content{
+     -moz-border-radius:     8px 8px 8px 8px;
+     -webkit-border-radius:  8px 8px 8px 8px;
+     border-radius:          8px 8px 8px 8px;
+ }
+ .yui3-skin-sam .skin-lj .yui3-scrollview{
+     -webkit-box-shadow: inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
+     -moz-box-shadow:    inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
+     box-shadow:         inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
+ }
+ 
+ .yui3-skin-sam .skin-lj div.yui3-scrollgrid-header-scroll{
+     -moz-border-radius: 8px 8px 0px 0px;
+     -webkit-border-radius: 8px 8px 0px 0px;
+     border-radius: 8px 8px 0px 0px;
+     /*background-color: #1effff;*/
+     background: #666666;
+ }
+ .yui3-skin-sam .skin-lj .yui3-scrollgrid-body td{
+     padding: 4px 4px;
+     border: 1px solid #666666;
+     /*border: 1px solid #1effff;*/
+ }
+ .yui3-skin-sam .skin-lj .yui3-scrollgrid-header-scroll th{
+     color: #e0e0e0;
+     padding: 4px 4px;
+     border-right: 1px solid #666666;
+     background-color: #666666;
+     /*border-right: 1px solid #1effff;
+     background-color: #1effff;*/
+ }
+
+
+/**----------- PagedGrid's skin ---------------*/
+ .yui3-skin-sam .skin-lj .yui3-pagedgrid-scroll{
+     -webkit-box-shadow: inset 1px 3px 10px 1px   rgba(30, 255, 255, .9);
+     -moz-box-shadow:    inset 1px 3px 10px 1px   rgba(30, 255, 255, .9);
+     box-shadow:         inset 1px 3px 10px 1px   rgba(30, 255, 255, .9);
+     -moz-border-radius: 0px 0px 8px 8px;
+     -webkit-border-radius: 0px 0px 8px 8px;
+     border-radius: 0px 0px 8px 8px;
+     
+ }
+ .yui3-skin-sam .skin-lj div.yui3-pagedgrid-header-scroll{
+     -moz-border-radius: 8px 8px 0px 0px;
+     -webkit-border-radius: 8px 8px 0px 0px;
+     border-radius: 8px 8px 0px 0px;
+     background-color: #1effff;
+ }
+ .yui3-skin-sam .skin-lj .yui3-pagedgrid-body td{
+     padding: 4px 4px;
+     /*border: 1px solid #cccccc;*/
+     border: 1px solid #1effff;
+ }
+ .yui3-skin-sam .skin-lj .yui3-pagedgrid-header-scroll th{
+     color: #000020;
+     padding: 4px 4px;
+     border-right: 1px solid #1effff;
+     /*border-left: 1px solid #cccccc;*/
+ }
+
+ /* ******* skin sam ********/
+ /*
+ .yui3-skin-sam .yui3-pagedgrid-body td{
+     padding: 4px 4px;
+     border: 1px solid #cccccc;
+     
+ }
+ .yui3-skin-sam .yui3-pagedgrid-header-scroll th, .yui3-pagedgrid-body thead th{
+     color: white;
+     padding: 4px 4px;
+     border-right: 1px solid #cccccc;
+     border-left: 1px solid #cccccc;
+     background-color: #996600;
+ }
+ 
+ .yui3-skin-sam .yui3-pagedgrid-scroll{
+      -webkit-box-shadow: inset 1px 3px 6px 2px rgba(0, 0, 0, .3);
+     -moz-box-shadow: inset 1px 3px 6px 2px rgba(0, 0, 0, .3);
+     box-shadow: inset 1px 3px 6px 2px rgba(0, 0, 0, .3);
+     -moz-border-radius: 0px 0px 8px 8px;
+     -webkit-border-radius: 0px 0px 8px 8px;
+     border-radius: 0px 0px 8px 8px;
+     background-color: #ffffcc;
+ }
+ .yui3-skin-sam div.yui3-pagedgrid-header-scroll{
+     -moz-border-radius: 8px 8px 0px 0px;
+     -webkit-border-radius: 8px 8px 0px 0px;
+     border-radius: 8px 8px 0px 0px;
+     background-color: #996600;
+ }
+ .yui3-skin-sam .yui3-pagedgrid-body td{
+     padding: 4px 4px;
+     border: 1px solid #cccccc;
+ }
+ .yui3-skin-sam .yui3-pagedgrid-header-scroll th, .yui3-pagedgrid-body thead th{
+     color: white;
+     padding: 4px 4px;
+     border-right: 1px solid #cccccc;
+     border-left: 1px solid #cccccc;
+     background-color: #996600;
+ }
+ .yui3-skin-sam{
+     background-color:#006699;
+     color: #003366;
+     font:medium Arial;
+ }
+ .yui3-skin-sam td, .yui3-skin-sam th{
+     color: #006699;
+ }
+*/
+/*-- -- */
+body .yui3-tabview{
+    float:left;
+}
+
+#leftSection{
+    float:left;
+}
+#rightSection{
+    padding-left: 8px;
+    /*position:relative;*/
+    float:left;
+}
+/* system widget required css */
+
+.yui3-verbox-child{
+    padding:4px 0px;
+}
+
+/** -------- @ScrollableGrid ----------*/
+ .yui3-scrollgrid-content{
+     font:medium Arial;
+ }
+ .yui3-scrollgrid-item-mousedown td{
+     background:#ffff99;
+     color:black;
+     -webkit-box-shadow: 0px 0px 14px 0px   rgba(255, 255, 153, .9);
+     -moz-box-shadow:    0px 0px 14px 0px   rgba(255, 255, 153, .9);
+     box-shadow:         0px 0px 14px 0px   rgba(255, 255, 153, .9);
+ }
+ .yui3-scrollgrid-item-tapped{
+     background:#00cc66;
+ }
+ .yui3-scrollgrid-table{
+     /*border: 1px solid #636363;*/
+ }
+ .yui3-scrollgrid-content th,.yui3-scrollgrid-content td { 
+  padding: 0; 
+  text-align: left;
+ }
+ .yui3-scrollgrid-content td{
+     cursor: pointer;
+ }
+ .yui3-scrollgrid-body{;
+     border-spacing:0;
+ }
+ .yui3-scrollgrid-scroll{
+ }
+ .yui3-scrollgrid-header-scroll{
+     overflow:hidden;
+ }
+ .yui3-scrollgrid table{
+     border-collapse:collapse;
+     border-spacing:0;
+ }
+
+/** ------------ @PagedGrid ---------------*/
+ .yui3-pagedgrid-content{
+     font:medium Arial;
+ }
+ .yui3-pagedgrid-item-mousedown td{
+     background:#ffff99;
+     color:black;
+     -webkit-box-shadow: 0px 0px 14px 0px   rgba(255, 255, 153, .9);
+     -moz-box-shadow:    0px 0px 14px 0px   rgba(255, 255, 153, .9);
+     box-shadow:         0px 0px 14px 0px   rgba(255, 255, 153, .9);
+ }
+ .yui3-pagedgrid-item-tapped{
+     background:#00cc66;
+ }
+ .yui3-pagedgrid-table{
+     /*border: 1px solid #636363;*/
+ }
+ .yui3-pagedgrid-content th,.yui3-pagedgrid-content td { 
+  padding: 0; 
+  text-align: left;
+ }
+ .yui3-pagedgrid-content td{
+     cursor: pointer;
+ }
+ .yui3-pagedgrid-body{
+     border-spacing:0;
+ }
+ .yui3-pagedgrid-scroll{
+     overflow-y:auto;
+     overflow-x:auto;
+     
+ }
+ .yui3-pagedgrid-header-scroll{
+     overflow-x:hidden;
+ }
+ .yui3-pagedgrid table{
+     border-collapse:collapse;
+     border-spacing:0;
+     
+     
+ }
+
+
+

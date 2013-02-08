@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE ACTIONS SYSTEM "actions.dtd">
+
+<ACTIONS>
+	<ACTION NAME="addFile">
+		<CODE>
+			org.liujing.jeditplugin.MyView.getInstance(view).popupAddFileDialog(view.getBuffer().getPath());
+		</CODE>
+	</ACTION>
+	<ACTION NAME="OSXfull">
+	    <CODE>
+	    com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(view, true);
+	    </CODE>
+	</ACTION>
+	<ACTION NAME="togOSXfull">
+	<CODE>
+	    org.liujing.jeditplugin.MyJeditPlugin.toggleOSXFullscreen(view);
+	    </CODE>
+	</ACTION>
+	<ACTION NAME="openAction">
+		<CODE>
+			new org.liujing.jeditplugin.MyJeditPluginPanel();
+		</CODE>
+	</ACTION>
+	<ACTION NAME="getClassName">
+		<CODE>
+			org.liujing.jeditplugin.v2.JavaFileAnalysisJEditDelegate.getInstance().copyFullClassName();
+		</CODE>
+	</ACTION>
+	<ACTION NAME="checkImports">
+		<CODE>
+			org.liujing.jeditplugin.v2.JavaFileAnalysisJEditDelegate.getInstance().checkImports();
+		</CODE>
+	</ACTION>
+	<ACTION NAME="copyAssociatedTypes">
+		<CODE>
+			org.liujing.jeditplugin.v2.JavaFileAnalysisJEditDelegate.getInstance().copyAllAssociatedTypes();
+		</CODE>
+	</ACTION>
+	<ACTION NAME="copyClassTemplateA">
+		<CODE>
+			org.liujing.jeditplugin.v2.MyPluginMenuActions.getInstance().copyJavaClassCreationTemplate("JavaClassCreationTemplate01.txt");
+		</CODE>
+	</ACTION>
+	<ACTION NAME="copyClassTemplateSF">
+		<CODE>
+			org.liujing.jeditplugin.v2.MyPluginMenuActions.getInstance().copyJavaClassCreationTemplate("JavaClassCreationTemplateSF.txt");
+		</CODE>
+	</ACTION>
+	<ACTION NAME="insertTestClassTemplateSF">
+		<CODE>
+			org.liujing.jeditplugin.v2.MyPluginMenuActions.getInstance().copyJavaClassCreationTemplate("JavaTestCreationTemplateSF.txt");
+		</CODE>
+	</ACTION>
+	<ACTION NAME="insertExceptionClassTemplateSF">
+		<CODE>
+			org.liujing.jeditplugin.v2.MyPluginMenuActions.getInstance().copyJavaClassCreationTemplate("JavaExecptionCreationTemplateSF.txt");
+		</CODE>
+	</ACTION>
+	<ACTION NAME="insertSFControllerTemplate">
+		<CODE>
+			org.liujing.jeditplugin.v2.MyPluginMenuActions.getInstance().copyJavaClassCreationTemplate("JavaControllerTemplateSF.txt");
+		</CODE>
+	</ACTION>
+	<ACTION NAME="insertServiceCommandTemplate">
+		<CODE>
+			org.liujing.jeditplugin.v2.MyPluginMenuActions.getInstance().copyJavaClassCreationTemplate("ServiceCommandTemplateSF.txt");
+		</CODE>
+	</ACTION>
+	<ACTION NAME="insertServiceCommandImplTemplate">
+		<CODE>
+			org.liujing.jeditplugin.v2.MyPluginMenuActions.getInstance().copyJavaClassCreationTemplate("ServiceCommandImplTemplateSF.txt");
+		</CODE>
+	</ACTION>
+	<ACTION NAME="insertServiceQueryTemplate">
+		<CODE>
+			org.liujing.jeditplugin.v2.MyPluginMenuActions.getInstance().copyJavaClassCreationTemplate("ServiceQueryTemplateSF.txt");
+		</CODE>
+	</ACTION>
+	<ACTION NAME="insertServiceQueryImplTemplate">
+		<CODE>
+			org.liujing.jeditplugin.v2.MyPluginMenuActions.getInstance().copyJavaClassCreationTemplate("ServiceQueryImplTemplateSF.txt");
+		</CODE>
+	</ACTION>
+	<ACTION NAME="copyGetterSetter">
+		<CODE>
+			org.liujing.jeditplugin.v2.JavaFileAnalysisJEditDelegate.getInstance().copyGeterSetter();
+		</CODE>
+	</ACTION>
+	<ACTION NAME="insertDocument">
+		<CODE>
+			org.liujing.jeditplugin.v2.JavaFileAnalysisJEditDelegate.getInstance().insertDocumentation();
+		</CODE>
+	</ACTION>
+</ACTIONS>

@@ -1,0 +1,48 @@
+______________________________________________
+ProjectModule
+----------------------------------------------
+  name: String
+  directory: String
+  includes: List<String>
+  excludes:
+  type: int
+  parent: ProjectModule
+  subModules: List<ProjectModule>
+
+  addSubModule()
+  removeSubModule()
+  delete()
+______________________________________________
+ProjectController
+----------------------------------------------
+  currentProject: ProjectModule
+
+  listProjects(name)
+  openProject(name)
+  listCurrentPrjFiles()
+  treeCurrentProject()
+  addModule()
+  deleteModule()
+  addFile()
+  removeFile()
+  deleteFile()
+  openFile()
+
+______________________________________________
+ProjectTableModel
+----------------------------------------------
+
+______________________________________________
+ProjectTreeModel
+----------------------------------------------
+
+
+
+#User case: Popup dialog for patch state view
+StateCacheManagement
+
+ProjectPanel                StateCacheManagement    StateFileViewPanel  FileSyncController
+    actionPerformed() ->            updateState()   ------------------------>  scanForUpdates()
+                      ---------------------------------->   setStateFile()
+
+

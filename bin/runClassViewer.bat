@@ -1,0 +1,1 @@
+java -ea -agentlib:jdwp=transport=dt_shmem,address=classviewer,server=y,suspend=n -cp build\classes;lib\mylib.jar;lib\filesync.jar  -Djava.util.logging.config.file=logging.properties  org.liujing.awttools.classview.ClassSearchFrame

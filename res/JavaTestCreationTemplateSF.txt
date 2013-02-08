@@ -1,0 +1,22 @@
+package com.successfactors.admin.app.XXX;
+
+import org.apache.log4j.Logger;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/**
+ FamilyRoleImportManagerTest
+ @author Break(Jing) Liu
+*/
+public class XXXTest{
+    /** logger */
+    private static final Logger log = Logger.getLogger(XXXTest.class);
+
+    @Test(groups={"checkin"})
+    public void test_XXX()throws Exception{
+        log.info("start");
+
+        //assertEquals();
+    }
+
+}

@@ -1,0 +1,17 @@
+package org.liujing.XXX;
+
+import java.util.*;
+import java.io.*;
+import java.util.logging.*;
+
+/**
+ XXX
+ @author Break(Jing) Liu
+*/
+public class XXX{
+    /** log */
+    private static Logger log = Logger.getLogger(XXX.class.getName());
+
+    public XXX(){
+    }
+}

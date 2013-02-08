@@ -1,0 +1,43 @@
+package org.liujing.ironsword.dao.hibernate;
+
+import org.hibernate.*;
+import org.hibernate.cfg.*;
+import java.util.*;
+
+import java.util.logging.*;
+
+public class HibernateUtil{
+    private static Logger log = Logger.getLogger(HibernateUtil.class.getName());
+
+    private static SessionFactory sessionFactory = null;
+    
+    private static SessionFactory createSessionFactory(){
+      try {
+            AnnotationConfiguration cfg = new AnnotationConfiguration();
+            cfg.configure();
+            sessionFactory = cfg.buildSessionFactory();
+            log.info(cfg.getProperty("hibernate.connection.url"));
+        } catch (Throwable ex) {
+            log.log(Level.SEVERE, "Failed to create session factory", ex);
+        }
+    }
+
+    public static Session createSession(){
+        
+        Session session = SingletonFactory.FACTORY.openSession();
+        return session;
+    }
+    
+    public static Session getGlobalSession(){
+      return SingletonSession.GLOBAL_SESS;
+    }
+    
+    private static class SingletonFactory{
+      public static SessionFactory FACTORY = createSessionFactory();
+      
+    }
+    
+    private static class SingletonSession{
+      public static Session GLOBAL_SESS = createSession();
+    }
+}

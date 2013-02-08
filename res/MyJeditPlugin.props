@@ -1,0 +1,37 @@
+plugin.org.liujing.jeditplugin.MyJeditPlugin.activate=startup
+plugin.org.liujing.jeditplugin.MyJeditPlugin.name=My Plugin
+plugin.org.liujing.jeditplugin.MyJeditPlugin.version=0.1
+plugin.org.liujing.jeditplugin.MyJeditPlugin.jars=mylib.jar  mytool.jar filesync.jar magDown.jar antlr-3.3-complete.jar
+plugin.org.liujing.jeditplugin.MyJeditPlugin.description=Test plugin
+plugin.org.liujing.jeditplugin.MyJeditPlugin.author=Liu Jing
+plugin.org.liujing.jeditplugin.MyJeditPlugin.depend.0=jedit 04.02.99.00
+plugin.org.liujing.jeditplugin.MyJeditPlugin.depend.1=jdk 1.6
+plugin.org.liujing.jeditplugin.MyJeditPlugin.depend.2=plugin sidekick.SideKickPlugin 0.6.1
+
+#Plugin menu item properties
+plugin.org.liujing.jeditplugin.MyJeditPlugin.menu=openAction OSXfull togOSXfull getClassName checkImports copyGetterSetter insertDocument copyClassTemplateA copyClassTemplateSF insertTestClassTemplateSF insertExceptionClassTemplateSF insertSFControllerTemplate insertServiceCommandTemplate insertServiceCommandImplTemplate insertServiceQueryTemplate insertServiceQueryImplTemplate copyAssociatedTypes addFile
+
+openAction.title=My Plugin
+openAction.label=Open
+
+addFile.label=Add File
+OSXfull.label=OS X full screen
+togOSXfull.label=Toggle full screen (OS X)
+checkImports.label=Check import clause
+
+getClassName.label=Copy class name
+copyClassTemplateA.label=insert class template A
+copyClassTemplateSF.label=insert class template SF
+copyGetterSetter.label=Copy Getter Setter
+copyAssociatedTypes.label=Copy associated types
+insertTestClassTemplateSF.label=Insert Test class template SF
+insertDocument.label=Insert documentation comment
+insertExceptionClassTemplateSF.label=Insert Exception template SF
+insertSFControllerTemplate.label=Insert Controller Template
+insertServiceCommandTemplate.label=Insert Service Command Template
+insertServiceCommandImplTemplate.label=Insert Service Command Impl Template
+insertServiceQueryTemplate.label=Insert Service Query Template
+insertServiceQueryImplTemplate.label=Insert Service Query Impl Template
+
+# registration with SideKick as a mode parser
+sidekick.parser.extjs.label=Extjs

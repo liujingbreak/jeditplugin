@@ -1,0 +1,6 @@
+backlog & task:
+
+- Support Find result display in hierarchical structure
+- Pagination of Grid
+- Gird keypress handle
+- Grid total section left alignment (float=left?)

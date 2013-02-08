@@ -1,0 +1,11 @@
+package com.successfactors.admin.service.xxx;
+
+import com.successfactors.sca.ServiceCommand;
+
+/**
+    XXX
+    @author Break (Jing) Liu
+*/
+public class XXX implements ServiceCommand<RRR> {
+
+}

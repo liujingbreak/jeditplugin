@@ -1,0 +1,2 @@
+drop table if exists SRC_FILE_UPDATED, SRC_FILE_DELETE, FILE_TREE_EMPTY;
+

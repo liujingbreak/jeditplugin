@@ -1,0 +1,27 @@
+package com.successfactors.admin.service.xxx.impl;
+
+import com.successfactors.admin.service.xxx.XXX;
+import org.apache.log4j.Logger;
+import com.successfactors.sca.ServiceApplicationException;
+import com.successfactors.sca.ServiceQueryImpl;
+import com.successfactors.sca.config.Service;
+
+/**
+    XXXImpl
+    @author Break (Jing) Liu
+*/
+@Service
+public class XXXImpl
+implements ServiceQueryImpl<RRR, XXX>
+{
+    /**
+    * Logger
+    */
+    private static final Logger log = Logger.getLogger(XXXImpl.class);
+
+    public RRR execute(XXX cmd)
+    throws ServiceApplicationException
+    {
+
+    }
+}

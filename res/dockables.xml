@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE DOCKABLES SYSTEM "dockables.dtd">
+
+<DOCKABLES>
+	<DOCKABLE NAME="openAction">
+		<!--new org.liujing.jeditplugin.MyJeditPluginPanel();-->
+		org.liujing.jeditplugin.MyJeditPlugin.getInstance().getPanelFactory().get(view);
+	</DOCKABLE>
+</DOCKABLES>

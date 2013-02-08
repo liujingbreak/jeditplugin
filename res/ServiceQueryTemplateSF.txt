@@ -1,0 +1,11 @@
+package com.successfactors.admin.service.xxx;
+
+import com.successfactors.sca.ServiceQuery;
+
+/**
+    XXX
+    @author Break (Jing) Liu
+*/
+public class XXX implements ServiceQuery<RRR> {
+
+}
