@@ -24,9 +24,9 @@ body {
 /** MyEditableGrid */
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td{
     background: rgba(30, 255, 255, .9);
-    -webkit-box-shadow: 0px 0px 10px 0px   rgba(30, 255, 255, .9);
-    -moz-box-shadow:    0px 0px 10px 0px   rgba(30, 255, 255, .9);
-    box-shadow:         0px 0px 10px 0px   rgba(30, 255, 255, .9);
+    -webkit-box-shadow: 0px 0px 10px 0px   rgba(30, 255, 255, .8);
+    -moz-box-shadow:    0px 0px 10px 0px   rgba(30, 255, 255, .8);
+    box-shadow:         0px 0px 10px 0px   rgba(30, 255, 255, .8);
     color: black;
 }
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-selItem td{
@@ -101,8 +101,9 @@ body {
     padding:0px;
     background: rgb(32, 32, 32) transparent; /* default fallback */
     background: rgba(0, 0, 0, 0.8);
-    -ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000)"; /* IE8 */
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000); /* IE 6/7 */
+    /*filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000);*/ /* IE 6/7 */
+    /*-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000)";*/ /* IE8 */
+    
 }
 .yui3-skin-sam .skin-lj .yui3-panel .yui3-widget-ft{
     background: transparent;
@@ -121,21 +122,21 @@ body {
     background: white;
     width:10px;
     height:20px;
-    margin-right: 4px;
+    margin: 0px 2px 0px 4px;
     float:left;
 }
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-1 .flag{
     background: yellow;
     width:10px;
     height:20px;
-    margin-right: 1em;
+    margin: 0px 2px 0px 1em;
     float:left;
 }
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-2 .flag{
     background: green;
     width:10px;
     height:20px;
-    margin-right: 2em;
+    margin: 0px 2px 0px 2em;
     float:left;
 }
 /*.yui3-skin-sam .skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-0 td{

@@ -338,7 +338,7 @@ YUI.add("lj-basic", function(Y){
             this._heightHandle = this.after("heightChange", this.syncHeight, this);
             this._widthHandle = this.on("widthChange", this.onWidthChange, this);
             this._tryBindScroll();
-            this._tapHandle = this._body.one(">tbody").delegate("tap", this._onItemSelect, "tr", this);
+            this._tapHandle = this._body.one(">tbody").delegate("tap", this._onItemTap, "tr", this);
         },
         _unbind:function(){
             this._heightHandle.detach();
@@ -348,7 +348,7 @@ YUI.add("lj-basic", function(Y){
         destructor:function(){
             this._unbind();
         },
-        _onItemSelect: function (e){
+        _onItemTap: function (e){
                 //e.currentTarget.addClass(this.getClassName("item","tapped"));
                 this.fire("itemSelected",{data:e.currentTarget.getAttribute("data-key")});
         },
@@ -691,7 +691,8 @@ YUI.add("lj-basic", function(Y){
             var tbody = this._body.one(">tbody");
             this.mouseEnterHandle = tbody.delegate('mouseenter', this._onMouseEnter, 'tr', this);
             this.mouseLeaveHandle = tbody.delegate('mouseleave', this._onMouseLeave, 'tr', this);
-            this.tapHandle = tbody.delegate("tap", this._onItemSelect, "tr", this);
+            this.tapHandle = tbody.delegate("tap", this._onItemTap, "tr", this);
+            this.keydownHandle = this.get('contentBox').on("keydown", this._syncKeydown, this);
         },
         _unbind:function(){
             this.heightHandle.detach();
@@ -701,6 +702,7 @@ YUI.add("lj-basic", function(Y){
             this.tapHandle.detach();
             if(this._scrollViewHandle)
                 this._scrollViewHandle.detach();
+            this.keydownHandle.detach();
         },
         syncWidth:function(){
             if(this.userSetWidth && this.scrollView != null){
@@ -749,7 +751,7 @@ YUI.add("lj-basic", function(Y){
                     this.model.requestMore();
             }
         },
-        _onItemSelect: function (e){
+        _onItemTap: function (e){
             //e.currentTarget.addClass(this.getClassName("item","tapped"));
             this.fire("itemSelected",{data:e.currentTarget.getAttribute("data-key")});
         },
@@ -866,8 +868,15 @@ YUI.add("lj-basic", function(Y){
                 this._bodyscroll.setStyle("maxHeight", (newVal - headerH) - padding - bottomH + this.DEF_UNIT);
             }
         },
-        _onItemSelect: function (e){
+        _onItemTap: function (e){
             var node = e.currentTarget;
+            this._syncSelectItemUI(node);
+            MyEditableGrid.superclass._onItemTap.apply(this, arguments);
+        },
+        /** @param node tr
+        */
+        _syncSelectItemUI:function(node){
+            Y.log("selected: "+ node.getAttribute("data-key"));
             if(this.get('singleSelection')){
                 var classname = this.getClassName('s','selItem');
                 this.selectionModel.selectSingle(node.getAttribute("data-key"), node);
@@ -885,8 +894,49 @@ YUI.add("lj-basic", function(Y){
                     this.selectionModel._addSelection(node.getAttribute("data-key"), node);
                 }
             }
-            MyEditableGrid.superclass._onItemSelect.apply(this, arguments);
         },
+        
+        _syncKeydown:function(e){
+            var code = e.keyCode;
+            switch(code){
+            case 38:
+                if(this.model.getRowCount() == 0) return;
+                if(this.selectionModel.isEmpty())
+                    this._syncSelectItemUI(this._body.one('tbody tr'));
+                else{
+                    var node = this.selectionModel.getFirstNode();
+                    var prev = node.previous();
+                    if(prev)
+                        this._syncSelectItemUI(prev);
+                }
+                break;
+            case 40:
+                if(this.model.getRowCount() == 0) return;
+                if(this.selectionModel.isEmpty())
+                    this._syncSelectItemUI(this._body.one('tbody tr'));
+                else{
+                    var node = this.selectionModel.getFirstNode();
+                    var next = node.next();
+                    if(next)
+                        this._syncSelectItemUI(next);
+                }
+                break;
+            case 13:
+                if(this.model.getRowCount() == 0) return;
+                if(this.selectionModel.isEmpty())
+                    this._syncSelectItemUI(this._body.one('tbody tr'));
+                else{
+                    var node = this.selectionModel.getFirstNode();
+                    var next = node.next();
+                    if(next)
+                        this._syncSelectItemUI(next);
+                }
+                break;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        
         _syncPageInfoUI:function(){
             this._totalNode.data = "      total: " + this.model.total;
         },
@@ -921,14 +971,15 @@ YUI.add("lj-basic", function(Y){
         }
     },
     {
-        
         ATTRS:{
             /** @attribute singleSelection */
             singleSelection:{value: true},
             /** @attribute buttonVisible */
             buttonVisible:{value: true},
             /** @attribute maxHeight */
-            maxHeight:{value: null}
+            maxHeight:{value: null},
+            /** @attribute popmenu */
+            popmenu:{value: null}
         }
     });
     MyEditableGrid.CSS_PREFIX = "yui3-scrollgrid";
@@ -968,6 +1019,18 @@ YUI.add("lj-basic", function(Y){
         },
         getSelectedKeyset:function(){
             return this.keyset;
+        },
+        getFirstNode:function(){
+            for(k in this.keyset){
+                return this.keyset[k];
+            }
+            return null;
+        },
+        isEmpty:function(){
+            for(k in this.keyset){
+                return false;
+            }
+            return true;
         }
     }
     Y.augment(MyGridSelModel, Y.EventTarget);
@@ -1260,7 +1323,7 @@ YUI.add("lj-basic", function(Y){
                 if(!this._onEnterKeySet){
                     this.invokeRendered(function(){
                         var field = this.get('contentBox').one('input[type="text"]');
-                        this._keypressHandle = field.on('keypress', function(e){
+                        this._keydownHandle = field.on('keypress', function(e){
                                 if(e.charCode == 13){
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -1286,8 +1349,8 @@ YUI.add("lj-basic", function(Y){
                 return val;
             },
             destructor:function(){
-                if(this._keypressHandle)
-                    this._keypressHandle.detach();
+                if(this._keydownHandle)
+                    this._keydownHandle.detach();
             }
             }, {ATTRS:{
                 /** @attribute required */

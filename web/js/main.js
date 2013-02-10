@@ -202,7 +202,7 @@ try{
                                     var data = res.listData;
                                     model.loadRows(res.listData, res.more, res.total);
                                     portal.loadingInd.setStyle("display","none");
-                                    Y.log(Y.JSON.stringify(res, null,'  '));
+                                    //Y.log(Y.JSON.stringify(res, null,'  '));
                                 }catch(e){
                                     Y.log(e.stack);
                                     throw e;
