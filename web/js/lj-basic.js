@@ -742,7 +742,7 @@ YUI.add("lj-basic", function(Y){
         },
         _syncLoadMore:function(scrollTop){
             if(this.rendedHasMore && 
-                this.scrollContHeight - scrollTop - this.scrollHeight
+                this.scrollContHeight - scrollTop - this.viewportHeight
             < this._moreRowNode.get("offsetHeight"))
             {
                 Y.log("loading more...");
@@ -752,9 +752,27 @@ YUI.add("lj-basic", function(Y){
             }
         },
         _onItemTap: function (e){
-            //e.currentTarget.addClass(this.getClassName("item","tapped"));
-            this.fire("itemSelected",{data:e.currentTarget.getAttribute("data-key")});
+            this._selectItemNode(e.currentTarget);
         },
+        
+        _selectItemNode:function(node){
+            this._scrollToVisible(node);
+            this.fire("itemSelected",{data:node.getAttribute("data-key")});
+        },
+        
+        _scrollToVisible:function(tr){
+            if( (tr.get("offsetTop") + tr.get("offsetHeight"))  >
+                (this.scrollView.getScrollTop() + this.viewportHeight))
+            {
+                //Y.log("test: "+ (tr.get("offsetTop")+ tr.get("offsetHeight") - this.viewportHeight + 4));
+                this.scrollView.scrollTo(this.scrollView.getScrollLeft(), 
+                    tr.get("offsetTop") + tr.get("offsetHeight") - this.viewportHeight, 200);
+            }else if(tr.get("offsetTop") < this.scrollView.getScrollTop()){
+                this.scrollView.scrollTo(this.scrollView.getScrollLeft(), 
+                    tr.get("offsetTop"), 200);
+            }
+        },
+        
         _onMouseEnter:function(e){
             var cln = this.getClassName('hover');
             e.currentTarget.addClass(cln);
@@ -767,8 +785,10 @@ YUI.add("lj-basic", function(Y){
         syncLoadedUI:function(){
             ScrollableGrid.superclass.syncLoadedUI.apply(this, arguments);
             this.scrollView.refresh();
+            /** @property scrollContHeight*/
             this.scrollContHeight = this.scrollView.get('boundingBox').get('scrollHeight');
-            this.scrollHeight = this.scrollView.get('boundingBox').get('clientHeight');
+            /** @property viewportHeight*/
+            this.viewportHeight = this.scrollView.get('boundingBox').get('clientHeight');
             this._syncLoadMore(0);
         }
     });
@@ -868,15 +888,15 @@ YUI.add("lj-basic", function(Y){
                 this._bodyscroll.setStyle("maxHeight", (newVal - headerH) - padding - bottomH + this.DEF_UNIT);
             }
         },
-        _onItemTap: function (e){
-            var node = e.currentTarget;
+        
+        _selectItemNode:function(node){
             this._syncSelectItemUI(node);
-            MyEditableGrid.superclass._onItemTap.apply(this, arguments);
+            MyEditableGrid.superclass._selectItemNode.apply(this, arguments);
         },
         /** @param node tr
         */
         _syncSelectItemUI:function(node){
-            Y.log("selected: "+ node.getAttribute("data-key"));
+
             if(this.get('singleSelection')){
                 var classname = this.getClassName('s','selItem');
                 this.selectionModel.selectSingle(node.getAttribute("data-key"), node);
@@ -898,43 +918,47 @@ YUI.add("lj-basic", function(Y){
         
         _syncKeydown:function(e){
             var code = e.keyCode;
+            //Y.log(code);
             switch(code){
             case 38:
-                if(this.model.getRowCount() == 0) return;
-                if(this.selectionModel.isEmpty())
-                    this._syncSelectItemUI(this._body.one('tbody tr'));
-                else{
-                    var node = this.selectionModel.getFirstNode();
-                    var prev = node.previous();
-                    if(prev)
-                        this._syncSelectItemUI(prev);
-                }
+                this._keySelNextItem(false, e);
                 break;
             case 40:
-                if(this.model.getRowCount() == 0) return;
-                if(this.selectionModel.isEmpty())
-                    this._syncSelectItemUI(this._body.one('tbody tr'));
-                else{
-                    var node = this.selectionModel.getFirstNode();
-                    var next = node.next();
-                    if(next)
-                        this._syncSelectItemUI(next);
-                }
+                this._keySelNextItem(true, e);
                 break;
             case 13:
-                if(this.model.getRowCount() == 0) return;
-                if(this.selectionModel.isEmpty())
-                    this._syncSelectItemUI(this._body.one('tbody tr'));
-                else{
-                    var node = this.selectionModel.getFirstNode();
-                    var next = node.next();
-                    if(next)
-                        this._syncSelectItemUI(next);
-                }
+                this._keySelNextItem(true, e);
                 break;
             }
-            e.preventDefault();
-            e.stopPropagation();
+        },
+        
+        _keySelNextItem:function(isNext, e){
+            if(this.model.getRowCount() == 0) return;
+            if(this.selectionModel.isEmpty()){
+                var firstTR = this._body.one('tbody tr');
+                this._skip2SelNextItemTR(firstTR, true, e);
+            }else{
+                var node = this.selectionModel.getFirstNode();
+                var next = isNext? node.next() : node.previous();
+                this._skip2SelNextItemTR(next, isNext, e);
+            }
+        },
+        
+        _skip2SelNextItemTR:function(tr, isNext, e){
+            while(tr != null){
+                var attr = tr.getAttribute("data-key");
+                if(attr != null & attr.length != 0){
+                    this._selectItemNode(tr);
+                    this.get("contentBox").focus();
+                    // have to use this.focus(), IE9 fails to obtain focus in this way
+                    break;
+                }else{
+                    this._scrollToVisible(tr);
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                tr = isNext? tr.next() : tr.previous();
+            }
         },
         
         _syncPageInfoUI:function(){
@@ -1045,14 +1069,14 @@ YUI.add("lj-basic", function(Y){
                 //this._contentNode = this.get("contentBox");
                 this.MyScrollView_top = 0;
                 this.MyScrollView_left = 0;
+                this.m_bb = this.get('boundingBox');
             },
             scrollTo: function (x, y, duration, easing, node){
                 var ret = MyScrollView.superclass.scrollTo.apply(this, arguments);
+                this.MyScrollView_top = y;
+                this.MyScrollView_left = x;
+                //Y.log('scroll to '+ this.getScrollLeft()+ ','+ this.getScrollTop());
                 
-                //Y.log('scroll to '+ x+ ','+ y
-                //    +"| "+ this._contentNode.get('scrollHeight') + "-"+ this._boundingNode.get('scrollHeight'));
-                this.MyScrollView_top = x;
-                this.MyScrollView_left = y;
                 this.fire('scrolling', {x:x, y:y, node:node});
                 return ret;
             },
@@ -1062,10 +1086,17 @@ YUI.add("lj-basic", function(Y){
             getScrollLeft:function(){
                 return this.MyScrollView_left;
             },
+            getScrollHeight:function(){
+                return this.m_bb.get("scrollHeight");
+            },
             refresh: function(){
                 delete this._cAxis;
                 this.syncUI();
-            }
+            },
+            getViewportHeight:function(){
+                return this.m_bb.get("clientHeight");
+            },
+            
     });
     MyScrollView.CSS_PREFIX = 'yui3-scrollview';
     /**@class VerBox
