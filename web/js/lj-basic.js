@@ -416,6 +416,8 @@ YUI.add("lj-basic", function(Y){
         
         refresh:function(){
             this._body.one('tbody').setHTML('');
+            delete this._lastTr;
+            this.rendedHasMore = false;
             if(this.model){
                 this.model.reset();
                 this.model.requestMore();
@@ -544,7 +546,11 @@ YUI.add("lj-basic", function(Y){
                 else
                     tbody.append(tr);
             }else{
+                try{
                 this._lastTr.insert(tr, "after");
+                }catch(e){
+                    Y.log("insertTr() "+ tr.get("tagName") + this._lastTr);
+                }
             }
             this._lastTr = tr;
         },
@@ -951,12 +957,15 @@ YUI.add("lj-basic", function(Y){
                     this._selectItemNode(tr);
                     this.get("contentBox").focus();
                     // have to use this.focus(), IE9 fails to obtain focus in this way
+                    e.preventDefault();
+                    e.stopPropagation();
                     break;
                 }else{
+                    e.preventDefault();
+                    e.stopPropagation();
                     this._scrollToVisible(tr);
                 }
-                e.preventDefault();
-                e.stopPropagation();
+                
                 tr = isNext? tr.next() : tr.previous();
             }
         },
