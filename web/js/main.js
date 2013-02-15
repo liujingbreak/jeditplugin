@@ -125,8 +125,6 @@ try{
     
     main.render(Y.one("#leftSection"));
     main.set("width", 350);
-    //directories.set("height",100);
-    //directories.set("width",250);
     
     var ProjectModel = function (){
         
@@ -212,7 +210,12 @@ try{
                     }
                 });
                 this.foundFilesGrid = new Y.MyEditableGrid({
-                        maxHeight: 300,
+                        maxHeight: 200,
+                        popmenu:[
+                            {
+                                text:"Open in JEdit"
+                            }
+                        ],
                 buttonVisible:false});
                 this.foundFilesGrid.setModel(this.foundFilesModel);
             },

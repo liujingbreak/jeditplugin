@@ -9,6 +9,7 @@ body {
     -moz-border-radius:     6px 6px 6px 6px;
     -webkit-border-radius:  6px 6px 6px 6px;
     border-radius:          6px 6px 6px 6px;
+    behavior: url(PIE/PIE.htc);
 }
 .yui3-skin-sam .yui3-horbox-child{
     display: inline-block;
@@ -20,14 +21,18 @@ body {
     -moz-border-radius:     6px 6px 6px 6px;
     -webkit-border-radius:  6px 6px 6px 6px;
     border-radius:          6px 6px 6px 6px;
+    behavior:url(PIE/PIE.htc);
 }
 /** MyEditableGrid */
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td{
+    background: #2ff;
     background: rgba(30, 255, 255, .9);
     -webkit-box-shadow: 0px 0px 10px 0px   rgba(30, 255, 255, .8);
     -moz-box-shadow:    0px 0px 10px 0px   rgba(30, 255, 255, .8);
     box-shadow:         0px 0px 10px 0px   rgba(30, 255, 255, .8);
     color: black;
+    -pie-background: linear-gradient(to bottom, rgba(30, 255, 255, .9));
+    behavior:url(PIE/PIE.htc);
 }
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-selItem td{
     background: rgba(30, 255, 255, .9);
@@ -40,6 +45,7 @@ body {
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-bottom{
     padding: 0px 5px;
     font-size: 12px;
+    text-align: right;
 }
 /** text_field */
 .yui3-skin-sam .skin-lj .yui3-mytextfield input[type=text]{
@@ -54,6 +60,7 @@ body {
     -webkit-text-shadow: 0px 0px 8px   rgba(30, 255, 255, .9);
     -moz-text-shadow:    0px 0px 8px   rgba(30, 255, 255, .9);
     text-shadow:         0px 0px 8px   rgba(30, 255, 255, .9);
+    behavior:url(PIE/PIE.htc);
     /*-webkit-box-shadow: inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);
     -moz-box-shadow:    inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);
     box-shadow:         inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);*/
@@ -70,6 +77,7 @@ body {
     text-shadow:         0px 0px 8px   rgba(30, 255, 255, .9);
     color:#1effff;
     margin: 3px 1px;
+    behavior: url(PIE/PIE.htc);
 }
 .yui3-skin-sam .skin-lj .yui3-buttongroup .yui3-button-selected{
     background-color:#1effff;
@@ -80,6 +88,7 @@ body {
     -webkit-text-shadow: none;
     -moz-text-shadow:    none;
     text-shadow:         none;
+    behavior: url(PIE/PIE.htc);
 }
 .yui3-skin-sam .skin-lj .yui3-buttongroup .yui3-button{
     -moz-border-radius:     none;
@@ -97,13 +106,17 @@ body {
     -moz-border-radius:     6px 6px 6px 6px;
     -webkit-border-radius:  6px 6px 6px 6px;
     border-radius:          6px 6px 6px 6px;
+    
+    /*-pie-background: linear-gradient(to bottom, rgba(0,0,0, .5), rgba(0,0,0, .5));*/
+    behavior:url(PIE/PIE.htc);
     border:2px solid #666666;
     padding:0px;
-    background: rgb(32, 32, 32) transparent; /* default fallback */
-    background: rgba(0, 0, 0, 0.8);
+    /*background: rgb(32, 32, 32);*/ /* default fallback */
+    
+    
     /*filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000);*/ /* IE 6/7 */
     /*-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000)";*/ /* IE8 */
-    
+    background: rgba(0, 0, 0, 0.8);
 }
 .yui3-skin-sam .skin-lj .yui3-panel .yui3-widget-ft{
     background: transparent;
@@ -158,11 +171,13 @@ body {
      -moz-border-radius:     8px 8px 8px 8px;
      -webkit-border-radius:  8px 8px 8px 8px;
      border-radius:          8px 8px 8px 8px;
+     behavior: url(PIE/PIE.htc);
  }
  .yui3-skin-sam .skin-lj .yui3-scrollview{
      -webkit-box-shadow: inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
      -moz-box-shadow:    inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
      box-shadow:         inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
+     behavior: url(PIE/PIE.htc);
  }
  
  .yui3-skin-sam .skin-lj div.yui3-scrollgrid-header-scroll{
@@ -171,6 +186,7 @@ body {
      border-radius: 8px 8px 0px 0px;
      /*background-color: #1effff;*/
      background: #666666;
+     behavior: url(PIE/PIE.htc);
  }
  .yui3-skin-sam .skin-lj .yui3-scrollgrid-body td{
      padding: 4px 4px;
@@ -195,13 +211,14 @@ body {
      -moz-border-radius: 0px 0px 8px 8px;
      -webkit-border-radius: 0px 0px 8px 8px;
      border-radius: 0px 0px 8px 8px;
-     
+     behavior: url(PIE/PIE.htc);
  }
  .yui3-skin-sam .skin-lj div.yui3-pagedgrid-header-scroll{
      -moz-border-radius: 8px 8px 0px 0px;
      -webkit-border-radius: 8px 8px 0px 0px;
      border-radius: 8px 8px 0px 0px;
      background-color: #1effff;
+     behavior: url(PIE/PIE.htc);
  }
  .yui3-skin-sam .skin-lj .yui3-pagedgrid-body td{
      padding: 4px 4px;

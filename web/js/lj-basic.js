@@ -806,7 +806,8 @@ YUI.add("lj-basic", function(Y){
     */
     var MyEditableGrid = Y.MyEditableGrid = Y.Base.create("myeditgrid", ScrollableGrid,[],
     {
-        initializer:function(){
+        initializer:function(config){
+            Y.log(config);
             this.selectionModel = new MyGridSelModel();
             this.selChangeHandle = this.selectionModel.after("selectChange",
                 function(e){this._syncButton();}, this);
@@ -818,6 +819,7 @@ YUI.add("lj-basic", function(Y){
             if(this.get('buttonVisible')){
                 this._renderDefButtons(this.bottom);
             }
+            this._renderMenu();
             this._totalNode = document.createTextNode("Total:  0");
             this.bottom.append(this._totalNode);
             this.get('contentBox').append(this.bottom);
@@ -825,6 +827,34 @@ YUI.add("lj-basic", function(Y){
         syncUI:function(){
             MyEditableGrid.superclass.syncUI.apply(this, arguments);
             this.bindAndSyncAttr('maxHeight', this._syncMaxHeightUI);
+        },
+        _renderMenu:function(){
+            var menu = this.get("popmenu");
+            if(menu == null) return;
+            if(menu.length == 1){
+                this._renderPopBtn(menu[0].text);
+            }else if(menu.length > 1){
+                this._renderPopBtn("more");
+            }
+        },
+        _renderPopBtn:function(text){
+            var node = Y.Node.create('<div>'+ text + '</div>');
+            node.addClass('yui3-button');
+            this.bottom.append(node);
+            this.popButton = new Y.Button({
+                    srcNode:node,
+                    on:{
+                        click: function(){
+                            if(grid.popButton.get('disabled') === true)
+                                return;
+                            grid.popButton.set('disabled', true);
+                            grid.model.deleteRows(grid.selectionModel.keyset);
+                            grid.fire('menu', {src:'ui'});
+                        }
+                    },
+                    disabled: true
+            });
+            this.popButton.render(this.bottom);
         },
         _renderDefButtons:function(container){
             
@@ -1012,7 +1042,7 @@ YUI.add("lj-basic", function(Y){
             /** @attribute maxHeight */
             maxHeight:{value: null},
             /** @attribute popmenu */
-            popmenu:{value: null}
+            popmenu:{value: []}
         }
     });
     MyEditableGrid.CSS_PREFIX = "yui3-scrollgrid";

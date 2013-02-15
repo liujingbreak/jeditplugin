@@ -16,7 +16,7 @@ public class SnapShotDAO extends SqlDAO{
     private Number id;
     private Timestamp time;
     private String desc;
-    private static SimpleDateFormat formater = new SimpleDateFormat("YYYY-MM-dd HH:mm");
+    private static SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     
     public SnapShotDAO(){
         
