@@ -216,9 +216,9 @@ try{
                         ],
                 buttonVisible:false});
                 this.foundFilesGrid.setModel(this.foundFilesModel);
-                this.foundFilesSelHandle = this.foundFilesGrid.selectionModel.after("selectChange",
+                this.foundFilesSelHandle = this.foundFilesGrid.after("selectChange",
                     function(){
-                        //todo : enable menu
+                        this.menuItems[0].set("disabled", false);
                     }, this.foundFilesGrid);
             },
             
