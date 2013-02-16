@@ -764,8 +764,7 @@ YUI.add("lj-basic", function(Y){
         _selectItemNode:function(node){
             this._scrollToVisible(node);
             var key = node.getAttribute("data-key");
-            if(key != null && key.length > 0)
-                this.fire("itemSelected",{data:key});
+            this.fire("itemSelected",{src:'ui', node:node, data:key});
         },
         
         _scrollToVisible:function(tr){
@@ -833,9 +832,11 @@ YUI.add("lj-basic", function(Y){
         _renderMenu:function(){
             var menu = this.get("popmenu");
             if(menu == null) return;
+            /**@property menuItems*/
+            this.menuItems = [];
             if(menu.length == 1){
-                this._renderPopBtn(menu[0].text,
-                    (menu[0].disabled==null? false: menu[0].disabled) );
+                this.menuItems.push(this._renderPopBtn(menu[0].text,
+                    (menu[0].disabled==null? false: menu[0].disabled) ));
             }else if(menu.length > 1){
                 this._renderPopBtn("more", false);
             }
@@ -859,6 +860,7 @@ YUI.add("lj-basic", function(Y){
                     disabled: disabled
             });
             this.popButton.render(this.bottom);
+            return this.popButton;
         },
         _renderDefButtons:function(container){
             
@@ -1041,6 +1043,12 @@ YUI.add("lj-basic", function(Y){
                 this.delBut.destroy();
             if(this.selChangeHandle)
                 this.selChangeHandle.detach();
+        },
+        destructor:function(){
+            Y.Array.each(this.menuItems, function(menuItem){
+                menuItem.destroy();
+            }
+            delete this.menuItems;
         }
     },
     {
