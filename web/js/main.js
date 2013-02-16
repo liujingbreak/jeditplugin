@@ -212,12 +212,14 @@ try{
                 this.foundFilesGrid = new Y.MyEditableGrid({
                         maxHeight: 200,
                         popmenu:[
-                            {
-                                text:"Open in JEdit"
-                            }
+                            {text:"Open in JEdit", disabled:true }
                         ],
                 buttonVisible:false});
                 this.foundFilesGrid.setModel(this.foundFilesModel);
+                this.foundFilesSelHandle = this.foundFilesGrid.selectionModel.after("selectChange",
+                    function(){
+                        //todo : enable menu
+                    }, this.foundFilesGrid);
             },
             
             renderLayout:function(){
@@ -279,6 +281,7 @@ try{
                 this.savedHandle.detach();
                 this._enterKeyHandle.detach();
                 this.visibleHandle.detech();
+                this.foundFilesSelHandle.detach();
             }
     });
     _ProjectPortal.CSS_PREFIX = _ProjectPortal.superclass.constructor.CSS_PREFIX;

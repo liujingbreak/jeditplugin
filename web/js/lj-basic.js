@@ -763,7 +763,9 @@ YUI.add("lj-basic", function(Y){
         
         _selectItemNode:function(node){
             this._scrollToVisible(node);
-            this.fire("itemSelected",{data:node.getAttribute("data-key")});
+            var key = node.getAttribute("data-key");
+            if(key != null && key.length > 0)
+                this.fire("itemSelected",{data:key});
         },
         
         _scrollToVisible:function(tr){
@@ -832,15 +834,17 @@ YUI.add("lj-basic", function(Y){
             var menu = this.get("popmenu");
             if(menu == null) return;
             if(menu.length == 1){
-                this._renderPopBtn(menu[0].text);
+                this._renderPopBtn(menu[0].text,
+                    (menu[0].disabled==null? false: menu[0].disabled) );
             }else if(menu.length > 1){
-                this._renderPopBtn("more");
+                this._renderPopBtn("more", false);
             }
         },
-        _renderPopBtn:function(text){
+        _renderPopBtn:function(text, disabled){
             var node = Y.Node.create('<div>'+ text + '</div>');
             node.addClass('yui3-button');
             this.bottom.append(node);
+            var grid = this;
             this.popButton = new Y.Button({
                     srcNode:node,
                     on:{
@@ -848,11 +852,11 @@ YUI.add("lj-basic", function(Y){
                             if(grid.popButton.get('disabled') === true)
                                 return;
                             grid.popButton.set('disabled', true);
-                            grid.model.deleteRows(grid.selectionModel.keyset);
+                            //grid.model.deleteRows(grid.selectionModel.keyset);
                             grid.fire('menu', {src:'ui'});
                         }
                     },
-                    disabled: true
+                    disabled: disabled
             });
             this.popButton.render(this.bottom);
         },
@@ -935,7 +939,7 @@ YUI.add("lj-basic", function(Y){
 
             if(this.get('singleSelection')){
                 var classname = this.getClassName('s','selItem');
-                this.selectionModel.selectSingle(node.getAttribute("data-key"), node);
+                this.selectionModel.selectSingle(node.getAttribute("data-key"), node, true);
                 if(!node.hasClass(classname))
                     node.addClass(classname);
                 if(this._lastSingleSelNode && this._lastSingleSelNode != node)
@@ -1025,6 +1029,12 @@ YUI.add("lj-basic", function(Y){
                     this.delBut.set('disabled', true);
             }
         },
+        //_syncMenuUI:function(){
+        //    var menu = this.get("popmenu");
+        //    if(menu == null || menu.length ==0) return;
+        //    if(this.selectionModel.selectCount > 0)
+        //        this.popButton.set("disabled", false);
+        //},
         _unbind:function(){
             MyEditableGrid.superclass._unbind.apply(this, arguments);
             if(this.delBut)
@@ -1041,8 +1051,15 @@ YUI.add("lj-basic", function(Y){
             buttonVisible:{value: true},
             /** @attribute maxHeight */
             maxHeight:{value: null},
-            /** @attribute popmenu */
-            popmenu:{value: []}
+            /** @attribute popmenu
+                <pre>e.g. [{
+                    text: 'open',
+                    disabled: false,
+                    action:function(){...}
+                }]
+                </pre>
+            */
+            popmenu:{value: null}
         }
     });
     MyEditableGrid.CSS_PREFIX = "yui3-scrollgrid";
@@ -1051,15 +1068,20 @@ YUI.add("lj-basic", function(Y){
     event: selectChange
     */
     Y.MyGridSelModel = MyGridSelModel = function(){
+        /** @property keyset*/
         this.keyset = {};
+        /** @property selectCount*/
         this.selectCount = 0;
     }
     MyGridSelModel.prototype = {
-        selectSingle:function(key, node){
+        selectSingle:function(key, node, fromUI){
             this.clear();
             this.keyset[key] = node;
             this.selectCount = 1;
-            this._fireSelectChange({src:'ui', key:key});
+            if(fromUI)
+                this._fireSelectChange({src:'ui', key:key});
+            else
+                this._fireSelectChange({key:key});
         },
         clear:function(){
             for(var k in this.keyset){

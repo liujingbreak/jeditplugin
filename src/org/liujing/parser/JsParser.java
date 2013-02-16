@@ -65,7 +65,13 @@ public class JsParser extends SideKickParser{
 	    public void onFunctionStart(int line, String name, String params, int streamOffset){
 
 	        currNode = new DefaultMutableTreeNode();
-	        JsNode jsinfo = new JsNode(name, params);
+	        JsNode jsinfo = null;
+	        //if(name != null && name.startsWith("_")){
+	        //    jsinfo = new RedSquareNode(name, params);
+	        //}else{
+	        jsinfo = new MutableIconNode(name, params);
+	        //}
+	        functionNodeIconSet(jsinfo, name);
 	        jsinfo.setStartOffset(streamOffset);
 	        currNode.setUserObject(jsinfo);
 	        parentNode.add(currNode);
@@ -102,14 +108,22 @@ public class JsParser extends SideKickParser{
             parentNode = pp;
 
         }
+        
+        private void functionNodeIconSet(JsNode node, String name){
+            if(name != null && (node instanceof MutableIconNode) && name.startsWith("_")){
+                MutableIconNode mnode = (MutableIconNode)node;
+                mnode.setIcon(RedSquareNode.ICON);
+            }
+        }
 
         public void onJSONProperty(String name, int line){
             lastNode.setName(name);
-
+            functionNodeIconSet(lastNode, name);
         }
 
         public void onFunctionAssign(String varname, Object tree){
             lastNode.setName(varname);
+            functionNodeIconSet(lastNode, varname);
         }
         
         public void onDoc(int line, int streamOffset,int streamEnd,String docContent){

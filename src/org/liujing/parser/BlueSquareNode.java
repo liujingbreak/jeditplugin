@@ -9,7 +9,7 @@ import javax.swing.text.Position;
 import sidekick.util.*;
 
 public class BlueSquareNode extends JsNode{
-    private static Icon ICON;
+    public static Icon ICON;
     static{
 		ICON = new ImageIcon(JsNode.class.getResource(
 		    "/org/liujing/parser/icons/blue_square_dot.gif"));

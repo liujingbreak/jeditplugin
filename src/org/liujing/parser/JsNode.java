@@ -10,7 +10,7 @@ import sidekick.util.*;
 
 public class JsNode extends Asset implements SideKickElement{
 	private String desc;
-	private static Icon ICON;
+	public static Icon ICON;
 
 	public int type = 0;
 	public static int TYPE_FUNCTION = 0;
