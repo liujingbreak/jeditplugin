@@ -194,7 +194,7 @@ try{
                         }
                         var model = this;
                         ProjectController.findSrcFilePlain(portal.model.id,
-                            portal.findText, null, findOpt, {offset:offset, limit:limit},
+                            portal.findText, portal.findSuffix, findOpt, {offset:offset, limit:limit},
                             {callback:function(res){
                                 try{
                                     var data = res.listData;
@@ -209,19 +209,29 @@ try{
                             }); 
                     }
                 });
+                
                 this.foundFilesGrid = new Y.MyEditableGrid({
                         maxHeight: 200,
                         popmenu:[
-                            {text:"Open in JEdit", disabled:true }
+                            {text:"Open in JEdit", disabled:true, action: function(e){portal._openJEdit();} }
                         ],
                 buttonVisible:false});
                 this.foundFilesGrid.setModel(this.foundFilesModel);
-                this.foundFilesSelHandle = this.foundFilesGrid.after("selectChange",
-                    function(){
-                        this.menuItems[0].set("disabled", false);
+                this.foundFilesSelHandle = this.foundFilesGrid.after("itemSelected",
+                    function(e){
+                        
+                        this.menuItems[0].set("disabled", e.data == null || e.data == "");
                     }, this.foundFilesGrid);
             },
-            
+            _openJEdit:function(){
+                for(var key in this.foundFilesGrid.selectionModel.keyset){
+                    Y.log('open '+ this.foundFilesGrid.model.getRowByKey(key)[0]);
+                    FileScanController.openFileInJEdit(parseInt(key, 10), 
+                        {callback:function(){
+                            Y.log('opened ');
+                        }});
+                }
+            },
             renderLayout:function(){
                 
                 var ct = this.getStdModNode(Y.WidgetStdMod.BODY, true);
@@ -233,6 +243,8 @@ try{
                 
                 this.descfield = new Y.MyTextField({label:'Description'});
                 this.vBox.add(this.descfield);
+                
+                
              
                 var searchGroup = new Y.VerBox({enableBorder: true});
                 var options = new Y.MyButtonGroup({type: 'radio'});
@@ -244,7 +256,8 @@ try{
                 this.findField = new Y.MyTextField({label:'Find'});
                 searchGroup.add(this.findField);
                 this._enterKeyHandle = this.findField.onEnterKey(function(e){
-                        this._search(e.text);
+                        this.suffixField.syncInput();
+                        this._search(e.text, this.suffixField.get("input"));
                         this.foundFilesGrid.refresh();
                     }, this);
                 
@@ -252,6 +265,14 @@ try{
                 ct.append(n);
                 this.loadingInd = n.one('img');
                 searchGroup.add(this.optionsBtn);
+                
+                this.suffixField = new Y.MyTextField({label:'File Suffix'});
+                searchGroup.add(this.suffixField);
+                this._enterKeyHandle2 = this.suffixField.onEnterKey(function(e){
+                        this.findField.syncInput();
+                        this._search(this.findField.get("input"), e.text);
+                        this.foundFilesGrid.refresh();
+                    }, this);
                 
                 this.vBox.add(searchGroup);
                 this.vBox.add(this.foundFilesGrid);
@@ -267,14 +288,14 @@ try{
                 this.model.name = this.namefield.get('input');
                 this.model.desc = this.descfield.get('input');
             },
-            _search:function(text){
+            _search:function(text, suffix){
                 if(this.model.id == null){
                     alert("Please select a project first.");
                     return;
                 }
                 //this.loadingInd.setStyle("display","inline");
                 this.findText = text;
-                
+                this.findSuffix = suffix;
             },
             destructor:function(){
                 this.modelHandle.detach();
@@ -282,6 +303,7 @@ try{
                 this._enterKeyHandle.detach();
                 this.visibleHandle.detech();
                 this.foundFilesSelHandle.detach();
+                this._enterKeyHandle2.detach();
             }
     });
     _ProjectPortal.CSS_PREFIX = _ProjectPortal.superclass.constructor.CSS_PREFIX;

@@ -129,6 +129,7 @@ YUI.add("lj-basic", function(Y){
         //config:
         this.columns = config.columns;
         this.columnKeys = config.columnKeys;
+        /** @property rows */
         this.rows = config.rows?config.rows:[];
         this.loadHandle = config.loadHandle;
         this.deleteHandle = config.deleteHandle;
@@ -136,6 +137,7 @@ YUI.add("lj-basic", function(Y){
         this.groupBy = config.groupBy;
         this.groupCont = config.groupCont? config.groupCont : this.groupBy;
         this._hasMore = false;
+        /** @property _rowMap */
         this._rowMap = {};
         this.lastFetchedCount = 0;
         this.total = 0;
@@ -658,6 +660,7 @@ YUI.add("lj-basic", function(Y){
     
     /**
     @class ScrollableGrid a new version of PagedGrid with Y.ScrollView feature
+    @event itemSelected: data - id in string, node - selected TR node, src - "ui"
     */
     //var ScrollView = Y.Base.mix(Y.ScrollView, [Y.WidgetChild]);
     var ScrollableGrid = Y.Base.create("scrollgrid", PagedGrid, [Y.WidgetChild, Y.WidgetParent],
@@ -725,6 +728,10 @@ YUI.add("lj-basic", function(Y){
             }
             this._syncColumnsWidth();
             
+        },
+        refresh:function(){
+            ScrollableGrid.superclass.refresh.apply(this, arguments);
+            this.scrollView.scrollTo(0, 0, 1);
         },
         _renderScrollView:function(){
             var grid = this;
@@ -809,6 +816,7 @@ YUI.add("lj-basic", function(Y){
     {
         initializer:function(config){
             Y.log(config);
+            /**@property selectionModel */
             this.selectionModel = new MyGridSelModel();
             this.selChangeHandle = this.selectionModel.after("selectChange",
                 function(e){this._syncButton();}, this);
@@ -836,12 +844,14 @@ YUI.add("lj-basic", function(Y){
             this.menuItems = [];
             if(menu.length == 1){
                 this.menuItems.push(this._renderPopBtn(menu[0].text,
-                    (menu[0].disabled==null? false: menu[0].disabled) ));
+                    (menu[0].disabled==null? false: menu[0].disabled), menu[0].action ));
             }else if(menu.length > 1){
-                this._renderPopBtn("more", false);
+                this._renderPopBtn("more", false, function(e){
+                        //todo popup menu
+                });
             }
         },
-        _renderPopBtn:function(text, disabled){
+        _renderPopBtn:function(text, disabled, action){
             var node = Y.Node.create('<div>'+ text + '</div>');
             node.addClass('yui3-button');
             this.bottom.append(node);
@@ -849,12 +859,8 @@ YUI.add("lj-basic", function(Y){
             this.popButton = new Y.Button({
                     srcNode:node,
                     on:{
-                        click: function(){
-                            if(grid.popButton.get('disabled') === true)
-                                return;
-                            grid.popButton.set('disabled', true);
-                            //grid.model.deleteRows(grid.selectionModel.keyset);
-                            grid.fire('menu', {src:'ui'});
+                        click: function(e){
+                            action.call(this, e);
                         }
                     },
                     disabled: disabled
@@ -1047,7 +1053,7 @@ YUI.add("lj-basic", function(Y){
         destructor:function(){
             Y.Array.each(this.menuItems, function(menuItem){
                 menuItem.destroy();
-            }
+            });
             delete this.menuItems;
         }
     },
@@ -1158,6 +1164,8 @@ YUI.add("lj-basic", function(Y){
             getScrollHeight:function(){
                 return this.m_bb.get("scrollHeight");
             },
+            /** current scrolled position is not reset to 0,0 yet, this has to be manually set if needed
+            */
             refresh: function(){
                 delete this._cAxis;
                 this.syncUI();
