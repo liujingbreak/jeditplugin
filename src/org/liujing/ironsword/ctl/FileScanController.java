@@ -505,6 +505,7 @@ public class FileScanController{
               }
         });
     }
+    
     @RemoteMethod
     public void openFileInJEdit(int srcFileId){
         openRemoteJEdit(getSrcFile(srcFileId));
