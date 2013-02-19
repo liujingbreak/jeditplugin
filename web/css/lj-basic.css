@@ -1,5 +1,5 @@
 body {
-    background:/*url('/img/ironman3imaxrelease.jpg')*/ #202020;
+    background:/*url('/img/ironman3imaxrelease.jpg')*/ gray;
     color:#c9c9c9;
     padding:0px;
     margin:0px;
@@ -118,7 +118,7 @@ body {
     
     /*filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000);*/ /* IE 6/7 */
     /*-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000)";*/ /* IE8 */
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.7);
 }
 .yui3-skin-sam .skin-lj .yui3-panel .yui3-widget-ft{
     background: transparent;
@@ -292,6 +292,7 @@ body .yui3-tabview{
 #leftSection{
     float:left;
     padding:4px;
+    background: rgba(0, 0, 0, 0.7);
 }
 #rightSection{
     /*position:relative;*/

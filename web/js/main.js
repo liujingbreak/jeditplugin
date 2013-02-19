@@ -124,7 +124,6 @@ try{
     });
     
     main.render(Y.one("#leftSection"));
-    main.set("width", 350);
     
     var ProjectModel = function (){
         
@@ -310,7 +309,6 @@ try{
     var ProjectPortal = function(){
         var portal = this;
         config = {
-        width   : 400,
         buttons: [
             'close',
             {
@@ -360,7 +358,8 @@ try{
          }
     });
     DirectoryAddPortal.CSS_PREFIX = DirectoryAddPortal.superclass.constructor.CSS_PREFIX;
-    var dirAdd = new DirectoryAddPortal({width:400, buttons: ['close']});
+    var dirAdd = new DirectoryAddPortal({buttons: ['close']});
+    
     dirAdd.render(rightSection);
     /** @class ProjectAaddPortal
     */
@@ -412,6 +411,8 @@ try{
         prjAdd.focus();
     });
     
+    //projects.set("maxWidth","300");
+    directories.set("width",350);
     
 }catch(e){
     Y.log(e.stack);

@@ -71,16 +71,17 @@ YUI.add("lj-basic", function(Y){
     })
     /** @class WidgetRenderTaskQ */
     var WidgetRenderTaskQ = {
-       
         
-        invokeRendered:function(taskFun, context){
-            if(this.get("rendered")){
-                if(context != null)
-                    taskFun.apply(context);
-                else
-                    taskFun.apply(this);
+        invokeRendered:function(taskFun, widget){
+            if(widget == null)
+                widget = this;
+            if(! widget instanceof Y.Widget){
+                Y.log("invokeRendered() incorrect widget instance: "+ widget);
+            }
+            if(widget.get("rendered")){
+                taskFun.apply(widget);
             }else{
-                this.after("render", taskFun, context);
+                widget.after("render", taskFun, widget);
             }
         },
         /**
@@ -96,6 +97,13 @@ YUI.add("lj-basic", function(Y){
             this.addAttr(name, config, false);
             this.setupUIAttr(name, syncUIFunc);
         },
+        WidgetRenderTaskQ_init:function(){
+            this.addUIAttr("maxWidth",{value:null}, function(maxWidth){
+                    if(maxWidth != null)
+                        this.get("contentBox").setStyle("maxWidth", maxWidth);
+            });
+        },
+        
         /**
         call it in syncUI
         @param setUIFunc function(newValue, prevValue) prevValue is null at first call
@@ -106,9 +114,12 @@ YUI.add("lj-basic", function(Y){
                     setUIFunc.call(this, e.newVal, e.prevVal);
             }
             this.after(attrName + "Change", _syncUIAttr, this);
-            setUIFunc.call(this, this.get(attrName ), null);
+            var value = this.get(attrName );
+            if(value != null)
+                setUIFunc.call(this, value, null);
         }
     };
+    Y.WidgetRenderTaskQ = WidgetRenderTaskQ;
     /**
     @param config <ul>
         <li> {array} columns column names
@@ -271,6 +282,7 @@ YUI.add("lj-basic", function(Y){
             this.cellView = config.cellView;
             this._horizontalScrollOn = false;
             this._verticalScrollOn = false;
+            this.WidgetRenderTaskQ_init();
         },
         setCellView:function(cellViewFunc){
             this.cellView = cellViewFunc;
@@ -339,6 +351,7 @@ YUI.add("lj-basic", function(Y){
         bindUI:function(){
             this._heightHandle = this.after("heightChange", this.syncHeight, this);
             this._widthHandle = this.on("widthChange", this.onWidthChange, this);
+            this._maxWidthHandle = this.on("maxWidthChange", this.onMaxWidthChange, this);
             this._tryBindScroll();
             this._tapHandle = this._body.one(">tbody").delegate("tap", this._onItemTap, "tr", this);
         },
@@ -346,6 +359,7 @@ YUI.add("lj-basic", function(Y){
             this._heightHandle.detach();
             this._widthHandle.detach();
             this._tapHandle.detach();
+            this._maxWidthHandle.detach();
         },
         destructor:function(){
             this._unbind();
@@ -365,6 +379,11 @@ YUI.add("lj-basic", function(Y){
         onWidthChange:function(e){
             this.userSetWidth = e.newVal;
             this.syncWidth();
+            this._syncColumnsWidth();
+            //e.preventDefault();
+        },
+        onMaxWidthChange:function(e){
+            this._bodyscroll.setStyle("maxWidth", e.newVal + this.DEF_UNIT);
             e.preventDefault();
         },
         syncWidth:function(){
@@ -702,6 +721,7 @@ YUI.add("lj-basic", function(Y){
             this.mouseLeaveHandle = tbody.delegate('mouseleave', this._onMouseLeave, 'tr', this);
             this.tapHandle = tbody.delegate("tap", this._onItemTap, "tr", this);
             this.keydownHandle = this.get('contentBox').on("keydown", this._syncKeydown, this);
+            this._maxWidthHandle = this.on("maxWidthChange", this.onMaxWidthChange, this);
         },
         _unbind:function(){
             this.heightHandle.detach();
@@ -712,11 +732,18 @@ YUI.add("lj-basic", function(Y){
             if(this._scrollViewHandle)
                 this._scrollViewHandle.detach();
             this.keydownHandle.detach();
+            this._maxWidthHandle.detach();
         },
         syncWidth:function(){
             if(this.userSetWidth && this.scrollView != null){
                 this.scrollView.set('width', this.userSetWidth + this.DEF_UNIT);
             }
+        },
+        
+        onMaxWidthChange:function(e){
+            this.scrollView.set("width", e.newVal);
+            this.scrollView.refresh();
+            e.preventDefault();
         },
         syncHeight:function(){
             var h = this.get("height");
@@ -1146,6 +1173,12 @@ YUI.add("lj-basic", function(Y){
                 this.MyScrollView_left = 0;
                 this.m_bb = this.get('boundingBox');
             },
+            bindUI:function(){
+                MyScrollView.superclass.bindUI.apply(this, arguments);
+                this.bindAndSyncAttr("maxWidth", function(w){
+                        this.m_bb.setStyle("maxWidth", w + "px");
+                });
+            },
             scrollTo: function (x, y, duration, easing, node){
                 var ret = MyScrollView.superclass.scrollTo.apply(this, arguments);
                 this.MyScrollView_top = y;
@@ -1174,7 +1207,10 @@ YUI.add("lj-basic", function(Y){
                 return this.m_bb.get("clientHeight");
             },
             
-    });
+        }, {ATTRS:{
+            maxWidth:{value:null}
+        }});
+    Y.mix(MyScrollView.prototype, WidgetRenderTaskQ);
     MyScrollView.CSS_PREFIX = 'yui3-scrollview';
     /**@class VerBox
     */
