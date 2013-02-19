@@ -1,6 +1,8 @@
 body {
     background:/*url('/img/ironman3imaxrelease.jpg')*/ #202020;
     color:#c9c9c9;
+    padding:0px;
+    margin:0px;
 }
 /** HorBox Horizontal layout box*/
 .yui3-skin-sam .skin-lj .yui3-horbox-border{
@@ -288,11 +290,13 @@ body .yui3-tabview{
 }
 
 #leftSection{
-    float:left
+    float:left;
+    padding:4px;
 }
 #rightSection{
     /*position:relative;*/
     float:left;
+    padding:4px;
 }
 /* system widget required css */
 
