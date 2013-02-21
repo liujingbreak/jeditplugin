@@ -288,6 +288,7 @@ try{
                 this.model.desc = this.descfield.get('input');
             },
             _search:function(text, suffix){
+                Y.log("_search() "+ text + ", " + suffix);
                 if(this.model.id == null){
                     alert("Please select a project first.");
                     return;
