@@ -75,14 +75,15 @@ YUI.add("lj-basic", function(Y){
         invokeRendered:function(taskFun, widget){
             if(widget == null)
                 widget = this;
-            if(! widget instanceof Y.Widget){
-                Y.log("invokeRendered() incorrect widget instance: "+ widget);
-            }
-            if(widget.get("rendered")){
-                taskFun.apply(widget);
-            }else{
-                widget.after("render", taskFun, widget);
-            }
+            widget.after("render", taskFun, widget);
+            //if(! widget instanceof Y.Widget){
+            //    Y.log("invokeRendered() incorrect widget instance: "+ widget);
+            //}
+            //if(widget.get("rendered")){
+            //    taskFun.apply(widget);
+            //}else{
+            //    widget.after("render", taskFun, widget);
+            //}
         },
         /**
         call it in initializer()
@@ -1425,7 +1426,10 @@ YUI.add("lj-basic", function(Y){
     Y.MyButtonGroup = MyButtonGroup;
     MyButtonGroup.CSS_PREFIX="yui3-buttongroup";
     
-    /**@class MyTextField */
+    /**@class MyTextField 
+        @event enterKey
+        @event valueChange
+    */
     MyTextField = Y.Base.create("mytextfield", Y.Widget, [Y.WidgetChild],
         {
             initializer:function(config){
@@ -1457,6 +1461,7 @@ YUI.add("lj-basic", function(Y){
                 if(config.label != null)
                     this.set('label', config.label);
                 this._onEnterKeySet = false;
+                this._onChangeSet = false;
             },
             /**
             event:
@@ -1466,24 +1471,41 @@ YUI.add("lj-basic", function(Y){
             onEnterKey:function(func, thisObj){
                 if(!this._onEnterKeySet){
                     this.invokeRendered(function(){
-                        var field = this.get('contentBox').one('input[type="text"]');
+                        var field = this.inputField;
                         this._keydownHandle = field.on('keypress', function(e){
                                 if(e.charCode == 13){
                                     e.preventDefault();
-                                    e.stopPropagation();
+                                    //e.stopPropagation();
                                     this.fire('enterKey', {src: 'ui', text:field.get("value") });
                                 }
                         }, this);
                     }, this);
                     this._onEnterKeySet = true;
                 }
-                this.on('enterKey', func, thisObj);
+                return this.on('enterKey', func, thisObj);
+            },
+            on:function(type, func, thisobj){
+                if(type == 'valueChange' && this._initValueChange == null ){
+                    
+                    this.invokeRendered(function(){
+                        this.inputField.on('valueChange',
+                        function(e){
+                            e.src = 'ui';
+                            e.text = this.inputField.get('value');
+                            this.fire('valueChange', e);
+                        }, this);
+                    });
+                    this._initValueChange = true;
+                }
+                return MyTextField.superclass.on.apply(this, arguments);
             },
             renderUI:function(){
                 this.lbDom = document.createTextNode("");
                 this.get('contentBox').append(this.lbDom);
                 var textbox = Y.Node.create('<input type="text" value="">');
                 this.get('contentBox').append(textbox);
+                /** @property inputField */
+                this.inputField = this.get('contentBox').one('input[type="text"]');
             },
             syncInput:function(){
                 var val = this.get('contentBox').one('input[type="text"]').get('value');
@@ -1496,12 +1518,14 @@ YUI.add("lj-basic", function(Y){
                 if(this._keydownHandle)
                     this._keydownHandle.detach();
             }
-            }, {ATTRS:{
-                /** @attribute required */
-                'required': {value: 'false'}
-            }});
+        }, {ATTRS:{
+            /** @attribute required */
+            'required': {value: 'false'}
+        }});
+    
     Y.mix(MyTextField.prototype, WidgetRenderTaskQ);
     Y.MyTextField = MyTextField;
+    
         }catch(e){
             Y.log(e.stack);
         }

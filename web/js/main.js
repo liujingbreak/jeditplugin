@@ -1,7 +1,7 @@
 /* reference to config class in YUI api */
 YUI_config = {
     debug: true
-    //filter:"raw"
+    ,filter:"raw"
 };
 YUI().use('lj-basic','panel','json-stringify','tabview','button-group', function (Y) {
 try{
@@ -260,6 +260,11 @@ try{
                         this.foundFilesGrid.refresh();
                     }, this);
                 
+                this.changeHandler1 = this.findField.on("valueChange",
+                    function(e){
+                        Y.log("change: "+ e.text);
+                    }, this);
+                
                 var n = Y.Node.create('<div><img src="../img/nycli1.gif" style="display:none"></div>');
                 ct.append(n);
                 this.loadingInd = n.one('img');
@@ -304,6 +309,7 @@ try{
                 this.visibleHandle.detech();
                 this.foundFilesSelHandle.detach();
                 this._enterKeyHandle2.detach();
+                this.changeHandler1.detach();
             }
     });
     _ProjectPortal.CSS_PREFIX = _ProjectPortal.superclass.constructor.CSS_PREFIX;
