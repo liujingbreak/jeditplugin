@@ -252,17 +252,12 @@ try{
                 options.selectButton("1");
                 this.optionsBtn = options; 
                 
-                this.findField = new Y.MyTextField({label:'Find'});
+                this.findField = new Y.MySearchField({label:'File Name'});
                 searchGroup.add(this.findField);
-                this._enterKeyHandle = this.findField.onEnterKey(function(e){
+                this._enterKeyHandle = this.findField.on("search", function(e){
                         this.suffixField.syncInput();
                         this._search(e.text, this.suffixField.get("input"));
                         this.foundFilesGrid.refresh();
-                    }, this);
-                
-                this.changeHandler1 = this.findField.on("valueChange",
-                    function(e){
-                        Y.log("change: "+ e.text);
                     }, this);
                 
                 var n = Y.Node.create('<div><img src="../img/nycli1.gif" style="display:none"></div>');
@@ -270,9 +265,9 @@ try{
                 this.loadingInd = n.one('img');
                 searchGroup.add(this.optionsBtn);
                 
-                this.suffixField = new Y.MyTextField({label:'File Suffix'});
+                this.suffixField = new Y.MySearchField({label:'File Suffix'});
                 searchGroup.add(this.suffixField);
-                this._enterKeyHandle2 = this.suffixField.onEnterKey(function(e){
+                this._enterKeyHandle2 = this.suffixField.on("search", function(e){
                         this.findField.syncInput();
                         this._search(this.findField.get("input"), e.text);
                         this.foundFilesGrid.refresh();

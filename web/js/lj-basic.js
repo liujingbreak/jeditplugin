@@ -692,6 +692,7 @@ YUI.add("lj-basic", function(Y){
             node.set('tabIndex',0);
             this.bodyHeight = null;
             this.headerscroll = Y.Node.create("<div><table><tbody></tbody></table></div>");
+            this._headerContent = this.headerscroll.one("*");
             var tbtbody = this.headerscroll.one("tbody");
             this.headerscroll.addClass(this.getClassName("header-scroll"));
             this._colheaders = Y.Node.create("<tr><th>header</th></tr>");
@@ -776,9 +777,15 @@ YUI.add("lj-basic", function(Y){
                 this);
         },
         _syncScrolling:function(e){
-            if(e.x >=0)
-                this.headerscroll.set("scrollLeft", e.x);
-            
+            if(e.x >=0){
+                //this.headerscroll.set("scrollLeft", e.x);
+                //this._headerContent.setStyle("left", -e.x + "px");
+                this._headerContent.transition(
+                    {
+                        duration: 0.3,
+                        left: -e.x + "px"
+                    });
+            }
             this._syncLoadMore(e.y);
         },
         _syncLoadMore:function(scrollTop){
@@ -1166,6 +1173,9 @@ YUI.add("lj-basic", function(Y){
     /** @class MyScrollView 
         @event scrolling
     */
+    var _constrain = function (val, min, max) {
+                return Math.min(Math.max(val, min), max);
+    };
     var MyScrollView = Y.Base.create("myscrollview",Y.ScrollView, [Y.WidgetChild],{
             initializer:function(){
                 //this._boundingNode = this.get("boundingBox");
@@ -1207,12 +1217,52 @@ YUI.add("lj-basic", function(Y){
             getViewportHeight:function(){
                 return this.m_bb.get("clientHeight");
             },
-            
+            /**
+            change to YUI code,<ul>
+                <li> scrollOffset = 2
+                <li> scrollToY = scrollY - ((e.wheelDelta) * scrollOffset);
+                </ul>
+            */
+            _mousewheel:function(e){
+                MyScrollView.superclass._mousewheel.apply(this, arguments);
+                //Y.log("wheelDelta: " + e.wheelDelta);
+                var sv = this,
+                    scrollY = sv.get("scrollY"),
+                    bb = sv._bb,
+                    scrollOffset = 2, // 10px
+                    isForward = (e.wheelDelta > 0),
+                    // change from YUI code
+                    scrollToY = scrollY - ((e.wheelDelta) * scrollOffset);
+                    //scrollToY = scrollY - ((isForward ? 1 : -1) * scrollOffset);
+        
+                scrollToY = _constrain(scrollToY, sv._minScrollY, sv._maxScrollY);
+        
+                if (bb.contains(e.target) && sv._cAxis["y"]) {
+                    sv.lastScrolledAmt = 0;
+                    sv.set("scrollY", scrollToY);
+                    if (sv.scrollbars) {
+                        // @TODO: The scrollbars should handle this themselves
+                        sv.scrollbars._update();
+                        sv.scrollbars.flash();
+                        // or just this
+                        // sv.scrollbars._hostDimensionsChange();
+                    }
+        
+                    // Fire the 'scrollEnd' event
+                    sv._onTransEnd();
+        
+                    // prevent browser default behavior on mouse scroll
+                    e.preventDefault();
+                }
+            }
         }, {ATTRS:{
             maxWidth:{value:null}
         }});
     Y.mix(MyScrollView.prototype, WidgetRenderTaskQ);
     MyScrollView.CSS_PREFIX = 'yui3-scrollview';
+    Y.MyScrollView = MyScrollView;
+    
+    
     /**@class VerBox
     */
     var VerBox = Y.Base.create("verbox",Y.Widget, [Y.WidgetChild, Y.WidgetParent], {
@@ -1397,7 +1447,6 @@ YUI.add("lj-basic", function(Y){
     */
     MyButtonGroup = Y.Base.create("mybtngroup", Y.ButtonGroup, [Y.WidgetChild], {
             initializer:function(config){
-                //MyButtonGroup.superclass.initializer.apply(this,arguments);
                 this._buttonMap = {};
                 this._buttonView = this._defButtonView;
                 this._groupId = Y.guid();
@@ -1427,13 +1476,12 @@ YUI.add("lj-basic", function(Y){
     MyButtonGroup.CSS_PREFIX="yui3-buttongroup";
     
     /**@class MyTextField 
-        @event enterKey
+        @event enter
         @event valueChange
     */
     MyTextField = Y.Base.create("mytextfield", Y.Widget, [Y.WidgetChild],
         {
             initializer:function(config){
-                MyTextField.superclass.initializer.apply(this, arguments);
                 this._textLabel = config.label;
                 /**@attribute input */
                 this.addUIAttr('input', {value: ''}, 
@@ -1464,40 +1512,41 @@ YUI.add("lj-basic", function(Y){
                 this._onChangeSet = false;
             },
             /**
-            event:
+            event object:
                 src - 'ui'
                 text - text value
             */
-            onEnterKey:function(func, thisObj){
-                if(!this._onEnterKeySet){
-                    this.invokeRendered(function(){
-                        var field = this.inputField;
-                        this._keydownHandle = field.on('keypress', function(e){
-                                if(e.charCode == 13){
-                                    e.preventDefault();
-                                    //e.stopPropagation();
-                                    this.fire('enterKey', {src: 'ui', text:field.get("value") });
-                                }
-                        }, this);
-                    }, this);
-                    this._onEnterKeySet = true;
-                }
-                return this.on('enterKey', func, thisObj);
-            },
             on:function(type, func, thisobj){
                 if(type == 'valueChange' && this._initValueChange == null ){
-                    
-                    this.invokeRendered(function(){
-                        this.inputField.on('valueChange',
-                        function(e){
-                            e.src = 'ui';
-                            e.text = this.inputField.get('value');
-                            this.fire('valueChange', e);
-                        }, this);
-                    });
-                    this._initValueChange = true;
+                    this._initValueChangeEvt();
+                }else if(type == "enter" && (this._onEnterKeySet == null || this._onEnterKeySet === false)){
+                    this._initEnterEvt();
                 }
                 return MyTextField.superclass.on.apply(this, arguments);
+            },
+            _initEnterEvt:function(){
+                this.after("render", function(){
+                    var field = this.inputField;
+                    this._keydownHandle = field.on('keypress', function(e){
+                            if(e.charCode == 13){
+                                e.preventDefault();
+                                //e.stopPropagation();
+                                this.fire('enter', {src: 'ui', text:field.get("value") });
+                            }
+                    }, this);
+                }, this);
+                this._onEnterKeySet = true;
+            },
+            _initValueChangeEvt:function(){
+                this.after("render", function(){
+                    this._valueChangeHandle = this.inputField.on('valueChange',
+                    function(e){
+                        e.src = 'ui';
+                        e.text = this.inputField.get('value');
+                        this.fire('valueChange', e);
+                    }, this);
+                });
+                this._initValueChange = true;
             },
             renderUI:function(){
                 this.lbDom = document.createTextNode("");
@@ -1517,6 +1566,8 @@ YUI.add("lj-basic", function(Y){
             destructor:function(){
                 if(this._keydownHandle)
                     this._keydownHandle.detach();
+                if(this._valueChangeHandle)
+                    this._valueChangeHandle.detach();
             }
         }, {ATTRS:{
             /** @attribute required */
@@ -1526,6 +1577,33 @@ YUI.add("lj-basic", function(Y){
     Y.mix(MyTextField.prototype, WidgetRenderTaskQ);
     Y.MyTextField = MyTextField;
     
+    /** @class MySearchField */
+    MySearchField = Y.Base.create("mytextfield", MyTextField, [Y.WidgetChild],
+        {
+            bindUI:function(config){
+                MySearchField.superclass.bindUI.apply(this, arguments);
+                this.on("valueChange", this._syncValueChangeUI, this);
+                
+            },
+            _syncValueChangeUI:function(e){
+                var field = this;
+                if(this.searchTimer != null)
+                    clearTimeout(this.searchTimer);
+                this.searchTimer = setTimeout(
+                    function(){
+                        field.fire("search", e);
+                    }, this.get("delay"));
+            }
+            
+        }, {ATTRS:{
+                /**@attribute delay time in millisecond*/
+                delay:{value:700}
+            }
+        });
+    Y.mix(MyTextField.prototype, WidgetRenderTaskQ);
+    Y.MySearchField = MySearchField;
+        MySearchField.CSS_PREFIX = "yui3-mytextfield";
+        
         }catch(e){
             Y.log(e.stack);
         }

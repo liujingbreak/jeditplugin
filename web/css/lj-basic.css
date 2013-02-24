@@ -55,7 +55,7 @@ body {
     margin-left:4px;
 }
 .yui3-skin-sam .skin-lj input[type='text']{
-    background:black;
+    background: transparent;
     color: #1effff;
     border: 1px solid #666666;
     font-size: 13px;
@@ -336,6 +336,9 @@ body .yui3-tabview{
  }
  .yui3-scrollgrid-header-scroll{
      overflow:hidden;
+ }
+ .yui3-scrollgrid-header-scroll *{
+     position:relative;
  }
  .yui3-scrollgrid table{
      border-collapse:collapse;
