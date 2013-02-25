@@ -722,7 +722,7 @@ YUI.add("lj-basic", function(Y){
             this.mouseEnterHandle = tbody.delegate('mouseenter', this._onMouseEnter, 'tr', this);
             this.mouseLeaveHandle = tbody.delegate('mouseleave', this._onMouseLeave, 'tr', this);
             this.tapHandle = tbody.delegate("tap", this._onItemTap, "tr", this);
-            this.keydownHandle = this.get('contentBox').on("keydown", this._syncKeydown, this);
+            //this.keydownHandle = this.get('contentBox').on("keydown", this._syncKeydown, this);
             this._maxWidthHandle = this.on("maxWidthChange", this.onMaxWidthChange, this);
         },
         _unbind:function(){
@@ -868,6 +868,12 @@ YUI.add("lj-basic", function(Y){
             this.bottom.append(this._totalNode);
             this.get('contentBox').append(this.bottom);
         },
+        bindUI:function(){
+            MyEditableGrid.superclass.bindUI.apply(this,arguments);
+            this.get("contentBox").plug(Y.Plugin.NodeFocusManager(
+                
+                );
+        }.
         syncUI:function(){
             MyEditableGrid.superclass.syncUI.apply(this, arguments);
             this.bindAndSyncAttr('maxHeight', this._syncMaxHeightUI);
@@ -1609,4 +1615,4 @@ YUI.add("lj-basic", function(Y){
         }
 }, "1.0.0",{
 requires:['base','overlay','node','event','panel','widget','widget-parent','widget-child',
-'button','button-group','scrollview']});
+'button','button-group','scrollview','node-focusmanager']});
