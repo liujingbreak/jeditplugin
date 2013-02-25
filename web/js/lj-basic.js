@@ -870,10 +870,21 @@ YUI.add("lj-basic", function(Y){
         },
         bindUI:function(){
             MyEditableGrid.superclass.bindUI.apply(this,arguments);
-            this.get("contentBox").plug(Y.Plugin.NodeFocusManager(
-                
-                );
-        }.
+            var cb = this.get('contentBox');
+            cb.plug( Y.Plugin.NodeFocusManager, {
+                descendants:'tr[data-key]',
+                keys: { next: 'down:40', previous: 'down:38' }
+                ,activeDescendant: 0
+                //,focusClass:this.getClassName('s','selItem')
+            });
+            
+            cb.delegate("focus", function(e){
+                    this._selectItemNode(e.currentTarget)
+            }, "tr", this);
+            cb.focusManager.after('focusedChange', function (event) {
+                    Y.log(event);
+            });
+        },
         syncUI:function(){
             MyEditableGrid.superclass.syncUI.apply(this, arguments);
             this.bindAndSyncAttr('maxHeight', this._syncMaxHeightUI);
@@ -1060,6 +1071,8 @@ YUI.add("lj-basic", function(Y){
             MyEditableGrid.superclass.syncLoadedUI.apply(this, arguments);
             this._syncButton();
             this._syncPageInfoUI();
+            
+            this.get('contentBox').focusManager.refresh();
         },
         refresh:function(){
             MyEditableGrid.superclass.refresh.apply(this, arguments);
