@@ -722,7 +722,6 @@ YUI.add("lj-basic", function(Y){
             this.mouseEnterHandle = tbody.delegate('mouseenter', this._onMouseEnter, 'tr', this);
             this.mouseLeaveHandle = tbody.delegate('mouseleave', this._onMouseLeave, 'tr', this);
             this.tapHandle = tbody.delegate("tap", this._onItemTap, "tr", this);
-            //this.keydownHandle = this.get('contentBox').on("keydown", this._syncKeydown, this);
             this._maxWidthHandle = this.on("maxWidthChange", this.onMaxWidthChange, this);
         },
         _unbind:function(){
@@ -733,7 +732,7 @@ YUI.add("lj-basic", function(Y){
             this.tapHandle.detach();
             if(this._scrollViewHandle)
                 this._scrollViewHandle.detach();
-            this.keydownHandle.detach();
+            
             this._maxWidthHandle.detach();
         },
         syncWidth:function(){
@@ -870,20 +869,21 @@ YUI.add("lj-basic", function(Y){
         },
         bindUI:function(){
             MyEditableGrid.superclass.bindUI.apply(this,arguments);
-            var cb = this.get('contentBox');
-            cb.plug( Y.Plugin.NodeFocusManager, {
-                descendants:'tr[data-key]',
-                keys: { next: 'down:40', previous: 'down:38' }
-                ,activeDescendant: 0
-                //,focusClass:this.getClassName('s','selItem')
-            });
-            
-            cb.delegate("focus", function(e){
-                    this._selectItemNode(e.currentTarget)
-            }, "tr", this);
-            cb.focusManager.after('focusedChange', function (event) {
-                    Y.log(event);
-            });
+            this.keydownHandle = this.get('contentBox').on("keydown", this._syncKeydown, this);
+            //var cb = this.get('contentBox');
+            //cb.plug( Y.Plugin.NodeFocusManager, {
+            //    descendants:'tr[data-key]',
+            //    keys: { next: 'down:40', previous: 'down:38' }
+            //    ,activeDescendant: 0
+            //    //,focusClass:this.getClassName('s','selItem')
+            //});
+            //
+            //cb.delegate("focus", function(e){
+            //        this._selectItemNode(e.currentTarget)
+            //}, "tr", this);
+            //cb.focusManager.after('focusedChange', function (event) {
+            //        Y.log(event);
+            //});
         },
         syncUI:function(){
             MyEditableGrid.superclass.syncUI.apply(this, arguments);
@@ -1071,8 +1071,7 @@ YUI.add("lj-basic", function(Y){
             MyEditableGrid.superclass.syncLoadedUI.apply(this, arguments);
             this._syncButton();
             this._syncPageInfoUI();
-            
-            this.get('contentBox').focusManager.refresh();
+            //this.get('contentBox').focusManager.refresh();
         },
         refresh:function(){
             MyEditableGrid.superclass.refresh.apply(this, arguments);
@@ -1103,6 +1102,7 @@ YUI.add("lj-basic", function(Y){
                 this.delBut.destroy();
             if(this.selChangeHandle)
                 this.selChangeHandle.detach();
+            this.keydownHandle.detach();
         },
         destructor:function(){
             Y.Array.each(this.menuItems, function(menuItem){

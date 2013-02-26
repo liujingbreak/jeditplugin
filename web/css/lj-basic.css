@@ -4,6 +4,15 @@ body {
     padding:0px;
     margin:0px;
 }
+/** triangle*/
+.triangle-right-white{
+    border-color: transparent white transparent transparent;
+    border-width:10px;
+    width:1px;
+    height:1px;
+    font-size:1px;
+}
+
 /** HorBox Horizontal layout box*/
 .yui3-skin-sam .skin-lj .yui3-horbox-border{
     border: 1px solid #606060;
@@ -134,25 +143,34 @@ body {
 }
 /**--------- Scrollable Grid's skin ----------*/
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-0 .flag{
-    background: white;
-    width:10px;
-    height:20px;
     margin: 0px 2px 0px 4px;
     float:left;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid white;
+    width:1px;
+    height:1px;
+    font-size:1px;
 }
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-1 .flag{
-    background: yellow;
-    width:10px;
-    height:20px;
-    margin: 0px 2px 0px 1em;
+    margin: 0px 2px 0px 24px;
     float:left;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid yellow;
+    width:1px;
+    height:1px;
+    font-size:1px;
 }
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-2 .flag{
-    background: green;
-    width:10px;
-    height:20px;
-    margin: 0px 2px 0px 2em;
+    margin: 0px 2px 0px 44px;
     float:left;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid green;
+    width:1px;
+    height:1px;
+    font-size:1px;
 }
 /*.yui3-skin-sam .skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-0 td{
     
