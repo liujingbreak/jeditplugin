@@ -61,7 +61,7 @@ try{
                  });
              }
     });
-    var projects = new Y.MyEditableGrid({height:250});
+    var projects = new Y.MyEditableGrid({height:250, srcNode:"#projectList"});
     projects.setModel(projectsModel);
     projects.on("itemSelected", 
         function(e){
@@ -76,7 +76,7 @@ try{
                     savedHandle.detach();
             }, projects);
         });
-    
+    projects.render();
     
     
     var dirModel = new Y.PagedGridModel({
@@ -114,16 +114,17 @@ try{
                     return rowModel.includes.join(", ");
                 else if(colIdx == 2)
                     return rowModel.excludes.join(", ");
-            }
+            },
+            srcNode:"#folderList"
     });
     directories.setModel(dirModel);
+    directories.render();
+    //var main = new Y.VerBox({
+    //        //children:[ directories]
+    //        children:[projects, directories]
+    //});
     
-    var main = new Y.VerBox({
-            //children:[ directories]
-            children:[projects, directories]
-    });
-    
-    main.render(Y.one("#leftSection"));
+    //main.render(Y.one("#leftSection"));
     
     var ProjectModel = function (){
         
@@ -310,7 +311,8 @@ try{
     _ProjectPortal.CSS_PREFIX = _ProjectPortal.superclass.constructor.CSS_PREFIX;
     var ProjectPortal = function(){
         var portal = this;
-        config = {
+        config = { 
+        srcNode:Y.one("#project"),
         buttons: [
             'close',
             {
@@ -331,10 +333,10 @@ try{
     
     
     var prjPortal = new ProjectPortal();
-    var rightSection = Y.one("#rightSection");
+    //var rightSection = Y.one("#rightSection");
     prjPortal.set("visible", false);
-    prjPortal.render(rightSection);
-    
+    //prjPortal.render(rightSection);
+    prjPortal.render();
     
 
     

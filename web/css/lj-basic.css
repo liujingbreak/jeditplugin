@@ -143,34 +143,50 @@ body {
 }
 /**--------- Scrollable Grid's skin ----------*/
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-0 .flag{
-    margin: 0px 2px 0px 4px;
+    margin: 0px 4px 0px 4px;
     float:left;
-    border-left: 8px solid transparent;
+    /*border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 10px solid white;
-    width:1px;
-    height:1px;
+    border-top: 10px solid white;*/
+    background:white;
+    -moz-border-radius:     5px 5px 5px 5px;
+    -webkit-border-radius:  5px 5px 5px 5px;
+    border-radius:          5px 5px 5px 5px;
+    /*behavior: url(PIE/PIE.htc);*/
+    width:10px;
+    height:10px;
     font-size:1px;
 }
 .yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-1 .flag{
-    margin: 0px 2px 0px 24px;
+    margin: 0px 4px 0px 24px;
+    float:left;
+    /*border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid yellow;*/
+    background:yellow;
+    -moz-border-radius:     5px 5px 5px 5px;
+    -webkit-border-radius:  5px 5px 5px 5px;
+    border-radius:          5px 5px 5px 5px;
+    /*behavior: url(PIE/PIE.htc);*/
+    width:10px;
+    height:10px;
+    font-size:1px;
+}
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-2 .flag{
+    margin: 0px 4px 0px 44px;
     float:left;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 10px solid yellow;
+    border-top: 10px solid green;
     width:1px;
     height:1px;
     font-size:1px;
 }
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-2 .flag{
-    margin: 0px 2px 0px 44px;
-    float:left;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 10px solid green;
-    width:1px;
-    height:1px;
-    font-size:1px;
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-0 td{
+    background: black;
+}
+.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-1 td{
+    background: black;
 }
 /*.yui3-skin-sam .skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-0 td{
     
@@ -316,6 +332,9 @@ body .yui3-tabview{
     /*position:relative;*/
     float:left;
     padding:4px;
+}
+#rightSection>div{
+    float:left;
 }
 /* system widget required css */
 
