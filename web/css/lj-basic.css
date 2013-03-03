@@ -1,8 +1,19 @@
 body {
-    background:/*url('/img/ironman3imaxrelease.jpg')*/ gray;
+    background: black ;
+    background: -ms-linear-gradient(top, #081741, #175ea4);
+    background: -moz-linear-gradient(top, #081741, #175ea4);
     color:#c9c9c9;
     padding:0px;
     margin:0px;
+    height:100%;
+    min-height:100%;
+}
+html{
+    height:100%;
+    min-height:100%;
+}
+.skin-lj{
+    height:100%;
 }
 /** triangle*/
 .triangle-right-white{
@@ -318,20 +329,27 @@ body {
      color: #006699;
  }
 */
-/*-- -- */
-body .yui3-tabview{
-    float:left;
-}
+/**-- main page -- */
 
 #leftSection{
     float:left;
     padding:4px;
-    background: rgba(0, 0, 0, 0.7);
+    height:100%;
+}
+#projectList{
+    height:40%;
+}
+#folderList{
+    height:40%;
+}
+#intro{
+    height:20%;
 }
 #rightSection{
     /*position:relative;*/
     float:left;
     padding:4px;
+    
 }
 #rightSection>div{
     float:left;

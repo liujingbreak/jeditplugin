@@ -971,6 +971,9 @@ YUI.add("lj-basic", function(Y){
                 padding += parseStyleLen(contentBox.getComputedStyle("paddingBottom"));
                 Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH);
                 this._bodyscroll.setStyle("height", (h - headerH) - padding - bottomH + this.DEF_UNIT);
+            }else{
+                //var bh = this.get("boundingBox").get("offsetHeight");
+                //this._bodyscroll.setStyle("height", (bh -
             }
             
             this._syncColumnsWidth();
