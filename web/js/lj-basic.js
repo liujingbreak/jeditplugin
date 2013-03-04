@@ -958,22 +958,26 @@ YUI.add("lj-basic", function(Y){
             });
             this.addBut.render(container);
         },
+        
         syncHeight:function(){
             var h = this.get("height");
-            //var padding = 2;
-            
-            
+            var contentBox = this.get('contentBox');
+            var headerH = this._colheaders.get("offsetHeight");
+            var bottomH = this.bottom.get('offsetHeight');
+            var padding = parseStyleLen(contentBox.getComputedStyle("paddingTop"));
+            padding += parseStyleLen(contentBox.getComputedStyle("paddingBottom"));
             if(Y.Lang.isNumber(h)){
-                var contentBox = this.get('contentBox');
-                var headerH = this._colheaders.get("offsetHeight");
-                var bottomH = this.bottom.get('offsetHeight');
-                var padding = parseStyleLen(contentBox.getComputedStyle("paddingTop"));
-                padding += parseStyleLen(contentBox.getComputedStyle("paddingBottom"));
                 Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH);
                 this._bodyscroll.setStyle("height", (h - headerH) - padding - bottomH + this.DEF_UNIT);
-            }else{
-                //var bh = this.get("boundingBox").get("offsetHeight");
-                //this._bodyscroll.setStyle("height", (bh -
+            }else if(h.charAt(h.length-1) == '%'){
+                var precent = parseInt(h.substring(0, h.length -1), 10);
+                var parent = this.get("boundingBox").ancestor();
+                if(parent !=null){
+                    var ph = parent.get("clientHeight");
+                    if(ph > 0 ){
+                        this._bodyscroll.setStyle("height", ph * precent/100 - headerH - padding - bottomH + "px");
+                    }
+                }
             }
             
             this._syncColumnsWidth();

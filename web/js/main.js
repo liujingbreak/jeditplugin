@@ -61,7 +61,7 @@ try{
                  });
              }
     });
-    var projects = new Y.MyEditableGrid({height:250});
+    var projects = new Y.MyEditableGrid({height:"100%"});
     projects.setModel(projectsModel);
     projects.on("itemSelected", 
         function(e){
@@ -114,7 +114,8 @@ try{
                     return rowModel.includes.join(", ");
                 else if(colIdx == 2)
                     return rowModel.excludes.join(", ");
-            }
+            },
+            height:"100%"
     });
     directories.setModel(dirModel);
     directories.render("#folderList");
@@ -210,7 +211,7 @@ try{
                 });
                 
                 this.foundFilesGrid = new Y.MyEditableGrid({
-                        maxHeight: 200,
+                        maxHeight: "100%",
                         popmenu:[
                             {text:"Open in JEdit", disabled:true, action: function(e){portal._openJEdit();} }
                         ],

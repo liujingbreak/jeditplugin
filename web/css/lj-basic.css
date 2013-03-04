@@ -338,12 +338,15 @@ html{
 }
 #projectList{
     height:40%;
+    overflow:hidden;
 }
 #folderList{
     height:40%;
+    overflow:hidden;
 }
 #intro{
     height:20%;
+    overflow:hidden;
 }
 #rightSection{
     /*position:relative;*/
