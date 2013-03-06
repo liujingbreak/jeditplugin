@@ -61,7 +61,7 @@ try{
                  });
              }
     });
-    var projects = new Y.MyEditableGrid({height:"100%"});
+    var projects = new Y.MyEditableGrid({height:"50%", width:'100%'});
     projects.setModel(projectsModel);
     projects.on("itemSelected", 
         function(e){
@@ -76,7 +76,7 @@ try{
                     savedHandle.detach();
             }, projects);
         });
-    projects.render("#projectList");
+    projects.render("#leftSection");
     
     
     var dirModel = new Y.PagedGridModel({
@@ -115,10 +115,11 @@ try{
                 else if(colIdx == 2)
                     return rowModel.excludes.join(", ");
             },
-            height:"100%"
+            height:"50%",
+            width:'100%'
     });
     directories.setModel(dirModel);
-    directories.render("#folderList");
+    directories.render("#leftSection");
     //var main = new Y.VerBox({
     //        //children:[ directories]
     //        children:[projects, directories]
@@ -416,7 +417,7 @@ try{
     });
     
     //projects.set("maxWidth","300");
-    directories.set("width",350);
+    //directories.set("width",350);
     
 }catch(e){
     Y.log(e.stack);

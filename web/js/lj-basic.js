@@ -351,10 +351,14 @@ YUI.add("lj-basic", function(Y){
         },
         bindUI:function(){
             this._heightHandle = this.after("heightChange", this.syncHeight, this);
-            this._widthHandle = this.on("widthChange", this.onWidthChange, this);
+            this._widthHandle = this.after("widthChange", this.syncWidth, this);
             this._maxWidthHandle = this.on("maxWidthChange", this.onMaxWidthChange, this);
             this._tryBindScroll();
             this._tapHandle = this._body.one(">tbody").delegate("tap", this._onItemTap, "tr", this);
+        },
+        syncUI:function(){
+            this.syncHeight();
+            this.syncWidth();
         },
         _unbind:function(){
             this._heightHandle.detach();
@@ -377,20 +381,15 @@ YUI.add("lj-basic", function(Y){
             //Y.log("sync UI "+ this.get("height"));
         },
         
-        onWidthChange:function(e){
-            this.userSetWidth = e.newVal;
-            this.syncWidth();
-            this._syncColumnsWidth();
-            //e.preventDefault();
-        },
         onMaxWidthChange:function(e){
             this._bodyscroll.setStyle("maxWidth", e.newVal + this.DEF_UNIT);
             e.preventDefault();
         },
         syncWidth:function(){
-            if(this.userSetWidth){
-                this._bodyscroll.setStyle("width", this.userSetWidth + this.DEF_UNIT);
-                Y.log("syncWidth");
+            var w = this.get("width");
+            if(w != null ){
+                this._bodyscroll.setStyle("width", w + this.DEF_UNIT);
+                this._syncColumnsWidth();
             }
         },
         syncHeight:function(){
@@ -400,8 +399,9 @@ YUI.add("lj-basic", function(Y){
                 var headerH = this._colheaders.get("offsetHeight");
                 Y.log("header Hight="+ headerH);
                 this._bodyscroll.setStyle("height", (h - headerH) - padding + this.DEF_UNIT);
+                this._syncColumnsWidth();
             }
-            this._syncColumnsWidth();
+            
             
         },
         
@@ -716,7 +716,7 @@ YUI.add("lj-basic", function(Y){
         
         bindUI:function(){
             this.heightHandle = this.after("heightChange", this.syncHeight, this);
-            this.widthHandle = this.on("widthChange", this.onWidthChange, this);
+            this.widthHandle = this.on("widthChange", this.syncWidth, this);
             //this._tryBindScroll();
             var tbody = this._body.one(">tbody");
             this.mouseEnterHandle = tbody.delegate('mouseenter', this._onMouseEnter, 'tr', this);
@@ -736,8 +736,15 @@ YUI.add("lj-basic", function(Y){
             this._maxWidthHandle.detach();
         },
         syncWidth:function(){
-            if(this.userSetWidth && this.scrollView != null){
-                this.scrollView.set('width', this.userSetWidth + this.DEF_UNIT);
+            var w = this.get("width"), pw;
+            if(w == null)
+                return;
+            if(typeof(w) == 'number' && this.scrollView != null){
+                this.scrollView.set('width', w + this.DEF_UNIT);
+            }else if(w.charAt(w.length-1) == '%'){
+                var percent = parseInt(w.substring(0, w.length -1), 10);
+                pw = this.get("boundingBox").ancestor().get("clientWidth")*percent/100;
+                this.scrollView.set('width', pw + "px");
             }
         },
         
@@ -870,20 +877,7 @@ YUI.add("lj-basic", function(Y){
         bindUI:function(){
             MyEditableGrid.superclass.bindUI.apply(this,arguments);
             this.keydownHandle = this.get('contentBox').on("keydown", this._syncKeydown, this);
-            //var cb = this.get('contentBox');
-            //cb.plug( Y.Plugin.NodeFocusManager, {
-            //    descendants:'tr[data-key]',
-            //    keys: { next: 'down:40', previous: 'down:38' }
-            //    ,activeDescendant: 0
-            //    //,focusClass:this.getClassName('s','selItem')
-            //});
-            //
-            //cb.delegate("focus", function(e){
-            //        this._selectItemNode(e.currentTarget)
-            //}, "tr", this);
-            //cb.focusManager.after('focusedChange', function (event) {
-            //        Y.log(event);
-            //});
+            
         },
         syncUI:function(){
             MyEditableGrid.superclass.syncUI.apply(this, arguments);
@@ -961,6 +955,8 @@ YUI.add("lj-basic", function(Y){
         
         syncHeight:function(){
             var h = this.get("height");
+            if(h == null)
+                return;
             var contentBox = this.get('contentBox');
             var headerH = this._colheaders.get("offsetHeight");
             var bottomH = this.bottom.get('offsetHeight');

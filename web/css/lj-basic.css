@@ -331,17 +331,21 @@ html{
 */
 /**-- main page -- */
 
+
 #leftSection{
-    float:left;
-    padding:4px;
-    height:100%;
+    position:absolute;
+    top:2px;
+    bottom:2px;
+    left:2px;
+    width:400px;
+    overflow:hidden;
 }
 #projectList{
-    height:40%;
+    height:50%;
     overflow:hidden;
 }
 #folderList{
-    height:40%;
+    height:50%;
     overflow:hidden;
 }
 #intro{
@@ -353,9 +357,6 @@ html{
     float:left;
     padding:4px;
     
-}
-#rightSection>div{
-    float:left;
 }
 /* system widget required css */
 
