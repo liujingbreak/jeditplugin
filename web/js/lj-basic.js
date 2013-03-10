@@ -121,6 +121,32 @@ YUI.add("lj-basic", function(Y){
         }
     };
     Y.WidgetRenderTaskQ = WidgetRenderTaskQ;
+    
+    function _GlobalEventMgr(){
+        var context = this;
+        Y.on("windowresize", function(e){
+        //Y.Event.attach("resize", function(e){
+                Y.log("window resized");
+                context.fire("resize", e);
+        });
+        //var t = this;
+        //window.onresize = function(e){
+        //        Y.log("window on resized");
+        //        t.fire("resize", e);
+        //}
+    };
+    _GlobalEventMgr.prototype = {
+        onresize:function(fn, context){
+                return this.on("resize", fn, context);
+        }
+    };
+    //Y.extend(_GlobalEventMgr, Y.EventTarget, {
+    //        onresize:function(fn, context){
+    //            return this.on("resize", fn, context);
+    //        },
+    //});
+    Y.augment(_GlobalEventMgr, Y.EventTarget);
+    var globalEventMgr = new _GlobalEventMgr();
     /**
     @param config <ul>
         <li> {array} columns column names
@@ -877,7 +903,7 @@ YUI.add("lj-basic", function(Y){
         bindUI:function(){
             MyEditableGrid.superclass.bindUI.apply(this,arguments);
             this.keydownHandle = this.get('contentBox').on("keydown", this._syncKeydown, this);
-            
+            this.resizeHandle = globalEventMgr.onresize(this.resize, this);
         },
         syncUI:function(){
             MyEditableGrid.superclass.syncUI.apply(this, arguments);
@@ -952,7 +978,9 @@ YUI.add("lj-basic", function(Y){
             });
             this.addBut.render(container);
         },
-        
+        resize:function(){
+            this.syncHeight();
+        },
         syncHeight:function(){
             var h = this.get("height");
             if(h == null)
@@ -1106,6 +1134,7 @@ YUI.add("lj-basic", function(Y){
             if(this.selChangeHandle)
                 this.selChangeHandle.detach();
             this.keydownHandle.detach();
+            this.resizeHandle.detach();
         },
         destructor:function(){
             Y.Array.each(this.menuItems, function(menuItem){
@@ -1631,4 +1660,4 @@ YUI.add("lj-basic", function(Y){
         }
 }, "1.0.0",{
 requires:['base','overlay','node','event','panel','widget','widget-parent','widget-child',
-'button','button-group','scrollview','node-focusmanager']});
+'button','button-group','scrollview','node-focusmanager',/*"event-resize"*/]});

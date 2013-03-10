@@ -353,8 +353,8 @@ html{
     overflow:hidden;
 }
 #rightSection{
-    /*position:relative;*/
-    float:left;
+    position:absolute;
+    left:400px;
     padding:4px;
     
 }
