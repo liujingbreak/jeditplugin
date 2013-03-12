@@ -484,6 +484,7 @@ YUI.add("lj-basic", function(Y){
             return row1;
         },
         _clearColumnsWidth:function(){
+            this.headerscroll.one(">table").setStyle("width", "auto");
             var row1 = this._firstRowTrNode();
             if(row1 == null) return;
             var tds = row1.all("> td");
@@ -507,9 +508,8 @@ YUI.add("lj-basic", function(Y){
                 var tds = row1.all("> td");
                 if(tds == null)
                     return;
-                var headerArray = this._colheaders.all("> th");
-                var last = tds.size() -1;
-                var calTotalWidth = 0;
+                var headerArray = this._colheaders.all("> th"),
+                last = tds.size() -1, calTotalWidth = 0;
                 tds.each(function(td, idx, tds){
                         // skip the last one, let it adjust its width
                         //if(last == idx)
@@ -772,6 +772,7 @@ YUI.add("lj-basic", function(Y){
                 pw = this.get("boundingBox").ancestor().get("clientWidth")*percent/100;
                 this.scrollView.set('width', pw + "px");
             }
+            this.scrollView.refresh();
         },
         
         onMaxWidthChange:function(e){
@@ -788,7 +789,7 @@ YUI.add("lj-basic", function(Y){
                 this.scrollView.set("height", (h - headerH) - padding + this.DEF_UNIT);
             }
             this._syncColumnsWidth();
-            
+            this.scrollView.refresh();
         },
         refresh:function(){
             ScrollableGrid.superclass.refresh.apply(this, arguments);
@@ -979,7 +980,9 @@ YUI.add("lj-basic", function(Y){
             this.addBut.render(container);
         },
         resize:function(){
+            
             this.syncHeight();
+            this.syncWidth();
         },
         syncHeight:function(){
             var h = this.get("height");
