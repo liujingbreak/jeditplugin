@@ -212,7 +212,7 @@ try{
                 });
                 
                 this.foundFilesGrid = new Y.MyEditableGrid({
-                        maxHeight: "100%",
+                        height: 400,
                         popmenu:[
                             {text:"Open in JEdit", disabled:true, action: function(e){portal._openJEdit();} }
                         ],

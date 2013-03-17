@@ -1658,6 +1658,15 @@ YUI.add("lj-basic", function(Y){
     Y.MySearchField = MySearchField;
         MySearchField.CSS_PREFIX = "yui3-mytextfield";
         
+        
+    /**@class MatrixPaneLayout */
+    function MatrixPaneLayout(){
+    }
+    MatrixPaneLayout.prototype = {
+        
+    };
+    Y.augment(MatrixPaneLayout, Y.EventTarget);
+    
         }catch(e){
             Y.log(e.stack);
         }
