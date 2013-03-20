@@ -768,8 +768,12 @@ YUI.add("lj-basic", function(Y){
             if(typeof(w) == 'number' && this.scrollView != null){
                 this.scrollView.set('width', w + this.DEF_UNIT);
             }else if(w.charAt(w.length-1) == '%'){
-                var percent = parseInt(w.substring(0, w.length -1), 10);
-                pw = this.get("boundingBox").ancestor().get("clientWidth")*percent/100;
+                var percent = parseInt(w.substring(0, w.length -1), 10),
+                bb = this.get("boundingBox");
+                pw = bb.ancestor().get("clientWidth")*percent/100 
+                - bb.getComputedStyle("padding-left")
+                - bb.getComputedStyle("padding-right");
+                
                 this.scrollView.set('width', pw + "px");
             }
             this.scrollView.refresh();
@@ -1007,7 +1011,7 @@ YUI.add("lj-basic", function(Y){
                 }
             }
             
-            this._syncColumnsWidth();
+            //this._syncColumnsWidth();
             
         },
         

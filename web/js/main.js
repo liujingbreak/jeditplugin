@@ -165,7 +165,7 @@ try{
             
             initializer:function(){
                 this.model = new ProjectModel();
-                this.get("boundingBox").setStyle("position", "static");
+                
                 
                 this.after('render', function(){ 
                     this.renderLayout();
@@ -234,7 +234,7 @@ try{
                 }
             },
             renderLayout:function(){
-                
+                this.get("boundingBox").setStyle("position", "static");
                 var ct = this.getStdModNode(Y.WidgetStdMod.BODY, true);
                 this.setChildrenContainer(ct);
                 this.vBox = new Y.VerBox();
@@ -313,7 +313,6 @@ try{
     var ProjectPortal = function(){
         var portal = this;
         config = { 
-        srcNode:Y.one("#project"),
         buttons: [
             'close',
             {
@@ -337,7 +336,7 @@ try{
     //var rightSection = Y.one("#rightSection");
     prjPortal.set("visible", false);
     //prjPortal.render(rightSection);
-    prjPortal.render();
+    prjPortal.render("#project");
     
 
     
@@ -365,7 +364,7 @@ try{
     DirectoryAddPortal.CSS_PREFIX = DirectoryAddPortal.superclass.constructor.CSS_PREFIX;
     var dirAdd = new DirectoryAddPortal({buttons: ['close']});
     
-    dirAdd.render(rightSection);
+    dirAdd.render("#folder");
     /** @class ProjectAaddPortal
     */
     var ProjectAddPortal = Y.Base.create("prjaddportal",Y.MyPortal, [Y.WidgetParent], {
@@ -376,7 +375,7 @@ try{
          },
          
          renderLayout:function(){
-             this.get("boundingBox").setStyle("position", "relative");
+             this.get("boundingBox").setStyle("position", "static");
              var ct = this.getStdModNode(Y.WidgetStdMod.BODY, true);
              this.setChildrenContainer(ct);
              this.vBox = new Y.VerBox();
@@ -409,7 +408,7 @@ try{
         },
         section: Y.WidgetStdMod.FOOTER
     }]});
-    prjAdd.render(rightSection);
+    prjAdd.render("#project");
     
     projects.on('add', function(){
         prjAdd.set('visible', true);

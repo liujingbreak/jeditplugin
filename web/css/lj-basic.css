@@ -13,7 +13,6 @@ html{
     min-height:100%;
 }
 .skin-lj{
-    height:100%;
 }
 /** triangle*/
 .triangle-right-white{
@@ -343,18 +342,19 @@ html{
 
 #leftSection{
     position:absolute;
-    top:2px;
-    bottom:2px;
-    left:2px;
-    width:400px;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    width:33%;
+    padding:5px;
     overflow:hidden;
 }
-#projectList{
-    height:50%;
+#project{
+    float:left;
     overflow:hidden;
 }
-#folderList{
-    height:50%;
+#folder{
+    float:left;
     overflow:hidden;
 }
 #intro{
@@ -363,9 +363,11 @@ html{
 }
 #rightSection{
     position:absolute;
-    left:400px;
-    padding:4px;
+    top:0px;
     
+    left:33%;
+    padding:0px;
+    bottom:0px;
 }
 /* system widget required css */
 
