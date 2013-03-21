@@ -299,6 +299,7 @@ YUI.add("lj-basic", function(Y){
     
     /** @class PagedGrid */
     var PagedGrid = Y.Base.create("pagedGrid",Y.Widget, [Y.WidgetChild], {
+        MAX_WIDTH:"2900px",
         CONTENT_TEMPLATE: "<table></table>",
         
         /**
@@ -414,8 +415,8 @@ YUI.add("lj-basic", function(Y){
         syncWidth:function(){
             var w = this.get("width");
             if(w != null ){
+                //this._syncColumnsWidth();
                 this._bodyscroll.setStyle("width", w + this.DEF_UNIT);
-                this._syncColumnsWidth();
             }
         },
         syncHeight:function(){
@@ -497,8 +498,8 @@ YUI.add("lj-basic", function(Y){
                     td.setStyle("width","auto");
                     colHeader.setStyle("width","auto");
             });
-            this._bodyscroll.setStyle("width", 'auto');
-            this.headerscroll.setStyle("width", 'auto');
+            this._bodyscroll.setStyle("width", this.MAX_WIDTH);
+            this.headerscroll.setStyle("width", this.MAX_WIDTH);
         },
         
         _syncColumnsWidth:function(){
@@ -552,17 +553,20 @@ YUI.add("lj-basic", function(Y){
             this.syncWidth();
             if(calTotalWidth){
                 Y.log("# calTotalWidth="+ calTotalWidth);
-                if(calTotalWidth > this._body.get('clientWidth')) 
-                    //for firefox, if set each column's width does not actually expand the table's width
-                {
+                this._bodyscroll.setStyle("width", "auto");
+                this.headerscroll.setStyle("width", 'auto');
+                //if(calTotalWidth > this._body.get('clientWidth')) 
+                //    //for firefox, if set each column's width does not actually expand the table's width
+                //{
                     this._body.setStyle("width", calTotalWidth+4  + "px");
                     //Y.log("synce header scroll, calTotalWidth="+ calTotalWidth+ " _body="+ this._body.get("tagName") );
                     this.headerscroll.one(">table").setStyle("width", calTotalWidth +"px");
                     //Y.log("this._bodyscroll's scrollWidth="+ this._bodyscroll.get("scrollWidth"));
-                }
+                //}
+                
+                
                 if(Y.UA.ie > 0){
-                    this._bodyscroll.setStyle("width", "");//fix IE's issue, force it recaculate the size of that DIV
-                    this.syncWidth();
+                    this.syncWidth();//fix IE's issue, force it recaculate the size of that DIV
                 }
                 this._eliminateHozScrollBar();
             }
@@ -769,10 +773,10 @@ YUI.add("lj-basic", function(Y){
                 this.scrollView.set('width', w + this.DEF_UNIT);
             }else if(w.charAt(w.length-1) == '%'){
                 var percent = parseInt(w.substring(0, w.length -1), 10),
-                bb = this.get("boundingBox");
-                pw = bb.ancestor().get("clientWidth")*percent/100 
-                - bb.getComputedStyle("padding-left")
-                - bb.getComputedStyle("padding-right");
+                aa = this.get("boundingBox").ancestor();
+                pw = aa.get("clientWidth")*percent/100 
+                - aa.getComputedStyle("padding-left")
+                - aa.getComputedStyle("padding-right");
                 
                 this.scrollView.set('width', pw + "px");
             }
@@ -1001,14 +1005,18 @@ YUI.add("lj-basic", function(Y){
                 Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH);
                 this._bodyscroll.setStyle("height", (h - headerH) - padding - bottomH + this.DEF_UNIT);
             }else if(h.charAt(h.length-1) == '%'){
+                
                 var precent = parseInt(h.substring(0, h.length -1), 10);
                 var parent = this.get("boundingBox").ancestor();
                 if(parent !=null){
                     var ph = parent.get("clientHeight");
                     if(ph > 0 ){
-                        this._bodyscroll.setStyle("height", ph * precent/100 - headerH - padding - bottomH + "px");
+                        var cal = Math.floor(ph * precent/100) - headerH - padding - bottomH;
+                        this._bodyscroll.setStyle("height", cal + "px");
                     }
                 }
+                Y.log("---% height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH+
+                    ", cal="+ cal);
             }
             
             //this._syncColumnsWidth();
@@ -1491,7 +1499,7 @@ YUI.add("lj-basic", function(Y){
             this._unbindFocus();
             this._unbindBlur();
             this._focusedAttrHandle.detach();
-        },
+        }
         },{ATTRS:{
             /**@attribute title*/
             title:{value:""}
