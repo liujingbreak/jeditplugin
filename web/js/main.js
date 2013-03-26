@@ -3,7 +3,7 @@ YUI_config = {
     debug: true
     ,filter:"raw"
 };
-YUI().use('lj-basic','panel','json-stringify','tabview','button-group', function (Y) {
+YUI().use('lj-basic','panel','json-stringify','tabview','button-group','router', function (Y) {
 try{
     
     dwr.engine.setErrorHandler(function(errorString, exception){
@@ -19,6 +19,20 @@ try{
                e.stopPropagation();
            }
         });
+    
+    function routeCallBack(req){
+        Y.log("req: "+ Y.JSON.stringify(req));
+    };
+    
+    var router = new Y.Router({
+            html5:false,
+            root:'/',
+            routes:[
+                {path:'/', callbacks:routeCallBack}
+            ]
+    });
+    
+    
     
     var projectsModel = new Y.PagedGridModel({
             columns:["Project Name", "Description"],
@@ -70,6 +84,7 @@ try{
             prjPortal.model.setData(rowModel);
             prjPortal.set("visible",true);
             prjPortal.focus();
+            router.save("?prjid=" + encodeURIComponent(rowModel.id));
             var savedHandle = 
             prjPortal.model.on('saved', function(){
                     this.refresh();
