@@ -345,15 +345,17 @@ html{
     top:0px;
     bottom:0px;
     left:0px;
-    width:33%;
-    padding:5px;
+    width:30%;
+    height:100%;
     overflow:hidden;
 }
 #project{
+    position:relative;
     float:left;
     overflow:hidden;
 }
 #folder{
+    position:relative;
     float:left;
     overflow:hidden;
 }
@@ -365,7 +367,7 @@ html{
     position:absolute;
     top:0px;
     
-    left:33%;
+    left:485px;
     padding:0px;
     bottom:0px;
 }
