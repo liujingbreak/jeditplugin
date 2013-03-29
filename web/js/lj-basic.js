@@ -1461,30 +1461,30 @@ YUI.add("lj-basic", function(Y){
             }, this);
         },
         _bindFocus:function(){
-            if(this.focusHandle == null)
-                this.focusHandle = this.get('contentBox').on('tap',
-                function(){
-                    this.focus();
-                }, this);
+            //if(this.focusHandle == null)
+            //    this.focusHandle = this.get('contentBox').on('focus',
+            //    function(){
+            //        this.focus();
+            //    }, this);
         },
         _unbindFocus:function(){
-            if(this.focusHandle){
-                this.focusHandle.detach();
-                delete this.focusHandle;
-            }
+            //if(this.focusHandle){
+            //    this.focusHandle.detach();
+            //    delete this.focusHandle;
+            //}
         },
         _bindBlur:function(){
-            if(this.blurHandle == null)
-                this.blurHandle = this.get('contentBox').on('tapoutside', 
-                    function(){
-                        this.blur();
-                    }, this);
+            //if(this.blurHandle == null)
+            //    this.blurHandle = this.get('boundingBox').on('blur', 
+            //        function(){
+            //            this.blur();
+            //        }, this);
         },
         _unbindBlur:function(){
-            if(this.blurHandle){
-                this.blurHandle.detach();
-                delete this.blurHandle;
-            }
+            //if(this.blurHandle){
+            //    this.blurHandle.detach();
+            //    delete this.blurHandle;
+            //}
         },
         _setTitleUI:function(title){
             this._titleNode.setHTML(title);
@@ -1684,4 +1684,4 @@ YUI.add("lj-basic", function(Y){
         }
 }, "1.0.0",{
 requires:['base','overlay','node','event','panel','widget','widget-parent','widget-child',
-'button','button-group','scrollview','node-focusmanager',/*"event-resize"*/]});
+'button','button-group','scrollview','node-focusmanager','event-focus'/*"event-resize"*/]});
