@@ -24,13 +24,14 @@ try{
         Y.log("req: "+ Y.JSON.stringify(req));
     };
     
-    var router = new Y.Router({
-            html5:false,
-            root:'/',
-            routes:[
-                {path:'/', callbacks:routeCallBack}
-            ]
-    });
+    //var router = new Y.Router({
+    //        html5:false,
+    //        root:'/',
+    //        routes:[
+    //            {path:'/', callbacks:routeCallBack}
+    //        ]
+    //});
+    
     
     
     
@@ -48,9 +49,8 @@ try{
                     }, {callback:function(res){
                             try{
                                 var data = res.data;
-                                //if(data.length > 0){
                                 model.loadRows(data, res.more, res.total);
-                                //}
+                                
                             }catch(e){
                                 Y.log(e.stack);
                                 throw e;
@@ -75,7 +75,7 @@ try{
                  });
              }
     });
-    var projects = new Y.MyEditableGrid({height:"50%", width:'100%'});
+    var projects = new Y.MyEditableGrid({width:'100%'});
     projects.setModel(projectsModel);
     projects.on("itemSelected", 
         function(e){
@@ -84,14 +84,14 @@ try{
             prjPortal.model.setData(rowModel);
             prjPortal.set("visible",true);
             prjPortal.focus();
-            router.save("?prjid=" + encodeURIComponent(rowModel.id));
+            //router.save("?prjid=" + encodeURIComponent(rowModel.id));
             var savedHandle = 
             prjPortal.model.on('saved', function(){
                     this.refresh();
                     savedHandle.detach();
             }, projects);
         });
-    projects.render("#leftSection");
+    //projects.render("#leftSection");
     
     
     var dirModel = new Y.PagedGridModel({
@@ -130,17 +130,13 @@ try{
                 else if(colIdx == 2)
                     return rowModel.excludes.join(", ");
             },
-            height:"50%",
+            
             width:'100%'
     });
     directories.setModel(dirModel);
-    directories.render("#leftSection");
-    //var main = new Y.VerBox({
-    //        //children:[ directories]
-    //        children:[projects, directories]
-    //});
+    //directories.render("#leftSection");
     
-    //main.render(Y.one("#leftSection"));
+    
     
     var ProjectModel = function (){
         
@@ -400,38 +396,123 @@ try{
              
              this.descfield = new Y.MyTextField({label:'Description'});
              this.vBox.add(this.descfield);
+         },
+         destructor:function(){
+             Y.log("ProjectAddPortal destroy");
          }
     });
     ProjectAddPortal.CSS_PREFIX = ProjectAddPortal.superclass.constructor.CSS_PREFIX;
-    var prjAdd = new ProjectAddPortal({width:400, visible: false, buttons: ['close',
-    {  
-        value:'Save',
-        action:function(e){
-            this.set('disabled', true);
-            prjAdd.namefield.syncInput();
-            prjAdd.descfield.syncInput();
-            var button = this;
-            ProjectController.addProject(prjAdd.namefield.get('input'), 
-                prjAdd.descfield.get('input'),
-                {   callback:function(res){
-                        projects.refresh();
-                        button.set('disabled', false);
-                    },
-                    errorHandler:function(m){ alert(m);}
-                }
-                );
-        },
-        section: Y.WidgetStdMod.FOOTER
-    }]});
-    prjAdd.render("#project");
+    var prjAdd = null;
+    
+    //prjAdd.render("#project");
     
     projects.on('add', function(){
-        prjAdd.set('visible', true);
-        prjAdd.focus();
+            appMgr.save("/add");
+        //prjAdd.set('visible', true);
+        //prjAdd.focus();
     });
     
     //projects.set("maxWidth","300");
     //directories.set("width",350);
+    /**@class ListView */
+    var ListView = Y.Base.create("listView", Y.View, [],{
+            initializer:function(){
+                Y.log("init listview");
+            },
+            render:function(){
+                var container = this.get('container');
+                projects.render(container);
+                directories.render(container);
+            }
+    });
+    /**@class AddProjectView */
+    var AddProjectView = Y.Base.create("addProjectView", Y.View, [],{
+            initializer:function(){
+                Y.log("init AddProjectView");
+            },
+            render:function(){
+                var container = this.get('container');
+                if(prjAdd != null)
+                    prjAdd.destroy();
+                prjAdd = new ProjectAddPortal({width:"100%", buttons: ['close',
+                {  
+                    value:'Save',
+                    action:function(e){
+                        this.set('disabled', true);
+                        prjAdd.namefield.syncInput();
+                        prjAdd.descfield.syncInput();
+                        var button = this;
+                        ProjectController.addProject(prjAdd.namefield.get('input'), 
+                                    prjAdd.descfield.get('input'),
+                                    {   callback:function(res){
+                                            projects.refresh();
+                                            button.set('disabled', false);
+                                        },
+                                        errorHandler:function(m){ alert(m);}
+                                    }
+                                    );
+                            },
+                            section: Y.WidgetStdMod.FOOTER
+                }]});
+                prjAdd.render(container);
+            }
+    });
+    /**@class AboutView */
+    var AboutView = Y.Base.create("AboutView", Y.View, [],{
+            initializer:function(){},
+            render:function(){
+                var container = this.get('container');
+                container.setHTML("By    Liu Jing");
+            }
+    });
+    
+    var appMgr = new Y.lj.AppManager("#leftSection", 
+        {
+            listView:{
+                preserve:true,
+                type:ListView
+            },
+            addProjectView:{
+                type:AddProjectView,
+                preserve:false,
+                parent:"listView"
+            },
+            aboutView:{
+                type:AboutView,
+                preserve:false,
+                parent:"listView"
+            }
+        });
+    appMgr.routes(
+        [
+            {   path: '/',
+                callbacks: function (){
+                    appMgr.showView("listView", null, null, resizePage);
+                }
+            },
+            {   path: '/add',callbacks: function (){
+                    appMgr.showView("addProjectView");
+                }
+            }
+        ]);
+    var mainApp = appMgr.apps[0];
+    
+    
+    
+    function resizePage(){
+        var p = Y.one("#leftSection"),
+        h = p.get("clientHeight") >> 1,
+        w = p.get("clientWidth");
+        Y.log(" resizePage client height = "+ h
+            +" client width = "+ w);
+        projects.set('height', h);
+        projects.set('width', w);
+        directories.set('height', h);
+        directories.set("width", w);
+    }
+    Y.lj.globalEventMgr.onWindowResize(resizePage);
+    
+    mainApp.render().save("/");
     
 }catch(e){
     Y.log(e.stack);

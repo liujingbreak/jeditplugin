@@ -22,6 +22,7 @@ public class DBWorker{
   
   protected Connection conn;
   protected int commandNestedLevel = 0;
+  protected String dbUrl;
   
   private DBWorker(){
       this(System.getProperty("dbpath"));
@@ -43,11 +44,28 @@ public class DBWorker{
       commandNestedLevel++;
     try{
       long time = System.nanoTime();
+      if(conn == null){
+          renewConnection();
+          if(conn == null){
+              throw new IronException("DB connection encounters previous problem");
+          }
+      }
       T result = cmd.run(conn);
       log.fine("time used: "+ (System.nanoTime() - time));
       if(commandNestedLevel == 1)
           conn.commit();
       return result;
+    }catch(SQLException e){
+        log.log(Level.SEVERE, "", e);
+        try{
+            DbUtils.rollback(conn);
+            log.info("rollback DB");
+        }catch(Exception de){
+            log.log(Level.SEVERE, "failed to rollback DB connection", de);
+            //renewConnection();
+        }
+        conn = null;
+        throw new IronException("", e);
     }catch(Exception e){
         log.log(Level.SEVERE, "", e);
         try{
@@ -55,6 +73,7 @@ public class DBWorker{
             log.info("rollback DB");
         }catch(Exception de){
             log.log(Level.SEVERE, "failed to rollback DB connection", de);
+            //renewConnection();
         }
         throw new IronException("", e);
     }finally{
@@ -64,13 +83,40 @@ public class DBWorker{
   
   private void initConnection(String dbname){
     try{
-        String url = "jdbc:h2:"+ dbname;
-        log.fine(url);
-        conn = DriverManager.getConnection(url, "sa", "");
+        this.dbUrl = "jdbc:h2:"+ dbname;
+        log.fine(dbUrl);
+        conn = DriverManager.getConnection(dbUrl, "sa", "");
         conn.setAutoCommit(false);
+    }catch(SQLException dbe){
+        try{
+            renewConnection();
+        }catch(IronException ie){
+            log.warning("reconnect failed");
+        }
     }catch(Exception e){
       log.log(Level.SEVERE, "", e);
     }
+  }
+  
+  public void renewConnection(){
+      SQLException lastDbe = null;
+      for(int i =0; i<4; i++){
+          log.info("retry connecting");
+          try{
+              Thread.sleep(1000);
+          }catch(InterruptedException ie){
+              
+          }
+          try{
+              conn = DriverManager.getConnection(dbUrl, "sa", "");
+              conn.setAutoCommit(false);
+              return;
+          }catch(SQLException e){
+              //log.log(Level.SEVERE, "failed to renew DB connection");
+              lastDbe = e;
+          }
+      }
+      throw new IronException("DB Connection", lastDbe);
   }
   
   protected void initdatabase(){

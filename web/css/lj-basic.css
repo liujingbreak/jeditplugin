@@ -240,6 +240,7 @@ html{
      /*background-color: #1effff;*/
      background: #666666;
      behavior: url(PIE/PIE.htc);
+     
  }
  .yui3-skin-sam .skin-lj .yui3-scrollgrid-body td{
      padding: 4px 4px;
@@ -342,11 +343,10 @@ html{
 
 #leftSection{
     position:absolute;
-    top:0px;
-    bottom:0px;
+    top:5px;
+    bottom:10px;
     left:0px;
     width:30%;
-    height:100%;
     overflow:hidden;
 }
 #project{

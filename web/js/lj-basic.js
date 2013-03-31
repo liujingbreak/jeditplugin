@@ -2,12 +2,15 @@
 YUI.add("lj-basic", function(Y){
         try{
     function parseStyleLen(styleLength){
-        //Y.log(styleLength);
+        //Y.log("parseSytleLen() "+ styleLength);
         if(Y.Lang.isString(styleLength)){
             var m = parseStyleLen.LENTH_PAT.exec(styleLength);
-            //Y.log(m[1]);
-            return parseInt(m[1]);
-        }else
+            
+            var n = parseInt(m[1], 10);
+            //Y.log("parseSytleLen() match "+m[1]);
+            n = isNaN(n) ? 0:n;
+            return n;
+        }else if(Y.Lang.isNumber(styleLength))
             return styleLength;
     }
     parseStyleLen.LENTH_PAT = /([0-9.]*)\w*/;
@@ -121,7 +124,7 @@ YUI.add("lj-basic", function(Y){
         }
     };
     Y.WidgetRenderTaskQ = WidgetRenderTaskQ;
-    
+    /**@property globalEventMgr */
     function _GlobalEventMgr(){
         var context = this;
         Y.on("windowresize", function(e){
@@ -136,7 +139,7 @@ YUI.add("lj-basic", function(Y){
         //}
     };
     _GlobalEventMgr.prototype = {
-        onresize:function(fn, context){
+        onWindowResize:function(fn, context){
                 return this.on("resize", fn, context);
         }
     };
@@ -550,11 +553,12 @@ YUI.add("lj-basic", function(Y){
         },
         _syncWidthForScroll:function(calTotalWidth){
             //Y.log('_syncColumnsWidth() here');
+            
+            this._bodyscroll.setStyle("width", "auto");
+            this.headerscroll.setStyle("width", 'auto');
             this.syncWidth();
             if(calTotalWidth){
                 Y.log("# calTotalWidth="+ calTotalWidth);
-                this._bodyscroll.setStyle("width", "auto");
-                this.headerscroll.setStyle("width", 'auto');
                 //if(calTotalWidth > this._body.get('clientWidth')) 
                 //    //for firefox, if set each column's width does not actually expand the table's width
                 //{
@@ -765,8 +769,8 @@ YUI.add("lj-basic", function(Y){
             
             this._maxWidthHandle.detach();
         },
-        syncWidth:function(){
-            var w = this.get("width"), pw;
+        syncWidth:function(e){
+            var w = e? e.newVal: this.get("width"), pw;
             if(w == null)
                 return;
             if(typeof(w) == 'number' && this.scrollView != null){
@@ -811,7 +815,7 @@ YUI.add("lj-basic", function(Y){
                 //axis:'xy',
                 srcNode: this._bodyscroll
                 });
-            this.scrollView.render();
+            this.scrollView.render(this._bodyscroll.ancestor());
             
             this._scrollViewHandle = this.scrollView.after('scrolling', 
                 createIntervalEventChecker(200, this._syncScrolling, null, this),
@@ -891,7 +895,7 @@ YUI.add("lj-basic", function(Y){
     var MyEditableGrid = Y.MyEditableGrid = Y.Base.create("myeditgrid", ScrollableGrid,[],
     {
         initializer:function(config){
-            Y.log(config);
+            //Y.log(config);
             /**@property selectionModel */
             this.selectionModel = new MyGridSelModel();
             this.selChangeHandle = this.selectionModel.after("selectChange",
@@ -908,11 +912,12 @@ YUI.add("lj-basic", function(Y){
             this._totalNode = document.createTextNode("Total:  0");
             this.bottom.append(this._totalNode);
             this.get('contentBox').append(this.bottom);
+            //Y.log("MyEditableGrid.renderUI()");
         },
         bindUI:function(){
             MyEditableGrid.superclass.bindUI.apply(this,arguments);
             this.keydownHandle = this.get('contentBox').on("keydown", this._syncKeydown, this);
-            this.resizeHandle = globalEventMgr.onresize(this.resize, this);
+            //this.resizeHandle = globalEventMgr.onWindowResize(this.resize, this);
         },
         syncUI:function(){
             MyEditableGrid.superclass.syncUI.apply(this, arguments);
@@ -1002,7 +1007,8 @@ YUI.add("lj-basic", function(Y){
             var padding = parseStyleLen(contentBox.getComputedStyle("paddingTop"));
             padding += parseStyleLen(contentBox.getComputedStyle("paddingBottom"));
             if(Y.Lang.isNumber(h)){
-                Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH);
+                Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH
+                    + " padding="+ padding);
                 this._bodyscroll.setStyle("height", (h - headerH) - padding - bottomH + this.DEF_UNIT);
             }else if(h.charAt(h.length-1) == '%'){
                 
@@ -1149,7 +1155,7 @@ YUI.add("lj-basic", function(Y){
             if(this.selChangeHandle)
                 this.selChangeHandle.detach();
             this.keydownHandle.detach();
-            this.resizeHandle.detach();
+            //this.resizeHandle.detach();
         },
         destructor:function(){
             Y.Array.each(this.menuItems, function(menuItem){
@@ -1250,6 +1256,12 @@ YUI.add("lj-basic", function(Y){
                 this.MyScrollView_left = 0;
                 this.m_bb = this.get('boundingBox');
             },
+            //renderUI:function(){
+            //    Y.log("myscrollview renderUI " 
+            //        + this.get("srcNode") + ", "
+            //        + this.get("boundingBox").ancestor().get("tagName"));
+            //    
+            //},
             bindUI:function(){
                 MyScrollView.superclass.bindUI.apply(this, arguments);
                 this.bindAndSyncAttr("maxWidth", function(w){
@@ -1257,10 +1269,13 @@ YUI.add("lj-basic", function(Y){
                 });
             },
             scrollTo: function (x, y, duration, easing, node){
+                //arguments[2]=300;
                 var ret = MyScrollView.superclass.scrollTo.apply(this, arguments);
                 this.MyScrollView_top = y;
                 this.MyScrollView_left = x;
-                //Y.log('scroll to '+ this.getScrollLeft()+ ','+ this.getScrollTop());
+                //Y.log('scroll to '+ this.getScrollLeft()+ ','+ this.getScrollTop()
+                //    +" duration="+ duration
+                //    +" node=" + node);
                 
                 this.fire('scrolling', {x:x, y:y, node:node});
                 return ret;
@@ -1280,6 +1295,11 @@ YUI.add("lj-basic", function(Y){
                 delete this._cAxis;
                 this.syncUI();
             },
+            
+            //_snapBack:function(){
+            //    Y.log(">>>>> snap back");
+            //    MyScrollView.superclass._snapBack.apply(this, arguments);
+            //},
             getViewportHeight:function(){
                 return this.m_bb.get("clientHeight");
             },
@@ -1363,7 +1383,7 @@ YUI.add("lj-basic", function(Y){
         },
         destructor:function(){
             this.widthHandle.detach();
-            this.visibleHandle.detech();
+            this.visibleHandle.detach();
         },
         _syncWidth:function(){
             var width = this.get("width");
@@ -1498,7 +1518,7 @@ YUI.add("lj-basic", function(Y){
         destructor:function(){
             this._unbindFocus();
             this._unbindBlur();
-            this._focusedAttrHandle.detach();
+            
         }
         },{ATTRS:{
             /**@attribute title*/
@@ -1511,7 +1531,7 @@ YUI.add("lj-basic", function(Y){
     
     /** @class MyButtonGroup 
     */
-    MyButtonGroup = Y.Base.create("mybtngroup", Y.ButtonGroup, [Y.WidgetChild], {
+    var MyButtonGroup = Y.Base.create("mybtngroup", Y.ButtonGroup, [Y.WidgetChild], {
             initializer:function(config){
                 this._buttonMap = {};
                 this._buttonView = this._defButtonView;
@@ -1545,7 +1565,7 @@ YUI.add("lj-basic", function(Y){
         @event enter
         @event valueChange
     */
-    MyTextField = Y.Base.create("mytextfield", Y.Widget, [Y.WidgetChild],
+    var MyTextField = Y.Base.create("mytextfield", Y.Widget, [Y.WidgetChild],
         {
             initializer:function(config){
                 this._textLabel = config.label;
@@ -1624,7 +1644,7 @@ YUI.add("lj-basic", function(Y){
             },
             syncInput:function(){
                 var val = this.get('contentBox').one('input[type="text"]').get('value');
-                Y.log(val);
+                //Y.log(val);
                 this.set('input', val,
                     {src:'ui'});
                 return val;
@@ -1644,7 +1664,7 @@ YUI.add("lj-basic", function(Y){
     Y.MyTextField = MyTextField;
     
     /** @class MySearchField */
-    MySearchField = Y.Base.create("mytextfield", MyTextField, [Y.WidgetChild],
+    var MySearchField = Y.Base.create("mytextfield", MyTextField, [Y.WidgetChild],
         {
             bindUI:function(config){
                 MySearchField.superclass.bindUI.apply(this, arguments);
@@ -1671,17 +1691,60 @@ YUI.add("lj-basic", function(Y){
         MySearchField.CSS_PREFIX = "yui3-mytextfield";
         
         
-    /**@class MatrixPaneLayout */
-    function MatrixPaneLayout(){
+    /**@class AppManager */
+    function AppManager(viewContainer, views){
+        /**@property apps */
+        this.apps = [];
+        this.setupApp(viewContainer, views);
+        this._create1stApp();
     }
-    MatrixPaneLayout.prototype = {
-        
-    };
-    Y.augment(MatrixPaneLayout, Y.EventTarget);
-    
-        }catch(e){
-            Y.log(e.stack);
+    AppManager.prototype = {
+        setupApp:function(viewContainer, views){
+            this.appConfig = {
+                    serverRouting:false,
+                    transitions:true,
+                    viewContainer:viewContainer,
+                    views:views
+            };
+        },
+        routes:function(routes){
+            if(routes != null){
+                this.routes = routes;
+                var self = this;
+                Y.Array.each(this.apps, function(app){
+                      Y.Array.each(self.routes, function(r){
+                              app.route(r.path, r.callbacks);
+                      });
+                });
+            }else
+                return this.routes;
+            return this;
+        },
+        _create1stApp:function(){
+            
+            var app = new Y.App(this.appConfig);
+            
+            this.apps.push(app);
+            return app;
+        },
+        showView:function(name){
+            Y.log("showView "+ name);
+            this.apps[0].showView.apply(this.apps[0], arguments);
+        },
+        save:function(url){
+            this.apps[0].save(url);
         }
+    };
+    Y.augment(AppManager, Y.EventTarget);
+    
+    Y.lj ={
+        AppManager:AppManager,
+        globalEventMgr:globalEventMgr
+    };
+    
+    }catch(e){
+        Y.log(e.stack);
+    }
 }, "1.0.0",{
 requires:['base','overlay','node','event','panel','widget','widget-parent','widget-child',
-'button','button-group','scrollview','node-focusmanager','event-focus'/*"event-resize"*/]});
+'button','button-group','scrollview','node-focusmanager','app'/*"event-resize"*/]});
