@@ -432,9 +432,7 @@ try{
             },
             render:function(){
                 var container = this.get('container');
-                if(prjAdd != null)
-                    prjAdd.destroy();
-                prjAdd = new ProjectAddPortal({width:"100%", buttons: ['close',
+                prjAdd = new ProjectAddPortal({width:"100%", buttons: [
                 {  
                     value:'Save',
                     action:function(e){
@@ -453,9 +451,24 @@ try{
                                     );
                             },
                             section: Y.WidgetStdMod.FOOTER
-                }]});
+                },
+                {
+                    value:'Cancel',
+                    action:function(e){
+                        appMgr.save("/");
+                    },
+                    section: Y.WidgetStdMod.FOOTER
+                }
+                ]});
                 prjAdd.render(container);
+            },
+            destructor:function(){
+                Y.log("destroy add project view");
+                if(prjAdd != null)
+                    prjAdd.destroy();
+                prjAdd = null;
             }
+             
     });
     /**@class AboutView */
     var AboutView = Y.Base.create("AboutView", Y.View, [],{
@@ -501,6 +514,7 @@ try{
     
     function resizePage(){
         var p = Y.one("#leftSection"),
+        
         h = p.get("clientHeight") >> 1,
         w = p.get("clientWidth");
         Y.log(" resizePage client height = "+ h
