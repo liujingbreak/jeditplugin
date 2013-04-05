@@ -9,6 +9,7 @@ public class AntlrGrammarHandler{
     private static Logger log = Logger.getLogger(AntlrGrammarHandler.class.getName());
     protected AntlrGrammarNode node;
     protected LinkedList<String> scopeStack = new LinkedList();
+    public final static String NO_NAME = "No Name";
     
     public AntlrGrammarHandler(){
       
@@ -41,6 +42,7 @@ public class AntlrGrammarHandler{
         node.addChild(subNode);
       node = subNode;
       node.setStart(startTk);
+      node.setName(NO_NAME);
     }
     public void onRuleStop(Token stopTk){
         node.setStop(stopTk);
@@ -56,6 +58,7 @@ public class AntlrGrammarHandler{
       if(node != null)
         node.addChild(subNode);
       node = subNode;
+      node.setName(NO_NAME);
     }
     public void onRuleStart(String type){
         onRuleStart(0, type);

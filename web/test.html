@@ -33,6 +33,13 @@ padding: 10px 0 10px 0;
 behavior: url(PIE/PIE.htc);
 height:5em;
 overflow:auto;
+-o-transition: all 1s ease-out;
+-moz-transition: all 1s ease-out;
+-webkit-transition: all .5s ease-out;
+transition: all 1s easing-out;
+}
+.pm2PortletMouseOut:hover{
+    -webkit-transform:scale(1,1.5);
 }
 .pm2PortletMouseOut > div{
     height:10em;
@@ -42,6 +49,14 @@ body{
     height:140%;
 }
 </style>
+<script type="text/javascript" language="javascript" src="build/yui/yui.js"></script>
+<script type="text/javascript" language="javascript">
+YUI_config = {
+    debug: true
+    ,filter:"raw"
+};
+
+</script>
 </head>
 <body style="">
 

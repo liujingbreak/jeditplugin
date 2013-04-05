@@ -32,8 +32,10 @@ try{
     //        ]
     //});
     
-    
-    
+    var commonDialog = new Y.lj.Dialog({
+            
+    });
+    commonDialog.render();
     
     var projectsModel = new Y.PagedGridModel({
             columns:["Project Name", "Description"],
@@ -63,7 +65,8 @@ try{
                  for(id in keyset)
                      ids.push(id);
                  var model = this;
-                 ProjectController.deleteProjects(ids, {
+                 commonDialog.show("Are you sure to delete project?");
+                 /*ProjectController.deleteProjects(ids, {
                          callback:function(res){
                             try{
                                 model.fireDeleted();
@@ -72,7 +75,7 @@ try{
                                 throw e;
                             }
                         }
-                 });
+                 });*/
              }
     });
     var projects = new Y.MyEditableGrid({width:'100%'});
@@ -375,7 +378,7 @@ try{
     DirectoryAddPortal.CSS_PREFIX = DirectoryAddPortal.superclass.constructor.CSS_PREFIX;
     var dirAdd = new DirectoryAddPortal({buttons: ['close']});
     
-    dirAdd.render("#folder");
+    //dirAdd.render("#folder");
     /** @class ProjectAaddPortal
     */
     var ProjectAddPortal = Y.Base.create("prjaddportal",Y.MyPortal, [Y.WidgetParent], {
@@ -455,7 +458,7 @@ try{
                 {
                     value:'Cancel',
                     action:function(e){
-                        appMgr.save("/");
+                        history.back();
                     },
                     section: Y.WidgetStdMod.FOOTER
                 }
@@ -500,10 +503,12 @@ try{
         [
             {   path: '/',
                 callbacks: function (){
+                    document.title = "Wooden Axe Tool"
                     appMgr.showView("listView", null, null, resizePage);
                 }
             },
             {   path: '/add',callbacks: function (){
+                    document.title = "Wooden Axe Tool - Add Project"
                     appMgr.showView("addProjectView");
                 }
             }

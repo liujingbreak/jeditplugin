@@ -54,11 +54,17 @@ public class CSSParser extends SideKickParser{
     
 	private void parseNodeToSidekick(DefaultMutableTreeNode uiNode, AntlrGrammarHandler h){
 	    GrammarNode gnode = h.getNode();
+	    parseNodeToSidekick(uiNode, gnode);
+	}
+	
+	private void parseNodeToSidekick(DefaultMutableTreeNode uiNode, GrammarNode gnode){
 	    for(GrammarNode cg : gnode.getChildren()){
 	        if(cg.isType("doc")){
 	            createUINode_doc(uiNode, cg);
 	        }else if(cg.isType("unit")){
 	            createUINode_green(uiNode, cg);
+	        }else if(cg.isType("rule")){
+	            createUINode_rule(uiNode, cg);
 	        }
 	    }
 	}
@@ -86,5 +92,17 @@ public class CSSParser extends SideKickParser{
 	    icon.setEndOffset(node.getEndOffset());
 	    uiNode.setUserObject(icon);
 	    parent.add(uiNode);
+	}
+	
+	private void createUINode_rule(DefaultMutableTreeNode parent,
+	    GrammarNode node)
+	{
+	    DefaultMutableTreeNode uiNode = new DefaultMutableTreeNode();
+	    JsNode icon = new BlueSquareNode(node.getName(), "");
+	    icon.setStartOffset(node.getStartOffset());
+	    icon.setEndOffset(node.getEndOffset());
+	    uiNode.setUserObject(icon);
+	    parent.add(uiNode);
+	    parseNodeToSidekick(uiNode, node);
 	}
 }

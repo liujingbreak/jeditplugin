@@ -54,8 +54,26 @@ cssfile[String fileName]
     @after{
         if(agh != null) agh.onRuleStop($stop);
     }:
-    cssUnit*
+    (cssUnit | cssRule)*
     ;
+    
+cssRule
+    @init{
+        addDocNode($start);
+        if(agh != null) agh.onRuleStart("rule",$start);
+    }
+    @after{
+        if(agh != null) agh.onRuleStop($stop);
+    }
+    : '@' cssRuleHeader '{' cssUnit* '}'
+    ;
+cssRuleHeader
+    @after{
+        if(agh != null) agh.setName("@"+ ruleText($start, $stop));
+    }
+    : (~'{')+ ;
+    
+    
 cssUnit
     @init{
         addDocNode($start);
@@ -69,7 +87,7 @@ cssUnit
     ;
 selector
     @after{ if(agh != null) agh.setName(ruleText($start, $stop)); }:
-    (~'{')+
+    ~('@'|'{'|'}')(~('{'|'}'))+
     ;
 STRING_LITERAL: (
     '"' DOUBLE_STRING_CHARACTERS '"'
@@ -84,6 +102,7 @@ WHITE_SPACE // Tab, vertical tab, form feed, space, non-breaking space and any o
 fragment USP: '\u2000'..'\u200b' | '\u3000';
 LBRACE: '{';
 RBRACE: '}';
+AT:'@';
 MultiLineComment
     @init{
             boolean isJavaDoc = false;

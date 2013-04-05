@@ -355,16 +355,16 @@ YUI.add("lj-basic", function(Y){
             var node = this.get("contentBox");
             
             this.bodyHeight = null;
-            this.headerscroll = Y.Node.create("<div><table><tbody></tbody></table></div>");
+            this.headerscroll = Y.Node.create("<div><div><table><tbody></tbody></table></div></div>");
             var tbtbody = this.headerscroll.one("tbody");
             this.headerscroll.addClass(this.getClassName("header-scroll"));
             this._colheaders = Y.Node.create("<tr><th>header</th></tr>");
             tbtbody.append(this._colheaders);
             
-            var bodyscroll = Y.Node.create("<div><table><tbody></tbody></table></div>")
+            var bodyscroll = Y.Node.create("<div><div><table><tbody></tbody></table></div></div>")
             
             this._bodyscroll = bodyscroll;
-            this._body = bodyscroll.one(">table");
+            this._body = bodyscroll.one("table");
             
             this._bodyscroll.addClass(this.getClassName("scroll"));
             this._body.addClass(this.getClassName("body"));
@@ -488,7 +488,7 @@ YUI.add("lj-basic", function(Y){
             return row1;
         },
         _clearColumnsWidth:function(){
-            this.headerscroll.one(">table").setStyle("width", "auto");
+            this.headerscroll.one("table").setStyle("width", "auto");
             var row1 = this._firstRowTrNode();
             if(row1 == null) return;
             var tds = row1.all("> td");
@@ -501,8 +501,8 @@ YUI.add("lj-basic", function(Y){
                     td.setStyle("width","auto");
                     colHeader.setStyle("width","auto");
             });
-            this._bodyscroll.setStyle("width", this.MAX_WIDTH);
-            this.headerscroll.setStyle("width", this.MAX_WIDTH);
+            this._bodyscroll.one("> div").setStyle("width", this.MAX_WIDTH);
+            this.headerscroll.one("> div").setStyle("width", this.MAX_WIDTH);
         },
         
         _syncColumnsWidth:function(){
@@ -518,30 +518,29 @@ YUI.add("lj-basic", function(Y){
                         // skip the last one, let it adjust its width
                         //if(last == idx)
                         //    return;
-                        var w = td.get("offsetWidth");
+                        var w = td.get("clientWidth");
                         var colHeader = headerArray.item(idx);
                         if(colHeader == null)
                             return; 
-                        var w1 = colHeader.get("offsetWidth");
-                        //Y.log("w, w1="+ w + "," + w1);
+                        var w1 = colHeader.get("clientWidth");
+                        Y.log("w, w1="+ w + "," + w1);
+                        var headerPadding = parseStyleLen(colHeader.getComputedStyle("paddingLeft"));
+                        headerPadding += parseStyleLen(colHeader.getComputedStyle("paddingRight"));
+                        var tdPadding = parseStyleLen(td.getComputedStyle("paddingLeft"));
+                        tdPadding += parseStyleLen(td.getComputedStyle("paddingRight"));
+                        
+                        
+                        Y.log("headerPadding:"+ headerPadding +
+                            ", tdPadding:"+ tdPadding);
                         if(Y.Lang.isNumber(w)){
                             if( w > w1){
-                                //colHeader.setAttribute("width", w );
-                                var padding = parseStyleLen(colHeader.getComputedStyle("paddingLeft"));
-                                padding += parseStyleLen(colHeader.getComputedStyle("paddingRight"));
-                                var perWidth = w - padding + "px";
-                                colHeader.setStyle("width", perWidth);
-                                td.setStyle("width", perWidth);//force its width
+                                colHeader.setStyle("width", w - headerPadding + "px");
+                                td.setStyle("width", w - tdPadding + "px");//force its width
                                 //Y.log("set column header "+ idx + " width "+ perWidth);
                                 calTotalWidth += td.get("offsetWidth");
                             }else if(w < w1){
-                                //td.setAttribute("width", w1);
-                                var padding = parseStyleLen(td.getComputedStyle("paddingLeft"));
-                                padding += parseStyleLen(td.getComputedStyle("paddingRight"));
-                                var perWidth = w1 - padding+"px";
-                                td.setStyle("width", perWidth);
-                                
-                                colHeader.setStyle("width", perWidth);//force its width
+                                td.setStyle("width", w1 - tdPadding + "px");
+                                colHeader.setStyle("width", w1 - headerPadding + "px");//force its width
                                 calTotalWidth += colHeader.get("offsetWidth");
                                 //Y.log("set column "+ idx + " width "+ perWidth);
                                 
@@ -555,16 +554,16 @@ YUI.add("lj-basic", function(Y){
             //Y.log('_syncColumnsWidth() here');
             
             this._bodyscroll.setStyle("width", "auto");
-            this.headerscroll.setStyle("width", 'auto');
+            this.headerscroll.one("> div").setStyle("width", 'auto');
             this.syncWidth();
             if(calTotalWidth){
                 Y.log("# calTotalWidth="+ calTotalWidth);
                 //if(calTotalWidth > this._body.get('clientWidth')) 
                 //    //for firefox, if set each column's width does not actually expand the table's width
                 //{
-                    this._body.setStyle("width", calTotalWidth+4  + "px");
+                    this._bodyscroll.one("> div").setStyle("width", calTotalWidth  + "px");
                     //Y.log("synce header scroll, calTotalWidth="+ calTotalWidth+ " _body="+ this._body.get("tagName") );
-                    this.headerscroll.one(">table").setStyle("width", calTotalWidth +"px");
+                    this.headerscroll.one("> div").setStyle("width", calTotalWidth + 1 +"px");
                     //Y.log("this._bodyscroll's scrollWidth="+ this._bodyscroll.get("scrollWidth"));
                 //}
                 
@@ -618,7 +617,8 @@ YUI.add("lj-basic", function(Y){
                  var tr = Y.Node.create("<tr></tr>");
                  this._insertTr(tbody, i, tr);
                  tr.setAttribute("data-key", this.model.getRowId(i));
-                 tr.append("<td>"+ (i+1) +"</td>");
+                 var idxTD = tr.append("<td>"+ (i+1) +"</td>");
+                 //idxTD.addClass(this.getClassName("idx"));
                  if(Y.Lang.isFunction(this.cellView)){
                      Y.Array.each(this.model.getColumns(), 
                          function(colName, colIndex){
@@ -725,14 +725,14 @@ YUI.add("lj-basic", function(Y){
             var node = this.get("contentBox");
             node.set('tabIndex',0);
             this.bodyHeight = null;
-            this.headerscroll = Y.Node.create("<div><table><tbody></tbody></table></div>");
+            this.headerscroll = Y.Node.create("<div><div><table><tbody></tbody></table></div></div>");
             this._headerContent = this.headerscroll.one("*");
             var tbtbody = this.headerscroll.one("tbody");
             this.headerscroll.addClass(this.getClassName("header-scroll"));
             this._colheaders = Y.Node.create("<tr><th>header</th></tr>");
             tbtbody.append(this._colheaders);
             
-            var bodyscroll = Y.Node.create("<div><table><tbody></tbody></table></div>")
+            var bodyscroll = Y.Node.create("<div><div><table><tbody></tbody></table></div></div>")
             
             this._bodyscroll = bodyscroll;
             this._body = bodyscroll.one('table');
@@ -903,15 +903,20 @@ YUI.add("lj-basic", function(Y){
         },
         renderUI:function(){
             MyEditableGrid.superclass.renderUI.apply(this, arguments);
-            this.bottom = Y.Node.create('<div>&nbsp;</div>');
+            var bottom = this.bottom = Y.Node.create('<div>&nbsp;</div>');
             this.bottom.addClass(this.getClassName('bottom'));
             if(this.get('buttonVisible')){
                 this._renderDefButtons(this.bottom);
             }
             this._renderMenu();
+            
             this._totalNode = document.createTextNode("Total:  0");
-            this.bottom.append(this._totalNode);
-            this.get('contentBox').append(this.bottom);
+            var _totalDIV = Y.Node.create("<div></div>");
+            _totalDIV.addClass(this.getClassName("total"));
+            _totalDIV.append(this._totalNode);
+            bottom.append(_totalDIV);
+            bottom.append("<div class=\"clear\"></div>");
+            this.get('contentBox').append(bottom);
             //Y.log("MyEditableGrid.renderUI()");
         },
         bindUI:function(){
@@ -954,9 +959,10 @@ YUI.add("lj-basic", function(Y){
             this.popButton.render(this.bottom);
             return this.popButton;
         },
-        _renderDefButtons:function(container){
-            
-            var delNode = Y.Node.create('<div>Delete</div>');
+        _renderDefButtons:function(bottom){
+            var container = Y.Node.create('<div></div>'),
+            delNode = Y.Node.create('<div>Delete</div>');
+            container.addClass(this.getClassName("buttons"));
             delNode.addClass('yui3-button');
             container.append(delNode);
             
@@ -991,6 +997,7 @@ YUI.add("lj-basic", function(Y){
                     disabled: false
             });
             this.addBut.render(container);
+            bottom.append(container);
         },
         resize:function(){
             
@@ -1529,6 +1536,65 @@ YUI.add("lj-basic", function(Y){
     Y.MyPortal = MyPortal;
     MyPortal.CSS_PREFIX = "yui3-panel";
     
+    /**@class Dialog 
+    useful attribute:
+    bodyContent - text content
+    */
+    var MyDialog = Y.Base.create("mydialog", Y.Panel, [], {
+        init:function(cfg){
+            var defCfg = {
+                 //centered:true,
+                 model:true,
+                 y:-300,
+                 zIndex:90,
+                 visible:false,
+                 plugins:[Y.Plugin.Drag],
+                 buttons: {
+                    footer: [
+                        {
+                            name  : 'cancel',
+                            label : 'Cancel',
+                            action: 'onCancel'
+                        },
+        
+                        {
+                            name     : 'proceed',
+                            label    : 'OK',
+                            action   : 'onOK'
+                        }
+                    ]
+                }
+            };
+            Y.mix(defCfg, cfg);
+            MyDialog.superclass.init.call(this, defCfg);
+        },
+        show:function(content){
+            if(content)
+                this.set('bodyContent', content);
+            
+            this.set('visible', true);
+            var bb = this.get("boundingBox"),
+             parent = bb.ancestor();
+            var viewport = {h:parent.get('clientHeight'), w: parent.get('clientWidth')};
+            var size = {h:bb.get('offsetHeight'), w:bb.get('offsetWidth')};
+            var x = (viewport.w - size.w)>>1;
+            var y = (viewport.h - size.h)>>1;
+            this.set("xy",[x, -size.h-10]);
+            
+            bb.transition({
+                    top:y+"px",
+                    left:x+"px",
+                    easing:'ease-out',
+                    duration:0.3
+            });
+            
+        }
+        
+    },{ATTRS:{
+            /**@attribute title*/
+            title:{value:""}
+    }});
+    MyDialog.CSS_PREFIX = "lj-dialog";
     /** @class MyButtonGroup 
     */
     var MyButtonGroup = Y.Base.create("mybtngroup", Y.ButtonGroup, [Y.WidgetChild], {
@@ -1739,6 +1805,7 @@ YUI.add("lj-basic", function(Y){
     
     Y.lj ={
         AppManager:AppManager,
+        Dialog:MyDialog,
         globalEventMgr:globalEventMgr
     };
     

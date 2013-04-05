@@ -1,7 +1,11 @@
 body {
-    background: black ;
-    background: -ms-linear-gradient(top, #081741, #175ea4);
-    background: -moz-linear-gradient(top, #081741, #175ea4);
+    background: -o-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.5)), url('/img/wild_oliva.png');
+    background: -ms-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.5)), url('/img/wild_oliva.png');
+    background: -moz-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.5)), url('/img/wild_oliva.png');
+    background: -webkit-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), url('/img/wild_oliva.png');
+    background: radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), url('/img/wild_oliva.png');
+    -pie-background: linear-gradient(left, rgba(0,0,0,0.5) , rgba(0,0,0,0), rgba(0,0,0,0.5)), url('/img/wild_oliva.png');
+    behavior:url(PIE/PIE.htc);
     color:#c9c9c9;
     padding:0px;
     margin:0px;
@@ -14,6 +18,16 @@ html{
 }
 .skin-lj{
 }
+.skin-lj div:focus{
+    outline:none;
+}
+/**dialog */
+.lj-dialog-hidden{
+    visibility:hidden;
+    top:-1000px;
+}
+
+
 /** triangle*/
 .triangle-right-white{
     border-color: transparent white transparent transparent;
@@ -24,7 +38,7 @@ html{
 }
 
 /** HorBox Horizontal layout box*/
-.yui3-skin-sam .skin-lj .yui3-horbox-border{
+.skin-lj .yui3-horbox-border{
     position:relative;
     border: 1px solid #606060;
     padding: 4px 2px;
@@ -37,7 +51,7 @@ html{
     display: inline-block;
 }
 /** VerBox Vertical layout box*/
-.yui3-skin-sam .skin-lj .yui3-verbox-border{
+.skin-lj .yui3-verbox-border{
     position:relative;
     border: 1px solid #606060;
     padding: 4px 2px;
@@ -47,7 +61,7 @@ html{
     behavior:url(PIE/PIE.htc);
 }
 /** MyEditableGrid */
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td{
+.skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td{
     background: #2ff;
     background: rgba(30, 255, 255, .9);
     -webkit-box-shadow: 0px 0px 10px 0px   rgba(30, 255, 255, .8);
@@ -57,25 +71,24 @@ html{
     -pie-background: linear-gradient(to bottom, rgba(30, 255, 255, .9));
     behavior:url(PIE/PIE.htc);
 }
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-selItem td{
-    background: rgba(30, 255, 255, .9);
-    color: black;
+.skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td:first-child{
+    color:rgb(30, 255, 255);
 }
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-bottom .yui3-button{
+.skin-lj .yui3-scrollgrid-bottom .yui3-button{
     height:25px;
     font-size:12px;
 }
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-bottom{
+.skin-lj .yui3-scrollgrid-bottom{
     padding: 0px 5px;
     font-size: 12px;
     text-align: right;
 }
 /** text_field */
-.yui3-skin-sam .skin-lj .yui3-mytextfield input[type=text]{
+.skin-lj .yui3-mytextfield input[type=text]{
     width: 15em;
     margin-left:4px;
 }
-.yui3-skin-sam .skin-lj input[type='text']{
+.skin-lj input[type='text']{
     position:relative;
     background: transparent;
     color: #1effff;
@@ -89,12 +102,12 @@ html{
     -moz-box-shadow:    inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);
     box-shadow:         inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);*/
 }
-.yui3-skin-sam .skin-lj .yui3-mytextfield{
+.skin-lj .yui3-mytextfield{
     padding-right: 10px;
     display: inline-block;
 }
 /** button */
-.yui3-skin-sam .skin-lj .yui3-button{
+.skin-lj .yui3-button{
     position:relative;
     background-color:#303030;
     -webkit-text-shadow: 0px 0px 8px   rgba(30, 255, 255, .9);
@@ -104,7 +117,7 @@ html{
     margin: 3px 1px;
     behavior: url(PIE/PIE.htc);
 }
-.yui3-skin-sam .skin-lj .yui3-buttongroup .yui3-button-selected{
+.skin-lj .yui3-buttongroup .yui3-button-selected{
     position:relative;
     background-color:#1effff;
     color: black;
@@ -116,18 +129,18 @@ html{
     text-shadow:         none;
     behavior: url(PIE/PIE.htc);
 }
-.yui3-skin-sam .skin-lj .yui3-buttongroup .yui3-button{
+.skin-lj .yui3-buttongroup .yui3-button{
     -moz-border-radius:     none;
     -webkit-border-radius:  none;
     border-radius:          none;
 }
     
 /** panel */
-.yui3-skin-sam .skin-lj .yui3-panel .yui3-widget-hd{
+.skin-lj .yui3-panel .yui3-widget-hd{
     background: transparent;
     font-size:large;
 }
-.yui3-skin-sam .skin-lj .yui3-panel-content{
+.skin-lj .yui3-panel-content{
     position:relative;
     margin: 2px 0px;
     -moz-border-radius:     6px 6px 6px 6px;
@@ -143,22 +156,22 @@ html{
     
     /*filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000);*/ /* IE 6/7 */
     /*-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000)";*/ /* IE8 */
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.2);
 }
-.yui3-skin-sam .skin-lj .yui3-panel .yui3-widget-ft{
+.skin-lj .yui3-panel .yui3-widget-ft{
     background: transparent;
 }
-.yui3-skin-sam .skin-lj .yui3-panel-hidden{
+.skin-lj .yui3-panel-hidden{
     display: none;
 }
-.yui3-skin-sam .skin-lj .yui3-panel-focused .yui3-panel-content{
+.skin-lj .yui3-panel-focused .yui3-panel-content{
     -webkit-box-shadow: 0px 0px 15px 1px   rgba(30, 255, 255, .9);
     -moz-box-shadow:    0px 0px 15px 1px   rgba(30, 255, 255, .9);
     box-shadow:         0px 0px 15px 1px   rgba(30, 255, 255, .9);
     border:2px solid rgb(30, 255, 255);
 }
 /**--------- Scrollable Grid's skin ----------*/
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-0 .flag{
+.skin-lj .yui3-scrollgrid-gp-0 .flag{
     margin: 0px 4px 0px 4px;
     float:left;
     /*border-left: 8px solid transparent;
@@ -173,7 +186,7 @@ html{
     height:10px;
     font-size:1px;
 }
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-1 .flag{
+.skin-lj .yui3-scrollgrid-gp-1 .flag{
     margin: 0px 4px 0px 24px;
     float:left;
     /*border-left: 8px solid transparent;
@@ -188,7 +201,7 @@ html{
     height:10px;
     font-size:1px;
 }
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-2 .flag{
+.skin-lj .yui3-scrollgrid-gp-2 .flag{
     margin: 0px 4px 0px 44px;
     float:left;
     border-left: 8px solid transparent;
@@ -198,67 +211,72 @@ html{
     height:1px;
     font-size:1px;
 }
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-0 td{
+.skin-lj .yui3-scrollgrid-gp-0 td{
     background: black;
 }
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-gp-1 td{
+.skin-lj .yui3-scrollgrid-gp-1 td{
     background: black;
 }
-/*.yui3-skin-sam .skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-0 td{
+/*.skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-0 td{
     
 }
 
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-1 td{
+.skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-1 td{
     padding-left: 1em;
 }
 
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-2 td{
+.skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-2 td{
     padding-left: 2em;
 }*/
 
-.yui3-skin-sam .skin-lj .yui3-scrollgrid-hover td{
+.skin-lj .yui3-scrollgrid-hover td{
     color:#1effff;
 }
- .yui3-skin-sam .skin-lj .yui3-scrollgrid-content{
+ .skin-lj .yui3-scrollgrid-content{
      position:relative;
-     -moz-border-radius:     8px 8px 8px 8px;
-     -webkit-border-radius:  8px 8px 8px 8px;
-     border-radius:          8px 8px 8px 8px;
+     -moz-border-radius:     4px 4px 4px 4px;
+     -webkit-border-radius:  4px 4px 4px 4px;
+     border-radius:          4px 4px 4px 4px;
+     border:1px inset #909090;
+     background: rgba(255,255,255,.1);
      behavior: url(PIE/PIE.htc);
  }
- .yui3-skin-sam .skin-lj .yui3-scrollview{
-     -webkit-box-shadow: inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
+ .skin-lj .yui3-scrollview{
+     /*-webkit-box-shadow: inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
      -moz-box-shadow:    inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
      box-shadow:         inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
-     behavior: url(PIE/PIE.htc);
+     behavior: url(PIE/PIE.htc);*/
  }
  
- .yui3-skin-sam .skin-lj div.yui3-scrollgrid-header-scroll{
-     -moz-border-radius: 8px 8px 0px 0px;
-     -webkit-border-radius: 8px 8px 0px 0px;
-     border-radius: 8px 8px 0px 0px;
-     /*background-color: #1effff;*/
-     background: #666666;
+ .skin-lj div.yui3-scrollgrid-header-scroll{
+     position:relative;
+     background:#909090;
+     /*-moz-border-radius:     4px 4px 0px 0px;
+     -webkit-border-radius:  4px 4px 0px 0px;
+     border-radius:          4px 4px 0px 0px;
      behavior: url(PIE/PIE.htc);
+     background: #666666;
+     behavior: url(PIE/PIE.htc);*/
      
  }
- .yui3-skin-sam .skin-lj .yui3-scrollgrid-body td{
+ .skin-lj .yui3-scrollgrid-body td{
+     background: rgba(0, 0, 0, 0.2);
      padding: 4px 4px;
-     border: 1px solid #666666;
-     /*border: 1px solid #1effff;*/
+     border-bottom: 1px solid #666666;
  }
- .yui3-skin-sam .skin-lj .yui3-scrollgrid-header-scroll th{
-     color: #e0e0e0;
+ .skin-lj .yui3-scrollgrid-body td:first-child{
+     background: none;
+     border-bottom:0px;
+     border-right:1px solid #666666;
+ }
+ .skin-lj .yui3-scrollgrid-header-scroll th{
+     color: #303030;
      padding: 4px 4px;
-     border-right: 1px solid #666666;
-     background-color: #666666;
-     /*border-right: 1px solid #1effff;
-     background-color: #1effff;*/
  }
 
 
 /**----------- PagedGrid's skin ---------------*/
- .yui3-skin-sam .skin-lj .yui3-pagedgrid-scroll{
+ .skin-lj .yui3-pagedgrid-scroll{
      position:relative;
      -webkit-box-shadow: inset 1px 3px 10px 1px   rgba(30, 255, 255, .9);
      -moz-box-shadow:    inset 1px 3px 10px 1px   rgba(30, 255, 255, .9);
@@ -268,20 +286,18 @@ html{
      border-radius: 0px 0px 8px 8px;
      behavior: url(PIE/PIE.htc);
  }
- .yui3-skin-sam .skin-lj div.yui3-pagedgrid-header-scroll{
+ .skin-lj div.yui3-pagedgrid-header-scroll{
      position:relative;
-     -moz-border-radius: 8px 8px 0px 0px;
-     -webkit-border-radius: 8px 8px 0px 0px;
-     border-radius: 8px 8px 0px 0px;
+     
      background-color: #1effff;
      behavior: url(PIE/PIE.htc);
  }
- .yui3-skin-sam .skin-lj .yui3-pagedgrid-body td{
+ .skin-lj .yui3-pagedgrid-body td{
      padding: 4px 4px;
      /*border: 1px solid #cccccc;*/
      border: 1px solid #1effff;
  }
- .yui3-skin-sam .skin-lj .yui3-pagedgrid-header-scroll th{
+ .skin-lj .yui3-pagedgrid-header-scroll th{
      color: #000020;
      padding: 4px 4px;
      border-right: 1px solid #1effff;
@@ -340,14 +356,36 @@ html{
 */
 /**-- main page -- */
 
-
+@media all and (min-width:480px) and (max-width:800px){
+    
+    #leftSection{
+        position:absolute;
+        top:5px;
+        bottom:10px;
+        left:5px;
+        width:50%;
+        overflow:hidden;
+    }
+}
+@media all and (min-width:800px){
 #leftSection{
-    position:absolute;
-    top:5px;
-    bottom:10px;
-    left:5px;
-    width:30%;
-    overflow:hidden;
+        position:absolute;
+        top:5px;
+        bottom:10px;
+        left:5px;
+        width:30%;
+        overflow:hidden;
+    }
+}
+@media all and (max-width:479px){
+#leftSection{
+        position:absolute;
+        top:5px;
+        bottom:10px;
+        left:5px;
+        width:100%;
+        overflow:hidden;
+    }
 }
 #project{
     position:relative;
@@ -397,6 +435,7 @@ html{
  .yui3-scrollgrid-content th,.yui3-scrollgrid-content td { 
   padding: 0; 
   text-align: left;
+  white-space:nowrap;
  }
  .yui3-scrollgrid-content td{
      cursor: pointer;
@@ -416,7 +455,18 @@ html{
      border-collapse:collapse;
      border-spacing:0;
  }
-
+ .yui3-scrollgrid-buttons{
+     float:left;
+ }
+ .yui3-scrollgrid-buttons button{
+     min-width:10em;
+ }
+ .yui3-scrollgrid-total{
+     bottom:0;
+ }
+ div.clear{
+     clear:both;
+ }
 /** ------------ @PagedGrid ---------------*/
  .yui3-pagedgrid-content{
      font:medium Arial;
@@ -437,6 +487,7 @@ html{
  .yui3-pagedgrid-content th,.yui3-pagedgrid-content td { 
   padding: 0; 
   text-align: left;
+  white-space:nowrap;
  }
  .yui3-pagedgrid-content td{
      cursor: pointer;
