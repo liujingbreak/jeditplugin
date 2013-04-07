@@ -72,7 +72,7 @@ YUI.add("lj-basic", function(Y){
     var _toInitialCap = Y.cached(function(str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     })
-    
+    /**@class deferredTasks */
     var deferredTasks = new Y.AsyncQueue();
     /** @class WidgetRenderTaskQ */
     var WidgetRenderTaskQ = {
@@ -327,8 +327,14 @@ YUI.add("lj-basic", function(Y){
                 this.model = model;
                 this._bindModel();
                 this.model.fireColumnChange();
-                //this.model.fireRowLoaded(0, this.model.getRowCount());
-                this.model.requestMore();
+                //model.requestMore();
+                deferredTasks.add(
+                    {fn:function(){
+                            model.requestMore();
+                        },
+                        //context:this.model,
+                        timeout:50
+                    }).run();
             }, this);
             
         },
