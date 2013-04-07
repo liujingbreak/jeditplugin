@@ -72,6 +72,8 @@ YUI.add("lj-basic", function(Y){
     var _toInitialCap = Y.cached(function(str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     })
+    
+    var deferredTasks = new Y.AsyncQueue();
     /** @class WidgetRenderTaskQ */
     var WidgetRenderTaskQ = {
         
@@ -523,15 +525,15 @@ YUI.add("lj-basic", function(Y){
                         if(colHeader == null)
                             return; 
                         var w1 = colHeader.get("clientWidth");
-                        Y.log("w, w1="+ w + "," + w1);
+                        //Y.log("w, w1="+ w + "," + w1);
                         var headerPadding = parseStyleLen(colHeader.getComputedStyle("paddingLeft"));
                         headerPadding += parseStyleLen(colHeader.getComputedStyle("paddingRight"));
                         var tdPadding = parseStyleLen(td.getComputedStyle("paddingLeft"));
                         tdPadding += parseStyleLen(td.getComputedStyle("paddingRight"));
                         
                         
-                        Y.log("headerPadding:"+ headerPadding +
-                            ", tdPadding:"+ tdPadding);
+                        //Y.log("headerPadding:"+ headerPadding +
+                        //    ", tdPadding:"+ tdPadding);
                         if(Y.Lang.isNumber(w)){
                             if( w > w1){
                                 colHeader.setStyle("width", w - headerPadding + "px");
@@ -610,7 +612,8 @@ YUI.add("lj-basic", function(Y){
             this._lastTr = tr;
         },
         syncLoadedUI:function(e){
-             var tbody = this._body.one("tbody");
+             
+             tbody = Y.one(document.createDocumentFragment());
              for(var i=e.index, l=e.index+e.count;i < l;i++){
                  var rowModel = this.model.getRow(i);
                  this._insertGroupLabel(tbody, i, rowModel);
@@ -632,6 +635,7 @@ YUI.add("lj-basic", function(Y){
                      }, this);
                  }
              }
+             this._body.one("tbody").append(tbody);
              this._syncHasMoreIncidater(this.model.hasMore());
              Y.log('syncLoadedUI() done');
              this._syncColumnsWidth();
@@ -724,6 +728,7 @@ YUI.add("lj-basic", function(Y){
         renderUI:function(){
             var node = this.get("contentBox");
             node.set('tabIndex',0);
+            var frag = Y.one(document.createDocumentFragment());
             this.bodyHeight = null;
             this.headerscroll = Y.Node.create("<div><div><table><tbody></tbody></table></div></div>");
             this._headerContent = this.headerscroll.one("*");
@@ -740,12 +745,13 @@ YUI.add("lj-basic", function(Y){
             this._bodyscroll.addClass(this.getClassName("scroll"));
             this._body.addClass(this.getClassName("body"));
             
-            node.append(this.headerscroll);
-            node.append(this._bodyscroll);
+            frag.append(this.headerscroll);
+            frag.append(this._bodyscroll);
             this._moreRowNode = Y.Node.create('<tr><td><img src="../img/nycli1.gif"></td></tr>');
             
-            this._renderScrollView();
+            this._renderScrollView(frag);
             this.rendedHasMore = false;
+            node.append(frag);
         },
         
         bindUI:function(){
@@ -755,7 +761,10 @@ YUI.add("lj-basic", function(Y){
             var tbody = this._body.one(">tbody");
             this.mouseEnterHandle = tbody.delegate('mouseenter', this._onMouseEnter, 'tr', this);
             this.mouseLeaveHandle = tbody.delegate('mouseleave', this._onMouseLeave, 'tr', this);
-            this.tapHandle = tbody.delegate("tap", this._onItemTap, "tr", this);
+            this.tapHandle = tbody.delegate("grid|touchend", this._onItemTap, "tr", this);
+            tbody.delegate("grid|mouseup", this._onItemTap, "tr", this);
+            tbody.delegate("grid|touchstart", this._onTouchStart, "tr", this);
+            tbody.delegate("grid|mousedown", this._onTouchStart, "tr", this);
             this._maxWidthHandle = this.on("maxWidthChange", this.onMaxWidthChange, this);
         },
         _unbind:function(){
@@ -768,6 +777,7 @@ YUI.add("lj-basic", function(Y){
                 this._scrollViewHandle.detach();
             
             this._maxWidthHandle.detach();
+            this._body.one(">tbody").detach("grid|*");
         },
         syncWidth:function(e){
             var w = e? e.newVal: this.get("width"), pw;
@@ -807,7 +817,7 @@ YUI.add("lj-basic", function(Y){
             ScrollableGrid.superclass.refresh.apply(this, arguments);
             this.scrollView.scrollTo(0, 0, 1);
         },
-        _renderScrollView:function(){
+        _renderScrollView:function(frag){
             var grid = this;
             this.scrollView = new MyScrollView({
                 //bounceRange: 50,
@@ -815,7 +825,7 @@ YUI.add("lj-basic", function(Y){
                 //axis:'xy',
                 srcNode: this._bodyscroll
                 });
-            this.scrollView.render(this._bodyscroll.ancestor());
+            this.scrollView.render(frag);
             
             this._scrollViewHandle = this.scrollView.after('scrolling', 
                 createIntervalEventChecker(200, this._syncScrolling, null, this),
@@ -848,7 +858,42 @@ YUI.add("lj-basic", function(Y){
             this._selectItemNode(e.currentTarget);
         },
         
+        _onTouchStart:function(e){
+            var node = e.currentTarget;
+            
+            var classname = this.getClassName('s','selItem');
+            Y.log("lastScrolledAmt="+ this.scrollView.lastScrolledAmt);
+            if(Math.abs(this.scrollView.lastScrolledAmt) > 2)
+                return;
+            
+            if(!node.hasClass(classname))
+                node.addClass(classname);
+            this._touchStartNode = node;
+        },
         _selectItemNode:function(node){
+            var classname = this.getClassName('s','selItem');
+            Y.log("_selectItemNode()");
+            if(node!= this._touchStartNode){
+                this._touchStartNode.removeClass(classname);
+                return;
+            }
+            if(this.get('singleSelection')){
+                
+                this.selectionModel.selectSingle(node.getAttribute("data-key"), node, true);
+                //if(!node.hasClass(classname))
+                //    node.addClass(classname);
+                if(this._lastSingleSelNode && this._lastSingleSelNode != node)
+                    this._lastSingleSelNode.removeClass(classname);
+                this._lastSingleSelNode = node;
+            }else{
+                if(node.hasClass(this.getClassName('selItem'))){
+                    node.removeClass(this.getClassName('selItem'));
+                    this.selectionModel._removeSelection(node.getAttribute("data-key"));
+                }else{
+                    node.addClass(this.getClassName('selItem'));
+                    this.selectionModel._addSelection(node.getAttribute("data-key"), node);
+                }
+            }
             this._scrollToVisible(node);
             var key = node.getAttribute("data-key");
             this.fire("itemSelected",{src:'ui', node:node, data:key});
@@ -974,8 +1019,14 @@ YUI.add("lj-basic", function(Y){
                             if(grid.delBut.get('disabled') === true)
                                 return;
                             grid.delBut.set('disabled', true);
-                            grid.model.deleteRows(grid.selectionModel.keyset);
-                            grid.fire('delete', {src:'ui'});
+                            deferredTasks.add({
+                                    fn:function(){
+                                        var g = grid;
+                                        g.model.deleteRows(grid.selectionModel.keyset);
+                                        g.fire('delete', {src:'ui'});
+                                    }
+                            }).run();
+                            
                         }
                     },
                     disabled: true
@@ -1014,8 +1065,8 @@ YUI.add("lj-basic", function(Y){
             var padding = parseStyleLen(contentBox.getComputedStyle("paddingTop"));
             padding += parseStyleLen(contentBox.getComputedStyle("paddingBottom"));
             if(Y.Lang.isNumber(h)){
-                Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH
-                    + " padding="+ padding);
+                //Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH
+                //    + " padding="+ padding);
                 this._bodyscroll.setStyle("height", (h - headerH) - padding - bottomH + this.DEF_UNIT);
             }else if(h.charAt(h.length-1) == '%'){
                 
@@ -1048,32 +1099,36 @@ YUI.add("lj-basic", function(Y){
             }
         },
         
-        _selectItemNode:function(node){
-            this._syncSelectItemUI(node);
-            MyEditableGrid.superclass._selectItemNode.apply(this, arguments);
-        },
-        /** @param node tr
-        */
-        _syncSelectItemUI:function(node){
-
-            if(this.get('singleSelection')){
-                var classname = this.getClassName('s','selItem');
-                this.selectionModel.selectSingle(node.getAttribute("data-key"), node, true);
-                if(!node.hasClass(classname))
-                    node.addClass(classname);
-                if(this._lastSingleSelNode && this._lastSingleSelNode != node)
-                    this._lastSingleSelNode.removeClass(classname);
-                this._lastSingleSelNode = node;
-            }else{
-                if(node.hasClass(this.getClassName('selItem'))){
-                    node.removeClass(this.getClassName('selItem'));
-                    this.selectionModel._removeSelection(node.getAttribute("data-key"));
-                }else{
-                    node.addClass(this.getClassName('selItem'));
-                    this.selectionModel._addSelection(node.getAttribute("data-key"), node);
-                }
-            }
-        },
+        //_selectItemNode:function(node){
+        //    this._syncSelectItemUI(node);
+        //    MyEditableGrid.superclass._selectItemNode.apply(this, arguments);
+        //},
+        ///** @param node tr
+        //*/
+        //_syncSelectItemUI:function(node){
+        //    var classname = this.getClassName('s','selItem');
+        //    if(!node.hasClass(classname)){
+        //        this._touchStartNode.removeClass(classname);
+        //        return;
+        //    }
+        //    if(this.get('singleSelection')){
+        //        
+        //        this.selectionModel.selectSingle(node.getAttribute("data-key"), node, true);
+        //        //if(!node.hasClass(classname))
+        //        //    node.addClass(classname);
+        //        if(this._lastSingleSelNode && this._lastSingleSelNode != node)
+        //            this._lastSingleSelNode.removeClass(classname);
+        //        this._lastSingleSelNode = node;
+        //    }else{
+        //        if(node.hasClass(this.getClassName('selItem'))){
+        //            node.removeClass(this.getClassName('selItem'));
+        //            this.selectionModel._removeSelection(node.getAttribute("data-key"));
+        //        }else{
+        //            node.addClass(this.getClassName('selItem'));
+        //            this.selectionModel._addSelection(node.getAttribute("data-key"), node);
+        //        }
+        //    }
+        //},
         
         _syncKeydown:function(e){
             var code = e.keyCode;
@@ -1256,6 +1311,12 @@ YUI.add("lj-basic", function(Y){
                 return Math.min(Math.max(val, min), max);
     };
     var MyScrollView = Y.Base.create("myscrollview",Y.ScrollView, [Y.WidgetChild],{
+            init:function(cfg){
+                cfg = cfg?cfg:{};
+                if(cfg.bounceRange == null)
+                    cfg.bounceRange = 80;//not working, dont know why
+                MyScrollView.superclass.init.call(this, cfg);
+            },
             initializer:function(){
                 //this._boundingNode = this.get("boundingBox");
                 //this._contentNode = this.get("contentBox");
@@ -1544,7 +1605,7 @@ YUI.add("lj-basic", function(Y){
         init:function(cfg){
             var defCfg = {
                  //centered:true,
-                 model:true,
+                 modal:true,
                  y:-300,
                  zIndex:90,
                  visible:false,
@@ -1554,13 +1615,15 @@ YUI.add("lj-basic", function(Y){
                         {
                             name  : 'cancel',
                             label : 'Cancel',
-                            action: 'onCancel'
+                            action: 'onCancel',
+                            context:this
                         },
         
                         {
                             name     : 'proceed',
                             label    : 'OK',
-                            action   : 'onOK'
+                            action   : 'onOK',
+                            context:this
                         }
                     ]
                 }
@@ -1576,7 +1639,7 @@ YUI.add("lj-basic", function(Y){
             var bb = this.get("boundingBox"),
              parent = bb.ancestor();
             var viewport = {h:parent.get('clientHeight'), w: parent.get('clientWidth')};
-            var size = {h:bb.get('offsetHeight'), w:bb.get('offsetWidth')};
+            var size = this._viewSize ={h:bb.get('offsetHeight'), w:bb.get('offsetWidth')};
             var x = (viewport.w - size.w)>>1;
             var y = (viewport.h - size.h)>>1;
             this.set("xy",[x, -size.h-10]);
@@ -1588,13 +1651,30 @@ YUI.add("lj-basic", function(Y){
                     duration:0.3
             });
             
+        },
+        hide:function(){
+            var bb = this.get("boundingBox"),
+            self = this;
+            bb.transition({
+                    top: -this._viewSize.h-20+"px",
+                    easing:'ease-out',
+                    duration:0.2
+            },function(){
+                self.set('visible', false);
+            });
+            
+        },
+        onCancel:function(){
+            this.hide();
         }
-        
     },{ATTRS:{
             /**@attribute title*/
             title:{value:""}
     }});
     MyDialog.CSS_PREFIX = "lj-dialog";
+    
+    
+    
     /** @class MyButtonGroup 
     */
     var MyButtonGroup = Y.Base.create("mybtngroup", Y.ButtonGroup, [Y.WidgetChild], {
@@ -1814,4 +1894,4 @@ YUI.add("lj-basic", function(Y){
     }
 }, "1.0.0",{
 requires:['base','overlay','node','event','panel','widget','widget-parent','widget-child',
-'button','button-group','scrollview','node-focusmanager','app'/*"event-resize"*/]});
+'button','button-group','scrollview','node-focusmanager','app',"async-queue"]});

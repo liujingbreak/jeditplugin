@@ -83,7 +83,7 @@ try{
     projects.on("itemSelected", 
         function(e){
             var rowModel = projectsModel.getRowByKey(e.data);
-            prjPortal.setTitle("Project " + rowModel.name);
+            /*prjPortal.setTitle("Project " + rowModel.name);
             prjPortal.model.setData(rowModel);
             prjPortal.set("visible",true);
             prjPortal.focus();
@@ -92,7 +92,7 @@ try{
             prjPortal.model.on('saved', function(){
                     this.refresh();
                     savedHandle.detach();
-            }, projects);
+            }, projects);*/
         });
     //projects.render("#leftSection");
     

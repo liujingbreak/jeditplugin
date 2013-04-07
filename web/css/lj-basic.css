@@ -26,7 +26,34 @@ html{
     visibility:hidden;
     top:-1000px;
 }
-
+.lj-dialog-content{
+    /*background:-o-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), #cccccc;
+    background:-moz-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), #3454b4;
+    background:-webkit-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), #cccccc;
+    background:-ms-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), #3454b4;
+    background:radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), #3454b4;
+    */
+    background: #e0e0e0;
+    color: #303030;
+    /*border:10px solid rgba(0, 0, 0, 0.);*/
+    -ms-box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
+    -webkit-box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
+    -moz-box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
+    -o-box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
+    -box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
+    border-radius:5px 5px 5px 5px;
+    -ms-border-radius:5px 5px 5px 5px;
+    -o-border-radius:5px 5px 5px 5px;
+    -webkit-border-radius:5px 5px 5px 5px;
+    -moz-border-radius:5px 5px 5px 5px;
+    behavior: url(PIE/PIE.htc);
+}
+.skin-lj .lj-dialog .lj-dialog-content .yui3-widget-ft{
+    background:transparent;
+}
+.lj-dialog button{
+    min-width:80px;
+}
 
 /** triangle*/
 .triangle-right-white{
@@ -64,12 +91,13 @@ html{
 .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td{
     background: #2ff;
     background: rgba(30, 255, 255, .9);
-    -webkit-box-shadow: 0px 0px 10px 0px   rgba(30, 255, 255, .8);
+    color: black;
+    /*-webkit-box-shadow: 0px 0px 10px 0px   rgba(30, 255, 255, .8);
     -moz-box-shadow:    0px 0px 10px 0px   rgba(30, 255, 255, .8);
     box-shadow:         0px 0px 10px 0px   rgba(30, 255, 255, .8);
-    color: black;
+    
     -pie-background: linear-gradient(to bottom, rgba(30, 255, 255, .9));
-    behavior:url(PIE/PIE.htc);
+    behavior:url(PIE/PIE.htc);*/
 }
 .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td:first-child{
     color:rgb(30, 255, 255);
@@ -136,6 +164,9 @@ html{
 }
     
 /** panel */
+.skin-lj.yui3-sam .yui3-widget-stdmod .yui3-widget-ft{
+    background:transparent;
+}
 .skin-lj .yui3-panel .yui3-widget-hd{
     background: transparent;
     font-size:large;
@@ -158,8 +189,14 @@ html{
     /*-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000)";*/ /* IE8 */
     background: rgba(0, 0, 0, 0.2);
 }
-.skin-lj .yui3-panel .yui3-widget-ft{
+.skin-lj.yui3-skin-sam .yui3-panel .yui3-widget-ft{
     background: transparent;
+}
+.skin-lj.yui3-skin-sam .yui3-panel-content{
+    background: transparent;
+}
+.skin-lj.yui3-skin-sam .yui3-panel .yui3-widget-ft{
+    padding:1px;
 }
 .skin-lj .yui3-panel-hidden{
     display: none;
@@ -238,7 +275,7 @@ html{
      -webkit-border-radius:  4px 4px 4px 4px;
      border-radius:          4px 4px 4px 4px;
      border:1px inset #909090;
-     background: rgba(255,255,255,.1);
+     /*background: rgba(255,255,255,.1);*/
      behavior: url(PIE/PIE.htc);
  }
  .skin-lj .yui3-scrollview{
@@ -260,7 +297,7 @@ html{
      
  }
  .skin-lj .yui3-scrollgrid-body td{
-     background: rgba(0, 0, 0, 0.2);
+     /*background: rgba(0, 0, 0, 0.2);*/
      padding: 4px 4px;
      border-bottom: 1px solid #666666;
  }
@@ -356,7 +393,7 @@ html{
 */
 /**-- main page -- */
 
-@media all and (min-width:480px) and (max-width:800px){
+@media all and (min-width:500px) and (max-width:800px){
     
     #leftSection{
         position:absolute;
@@ -377,7 +414,7 @@ html{
         overflow:hidden;
     }
 }
-@media all and (max-width:479px){
+@media all and (max-width:499px){
 #leftSection{
         position:absolute;
         top:5px;
