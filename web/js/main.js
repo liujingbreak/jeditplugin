@@ -1,7 +1,15 @@
 /* reference to config class in YUI api */
 YUI_config = {
-    debug: true
-    ,filter:"raw"
+    debug: true,
+    filter:"raw",
+    modules: {
+        "lj-basic": {
+            fullpath: 'js/lj-basic.js'
+        },
+        "lj-init":{
+            fullpath: 'js/lj-init.js'
+        }
+    }
 };
 YUI().use('lj-basic','panel','json-stringify','tabview','button-group','router', function (Y) {
 try{
