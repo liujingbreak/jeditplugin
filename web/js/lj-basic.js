@@ -954,7 +954,8 @@ YUI.add("lj-basic", function(Y){
         },
         renderUI:function(){
             MyEditableGrid.superclass.renderUI.apply(this, arguments);
-            var bottom = this.bottom = Y.Node.create('<div>&nbsp;</div>');
+            var bottom = this.bottom = Y.Node.create('<div></div>');
+            
             this.bottom.addClass(this.getClassName('bottom'));
             if(this.get('buttonVisible')){
                 this._renderDefButtons(this.bottom);
@@ -967,8 +968,8 @@ YUI.add("lj-basic", function(Y){
             _totalDIV.append(this._totalNode);
             bottom.append(_totalDIV);
             bottom.append("<div class=\"clear\"></div>");
+            
             this.get('contentBox').append(bottom);
-            //Y.log("MyEditableGrid.renderUI()");
         },
         bindUI:function(){
             MyEditableGrid.superclass.bindUI.apply(this,arguments);
@@ -1663,8 +1664,8 @@ YUI.add("lj-basic", function(Y){
             self = this;
             bb.transition({
                     top: -this._viewSize.h-20+"px",
-                    easing:'ease-out',
-                    duration:0.2
+                    easing:'ease-in',
+                    duration:0.3
             },function(){
                 self.set('visible', false);
             });

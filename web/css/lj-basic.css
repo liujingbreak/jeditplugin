@@ -480,10 +480,8 @@ html{
  .yui3-scrollgrid-body{;
      border-spacing:0;
  }
- .yui3-scrollgrid-scroll{
- }
  .yui3-scrollgrid-header-scroll{
-     overflow:hidden;
+     clear:both;/* fix firefox v20 css float bug found in macAir */
  }
  .yui3-scrollgrid-header-scroll *{
      position:relative;
@@ -499,12 +497,14 @@ html{
      min-width:10em;
  }
  .yui3-scrollgrid-total{
-     bottom:0;
+     position:absolute;
+     bottom:1px;
+     right:2px;
  }
  div.clear{
      clear:both;
  }
-/** ------------ @PagedGrid ---------------*/
+/** ------------ @PagedGrid ---------------
  .yui3-pagedgrid-content{
      font:medium Arial;
  }
@@ -517,9 +517,6 @@ html{
  }
  .yui3-pagedgrid-item-tapped{
      background:#00cc66;
- }
- .yui3-pagedgrid-table{
-     /*border: 1px solid #636363;*/
  }
  .yui3-pagedgrid-content th,.yui3-pagedgrid-content td { 
   padding: 0; 
@@ -546,6 +543,6 @@ html{
      
      
  }
-
+*/
 
 

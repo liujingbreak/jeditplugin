@@ -13,7 +13,7 @@ YUI_config = {
 };
 YUI().use('lj-basic','panel','json-stringify','tabview','button-group','router', function (Y) {
 try{
-    
+
     dwr.engine.setErrorHandler(function(errorString, exception){
             Y.log(errorString);
             Y.log(JSON.stringify(exception));
@@ -433,7 +433,9 @@ try{
             render:function(){
                 var container = this.get('container');
                 projects.render(container);
+                
                 directories.render(container);
+                
             }
     });
     /**@class AddProjectView */
