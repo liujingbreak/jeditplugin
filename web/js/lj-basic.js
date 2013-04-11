@@ -1,6 +1,18 @@
 
 YUI.add("lj-basic", function(Y){
-        try{
+  try{
+      
+    function loadHandler(){
+        if (err) {
+            Y.Array.each(err, function (error) {
+                Y.log('Error loading file: ' + error.error, 'error');
+            });
+            return;
+        }
+        Y.log('All files loaded successfully!');
+    }
+    Y.Get.css('css/lj-basic.css', loadHandler);
+            
     function parseStyleLen(styleLength){
         //Y.log("parseSytleLen() "+ styleLength);
         if(Y.Lang.isString(styleLength)){
@@ -1900,5 +1912,5 @@ YUI.add("lj-basic", function(Y){
         Y.log(e.stack);
     }
 }, "1.0.0",{
-requires:['base','overlay','node','event','panel','widget','widget-parent','widget-child',
+requires:['get','base','overlay','node','event','panel','widget','widget-parent','widget-child',
 'button','button-group','scrollview','node-focusmanager','app',"async-queue"]});
