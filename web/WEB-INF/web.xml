@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee">
+<!--
+  <filter>
+    <filter-name></filter-name>
+    <filter-class></filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name></filter-name>
+    <filter-mapping></filter-mapping>
+  </filter-mapping>
+  -->
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>DwrServlet</servlet-name>
+    <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+    <init-param>
+        <param-name>classes</param-name>
+        <param-value>org.liujing.ironsword.ctl.ProjectController
+        ,org.liujing.ironsword.bean.DaoPagination
+        ,org.liujing.ironsword.bean.PagingRequest
+        ,org.liujing.ironsword.dao.ProjectDAO
+        ,org.liujing.ironsword.dao.FileTree
+        ,org.liujing.ironsword.dao.RootFolder
+        ,org.liujing.ironsword.dao.SrcFile
+        ,org.liujing.ironsword.bean.PagedVO
+        ,org.liujing.ironsword.bean.TableStyleVO
+        ,org.liujing.ironsword.bean.TableRowVO
+        ,org.liujing.ironsword.ctl.FileScanController
+        </param-value>
+    </init-param>
+    <init-param>
+        <param-name>debug</param-name>
+        <param-value>true</param-value>
+    </init-param>
+    <init-param>
+        <param-name>generateDtoClasses</param-name>
+        <param-value></param-value>
+    </init-param>
+    <init-param>
+        <param-name>customConfigurator</param-name>
+        <param-value>org.liujing.ironsword.ctl.DWRConfiguration</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>DwrServlet</servlet-name>
+    <url-pattern>/dwr/*</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>/index.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

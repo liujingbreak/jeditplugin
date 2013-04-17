@@ -1,26 +1,4 @@
-body {
-    background: -o-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.5)), url('/img/wild_oliva.png');
-    background: -ms-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.5)), url('/img/wild_oliva.png');
-    background: -moz-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.5)), url('/img/wild_oliva.png');
-    background: -webkit-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), url('/img/wild_oliva.png');
-    background: radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), url('/img/wild_oliva.png');
-    -pie-background: linear-gradient(left, rgba(0,0,0,0.5) , rgba(0,0,0,0), rgba(0,0,0,0.5)), url('/img/wild_oliva.png');
-    behavior:url(PIE/PIE.htc);
-    color:#c9c9c9;
-    padding:0px;
-    margin:0px;
-    height:100%;
-    min-height:100%;
-}
-html{
-    height:100%;
-    min-height:100%;
-}
-.skin-lj{
-}
-.skin-lj div:focus{
-    outline:none;
-}
+
 /**dialog */
 .lj-dialog-hidden{
     visibility:hidden;
@@ -278,12 +256,6 @@ html{
      /*background: rgba(255,255,255,.1);*/
      behavior: url(PIE/PIE.htc);
  }
- .skin-lj .yui3-scrollview{
-     /*-webkit-box-shadow: inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
-     -moz-box-shadow:    inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
-     box-shadow:         inset 1px 3px 10px 1px   rgba(180, 180, 180, .8);
-     behavior: url(PIE/PIE.htc);*/
- }
  
  .skin-lj div.yui3-scrollgrid-header-scroll{
      position:relative;
@@ -391,61 +363,7 @@ html{
      color: #006699;
  }
 */
-/**-- main page -- */
 
-@media all and (min-width:500px) and (max-width:800px){
-    
-    #leftSection{
-        position:absolute;
-        top:5px;
-        bottom:10px;
-        left:5px;
-        width:50%;
-        overflow:hidden;
-    }
-}
-@media all and (min-width:800px){
-#leftSection{
-        position:absolute;
-        top:5px;
-        bottom:10px;
-        left:5px;
-        width:30%;
-        overflow:hidden;
-    }
-}
-@media all and (max-width:499px){
-#leftSection{
-        position:absolute;
-        top:0px;
-        bottom:1px;
-        left:1px;
-        right:1px;
-        overflow:hidden;
-    }
-}
-#project{
-    position:relative;
-    float:left;
-    overflow:hidden;
-}
-#folder{
-    position:relative;
-    float:left;
-    overflow:hidden;
-}
-#intro{
-    height:20%;
-    overflow:hidden;
-}
-#rightSection{
-    position:absolute;
-    top:0px;
-    
-    left:485px;
-    padding:0px;
-    bottom:0px;
-}
 /* system widget required css */
 
 .yui3-verbox-child{
@@ -455,6 +373,7 @@ html{
 /** -------- @ScrollableGrid ----------*/
  .yui3-scrollgrid-content{
      font:medium Arial;
+     overflow:hidden;
  }
  .yui3-scrollgrid-item-mousedown td{
      background:#ffff99;
@@ -504,45 +423,13 @@ html{
  div.clear{
      clear:both;
  }
-/** ------------ @PagedGrid ---------------
- .yui3-pagedgrid-content{
-     font:medium Arial;
- }
- .yui3-pagedgrid-item-mousedown td{
-     background:#ffff99;
-     color:black;
-     -webkit-box-shadow: 0px 0px 14px 0px   rgba(255, 255, 153, .9);
-     -moz-box-shadow:    0px 0px 14px 0px   rgba(255, 255, 153, .9);
-     box-shadow:         0px 0px 14px 0px   rgba(255, 255, 153, .9);
- }
- .yui3-pagedgrid-item-tapped{
-     background:#00cc66;
- }
- .yui3-pagedgrid-content th,.yui3-pagedgrid-content td { 
-  padding: 0; 
-  text-align: left;
-  white-space:nowrap;
- }
- .yui3-pagedgrid-content td{
-     cursor: pointer;
- }
- .yui3-pagedgrid-body{
-     border-spacing:0;
- }
- .yui3-pagedgrid-scroll{
-     overflow-y:auto;
-     overflow-x:auto;
+/** App [hack]: avoid Android webkit flick issue*/
+ .skin-lj .yui3-app-views>div{
      
- }
- .yui3-pagedgrid-header-scroll{
-     overflow-x:hidden;
- }
- .yui3-pagedgrid table{
-     border-collapse:collapse;
-     border-spacing:0;
-     
-     
- }
-*/
-
+     /*overflow:hidden;*/
+ } 
+ /** Hack: fix Android webkit YUI scrollView transform flickering issue */
+.yui3-scrollview{
+    -webkit-backface-visibility: hidden;
+}
 

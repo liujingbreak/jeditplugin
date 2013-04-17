@@ -2,21 +2,61 @@
 YUI_config = {
     debug: true,
     filter:"raw",
-    modules: {
-        "lj-basic": {
-            fullpath: 'js/lj-basic.js'
-        },
-        "lj-init":{
-            fullpath: 'js/lj-init.js'
+    groups:{
+        WoodenAxe:{
+            base:'js/',
+            modules: {
+                "lj-basic": {
+                    path: 'lj-basic/lj-basic.js'
+                    ,lang:[]
+                },
+                "lj-init":{
+                    path: 'lj-init/lj-init.js',
+                    lang: ["zh"]
+                },
+                "dwr":{
+                    async: false,
+                    fullpath:'/dwr/engine.js'
+                },
+                'dwr-projects':{
+                    async: false,
+                    fullpath:'/dwr/interface/ProjectController.js',
+                    requires:['dwr']
+                },
+                'dwr-filescan':{
+                    async: false,
+                    fullpath:'/dwr/interface/FileScanController.js',
+                    requires:['dwr']
+                }
+            }
         }
     }
+    
 };
-YUI().use('lj-basic','panel','json-stringify','tabview','button-group','router', function (Y) {
+
+var globalY;
+
+YUI({lang:'zh'}).use('lj-init', function(Y){
+        
+    Y.log("main start");
+    Y.lj.statusBar.showLoading();
+    Y.lj.statusBar.render();
+    globalY = Y;
+        
+    // lazy loading starts ...
+    setTimeout(function(){
+    Y.use('dwr-projects','dwr-filescan','lj-basic','json-stringify',initljBasic)}, 10);
+});
+
+
+function initljBasic() {
 try{
+    var Y = globalY, lj = Y.lj;
+    lj.statusBar.render();
 
     dwr.engine.setErrorHandler(function(errorString, exception){
-            Y.log(errorString);
-            Y.log(JSON.stringify(exception));
+            Y.log("DWR engine error: "+ errorString);
+            Y.log("DWR exception: "+ JSON.stringify(exception));
     });
     // IE9 has a problem with pressing enter key leads to first button on the page 
     // get pressed issue
@@ -32,17 +72,8 @@ try{
         Y.log("req: "+ Y.JSON.stringify(req));
     };
     
-    //var router = new Y.Router({
-    //        html5:false,
-    //        root:'/',
-    //        routes:[
-    //            {path:'/', callbacks:routeCallBack}
-    //        ]
-    //});
     
-    var commonDialog = new Y.lj.Dialog({
-            
-    });
+    var commonDialog = new Y.lj.Dialog({});
     commonDialog.render();
     
     var projectsModel = new Y.PagedGridModel({
@@ -74,16 +105,7 @@ try{
                      ids.push(id);
                  var model = this;
                  commonDialog.show("Are you sure to delete project?");
-                 /*ProjectController.deleteProjects(ids, {
-                         callback:function(res){
-                            try{
-                                model.fireDeleted();
-                            }catch(e){
-                                Y.log(e.stack);
-                                throw e;
-                            }
-                        }
-                 });*/
+                 
              }
     });
     var projects = new Y.MyEditableGrid({width:'100%'});
@@ -91,16 +113,7 @@ try{
     projects.on("itemSelected", 
         function(e){
             var rowModel = projectsModel.getRowByKey(e.data);
-            /*prjPortal.setTitle("Project " + rowModel.name);
-            prjPortal.model.setData(rowModel);
-            prjPortal.set("visible",true);
-            prjPortal.focus();
-            //router.save("?prjid=" + encodeURIComponent(rowModel.id));
-            var savedHandle = 
-            prjPortal.model.on('saved', function(){
-                    this.refresh();
-                    savedHandle.detach();
-            }, projects);*/
+            
         });
     //projects.render("#leftSection");
     
@@ -445,7 +458,7 @@ try{
             },
             render:function(){
                 var container = this.get('container');
-                prjAdd = new ProjectAddPortal({width:"100%", buttons: [
+                prjAdd = new ProjectAddPortal({ buttons: [
                 {  
                     value:'Save',
                     action:function(e){
@@ -514,7 +527,16 @@ try{
             {   path: '/',
                 callbacks: function (){
                     document.title = "Wooden Axe Tool"
-                    appMgr.showView("listView", null, null, resizePage);
+                    appMgr.showView("listView", null, null, 
+                        function(){
+                            if(firstLoad){
+                                resizePage();
+                                firstLoad = false;
+                                lj.deferredTasks.add(function(){
+                                        lj.statusBar.hide();
+                                }, 50).run();
+                            }
+                        });
                 }
             },
             {   path: '/add',callbacks: function (){
@@ -523,7 +545,8 @@ try{
                 }
             }
         ]);
-    var mainApp = appMgr.apps[0];
+    var mainApp = appMgr.apps[0], 
+    firstLoad = true;
     
     
     
@@ -542,9 +565,13 @@ try{
     Y.lj.globalEventMgr.onWindowResize(resizePage);
     
     mainApp.render().save("/");
+    //new ListView({container:"#leftSection"}).render();
+    
+    
     
 }catch(e){
     Y.log(e.stack);
     throw e;
 }
-});
+}
+

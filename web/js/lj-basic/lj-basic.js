@@ -1,8 +1,9 @@
 
 YUI.add("lj-basic", function(Y){
   try{
+      var res = Y.Intl.get("lj-basic");
       
-    function loadHandler(){
+    function loadHandler(err){
         if (err) {
             Y.Array.each(err, function (error) {
                 Y.log('Error loading file: ' + error.error, 'error');
@@ -55,28 +56,36 @@ YUI.add("lj-basic", function(Y){
     @param stopHandleFunc (could be null) the stop|last event handle function, if you only want to handle stop event
     @return the delegate event handler function
     */
-    function createIntervalEventChecker(interval, handleFunc, stopHandleFunc, thisObj){
-        var DONE = 'nil', timeoutId = null, lastEvent = null;
-        var newEvent = DONE;
+    function createIntervalEventChecker(interval, handleFunc, stopHandleFunc, startHandleFunc, thisObj){
+        var timeoutId = null, STAT_STOPED = 0, STAT_STARTED =1, STAT_WAIT =2;
+        var newEvent = null, stat = STAT_STOPED;
         
         function heartBeat(){
-            if(newEvent === DONE){
-                //Y.log("stop event");
+            if(stat === STAT_WAIT){
+                //Y.log("createIntervalEventChecker()- stop event");
                 timeoutId = null;
                 if(stopHandleFunc)
                     stopHandleFunc.call(thisObj, lastEvent);
-            }else{
-                lastEvent = newEvent;
-                newEvent = DONE;
-                //Y.log("check event");
-                if(handleFunc)
-                    handleFunc.call(thisObj, lastEvent);
+                stat = STAT_STOPED;
+            }else if(stat == STAT_STARTED){
+                stat = STAT_WAIT;
+                //Y.log("createIntervalEventChecker() check event");
                 timeoutId = setTimeout(heartBeat, interval);
+                if(handleFunc)
+                    handleFunc.call(thisObj, newEvent);
+            }else{
+                //Y.log("!! createIntervalEventChecker() unknown state: "+ stat);
             }
         }
         
         return function handleEvent(e){
             newEvent = e;
+            if(stat == STAT_STOPED){
+                if(startHandleFunc)
+                    startHandleFunc.call(thisObj, newEvent);
+                //Y.log(">> createIntervalEventChecker() start event");
+            }
+            stat = STAT_STARTED;
             if(timeoutId === null)
                 timeoutId = setTimeout(heartBeat, interval);
         }
@@ -676,7 +685,7 @@ YUI.add("lj-basic", function(Y){
             if(this._bodyScrollHandle)
                 return;
             this._bodyScrollHandle = this._bodyscroll.after("scroll", 
-                createIntervalEventChecker(50, this._syncScroll, null, this)
+                createIntervalEventChecker(50, this._syncScroll, null,null, this)
                 
                 , this);
         },
@@ -802,13 +811,16 @@ YUI.add("lj-basic", function(Y){
             if(w == null)
                 return;
             if(typeof(w) == 'number' && this.scrollView != null){
+                var cb = this.get("contentBox");
+                w = w - parseStyleLen(cb.getComputedStyle("paddingLeft"))
+                - parseStyleLen(cb.getComputedStyle("paddingRight"));
                 this.scrollView.set('width', w + this.DEF_UNIT);
             }else if(w.charAt(w.length-1) == '%'){
                 var percent = parseInt(w.substring(0, w.length -1), 10),
                 aa = this.get("boundingBox").ancestor();
                 pw = aa.get("clientWidth")*percent/100 
-                - aa.getComputedStyle("padding-left")
-                - aa.getComputedStyle("padding-right");
+                - parseStyleLen(aa.getComputedStyle("paddingLeft"))
+                - parseStyleLen(aa.getComputedStyle("paddingRight"));
                 
                 this.scrollView.set('width', pw + "px");
             }
@@ -846,7 +858,7 @@ YUI.add("lj-basic", function(Y){
             this.scrollView.render(frag);
             
             this._scrollViewHandle = this.scrollView.after('scrolling', 
-                createIntervalEventChecker(200, this._syncScrolling, null, this),
+                createIntervalEventChecker(200, this._syncScrolling, null,null, this),
                 this);
         },
         _syncScrolling:function(e){
@@ -1025,7 +1037,7 @@ YUI.add("lj-basic", function(Y){
         },
         _renderDefButtons:function(bottom){
             var container = Y.Node.create('<div></div>'),
-            delNode = Y.Node.create('<div>Delete</div>');
+            delNode = Y.Node.create('<div>'+res.DELETE+'</div>');
             container.addClass(this.getClassName("buttons"));
             delNode.addClass('yui3-button');
             container.append(delNode);
@@ -1052,7 +1064,7 @@ YUI.add("lj-basic", function(Y){
             });
             this.delBut.render(container);
             
-            var addNode = Y.Node.create('<button>Add</button>');
+            var addNode = Y.Node.create('<button>'+res.ADD+'</button>');
             
             container.append(addNode);
             this.addBut = new Y.Button({
@@ -1902,11 +1914,13 @@ YUI.add("lj-basic", function(Y){
     };
     Y.augment(AppManager, Y.EventTarget);
     
-    Y.lj ={
+    var lj = Y.namespace('lj');
+    Y.mix(lj,{
         AppManager:AppManager,
         Dialog:MyDialog,
-        globalEventMgr:globalEventMgr
-    };
+        globalEventMgr:globalEventMgr,
+        deferredTasks:deferredTasks
+    });
     
     }catch(e){
         Y.log(e.stack);
