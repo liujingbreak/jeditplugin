@@ -15,16 +15,16 @@ YUI_config = {
                     lang: ["zh"]
                 },
                 "dwr":{
-                    async: false,
+                    //async: false,
                     fullpath:'/dwr/engine.js'
                 },
                 'dwr-projects':{
-                    async: false,
+                    //async: false,
                     fullpath:'/dwr/interface/ProjectController.js',
                     requires:['dwr']
                 },
                 'dwr-filescan':{
-                    async: false,
+                    //async: false,
                     fullpath:'/dwr/interface/FileScanController.js',
                     requires:['dwr']
                 }
@@ -56,6 +56,10 @@ try{
 
     dwr.engine.setErrorHandler(function(errorString, exception){
             Y.log("DWR engine error: "+ errorString);
+            Y.log("DWR exception: "+ JSON.stringify(exception));
+    });
+    dwr.engine.setWarningHandler(function(errorString, exception){
+            Y.log("DWR engine warning: "+ errorString);
             Y.log("DWR exception: "+ JSON.stringify(exception));
     });
     // IE9 has a problem with pressing enter key leads to first button on the page 
@@ -138,9 +142,6 @@ try{
                             Y.log(e.stack);
                             throw e;
                         }
-                    },
-                    errorHandler:function(message){
-                        alert(message);
                     }
                 }); 
             }
@@ -472,7 +473,7 @@ try{
                                             projects.refresh();
                                             button.set('disabled', false);
                                         },
-                                        errorHandler:function(m){ alert(m);}
+                                        errorHandler:function(m){ }
                                     }
                                     );
                             },

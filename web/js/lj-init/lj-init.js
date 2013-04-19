@@ -25,7 +25,16 @@ YUI.add("lj-init", function(Y){
               this.set('status', res.LOADING);
           },
           hide:function(){
-              this.set('visible', false);
+              var bar = this;
+              this.get('boundingBox').hide({duration: 0.75});
+              //this.get('boundingBox').transition({
+              //        easing: 'ease-out',
+              //        duration: 0.75,
+              //        opacity:0, 
+              //        function(){
+              //            bar.set('visible', false);
+              //        }
+              //});
           }
         },{
             ATTRS:{
@@ -44,4 +53,4 @@ YUI.add("lj-init", function(Y){
     var statusBar = new StatusBar({srcNode:"#status-bar"});
     lj.statusBar = statusBar;
 }, "1.0.0",{
-requires:['base','overlay','intl']});
+requires:['base','overlay','intl','transition']});

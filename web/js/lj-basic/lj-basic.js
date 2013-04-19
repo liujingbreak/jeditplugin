@@ -65,7 +65,7 @@ YUI.add("lj-basic", function(Y){
                 //Y.log("createIntervalEventChecker()- stop event");
                 timeoutId = null;
                 if(stopHandleFunc)
-                    stopHandleFunc.call(thisObj, lastEvent);
+                    stopHandleFunc.call(thisObj, newEvent);
                 stat = STAT_STOPED;
             }else if(stat == STAT_STARTED){
                 stat = STAT_WAIT;
