@@ -788,10 +788,11 @@ YUI.add("lj-basic", function(Y){
             var tbody = this._body.one(">tbody");
             this.mouseEnterHandle = tbody.delegate('mouseenter', this._onMouseEnter, 'tr', this);
             this.mouseLeaveHandle = tbody.delegate('mouseleave', this._onMouseLeave, 'tr', this);
-            this.tapHandle = tbody.delegate("grid|touchend", this._onItemTap, "tr", this);
-            tbody.delegate("grid|mouseup", this._onItemTap, "tr", this);
+            tbody.delegate("grid|click", this._onItemClick, "tr", this);
             tbody.delegate("grid|touchstart", this._onTouchStart, "tr", this);
-            tbody.delegate("grid|mousedown", this._onTouchStart, "tr", this);
+            tbody.delegate("grid|touchend", this._onTouchEnd, "tr", this);
+            //tbody.delegate("grid|touchcancel", this._onTouchCancel, "tr", this);
+            //tbody.delegate("grid|touchmove", this._onTouchMove, "tr", this);
             this._maxWidthHandle = this.on("maxWidthChange", this.onMaxWidthChange, this);
         },
         _unbind:function(){
@@ -884,34 +885,41 @@ YUI.add("lj-basic", function(Y){
                     this.model.requestMore();
             }
         },
-        _onItemTap: function (e){
+        _onItemClick: function (e){
+            
             this._selectItemNode(e.currentTarget);
+            if(this._touchStartNode){
+                var classname = this.getClassName('s','tch','start');
+                this._touchStartNode.removeClass(classname);
+                delete this._touchStartNode;
+            }
         },
         
         _onTouchStart:function(e){
             var node = e.currentTarget;
-            
-            var classname = this.getClassName('s','selItem');
-            Y.log("lastScrolledAmt="+ this.scrollView.lastScrolledAmt);
-            if(Math.abs(this.scrollView.lastScrolledAmt) > 2)
-                return;
-            
-            if(!node.hasClass(classname))
-                node.addClass(classname);
+            var classname = this.getClassName('s','tch','start');
+            node.addClass(classname);
             this._touchStartNode = node;
         },
+        _onTouchEnd:function(e){
+            var classname = this.getClassName('s','tch','start'),
+                tc = e.changedTouches;
+                if(tc.length> 0)
+                    this._touchStartNode.removeClass(classname);
+        },
+       
         _selectItemNode:function(node){
             var classname = this.getClassName('s','selItem');
             Y.log("_selectItemNode()");
-            if(node!= this._touchStartNode){
-                this._touchStartNode.removeClass(classname);
-                return;
-            }
+            //if(node!= this._touchStartNode){
+            //    this._touchStartNode.removeClass(classname);
+            //    return;
+            //}
             if(this.get('singleSelection')){
                 
                 this.selectionModel.selectSingle(node.getAttribute("data-key"), node, true);
                 //if(!node.hasClass(classname))
-                //    node.addClass(classname);
+                    node.addClass(classname);
                 if(this._lastSingleSelNode && this._lastSingleSelNode != node)
                     this._lastSingleSelNode.removeClass(classname);
                 this._lastSingleSelNode = node;
@@ -1668,31 +1676,30 @@ YUI.add("lj-basic", function(Y){
             
             this.set('visible', true);
             var bb = this.get("boundingBox"),
-             parent = bb.ancestor();
-            var viewport = {h:parent.get('clientHeight'), w: parent.get('clientWidth')};
+             parent = Y.one(window);
+            var viewport = {h:parent.get('winHeight'), w: parent.get('winWidth')};
             var size = this._viewSize ={h:bb.get('offsetHeight'), w:bb.get('offsetWidth')};
             var x = (viewport.w - size.w)>>1;
             var y = (viewport.h - size.h)>>1;
             this.set("xy",[x, -size.h-10]);
             
-            bb.transition({
-                    top:y+"px",
-                    left:x+"px",
-                    easing:'ease-out',
-                    duration:0.3
-            });
+            deferredTasks.add(function(){
+                bb.transition({
+                        top:y+"px",
+                        left:x+"px",
+                        easing:'ease-out',
+                        duration:0.15
+                }); 
+                bb.setStyles({top:y+"px",
+                left:x+"px"});
+            }).run();
             
         },
         hide:function(){
             var bb = this.get("boundingBox"),
             self = this;
-            bb.transition({
-                    top: -this._viewSize.h-20+"px",
-                    easing:'ease-in',
-                    duration:0.3
-            },function(){
-                self.set('visible', false);
-            });
+            //bb.setStyle("top", -this._viewSize.h-20+"px");
+            self.set('visible', false);
             
         },
         onCancel:function(){
@@ -1919,7 +1926,8 @@ YUI.add("lj-basic", function(Y){
         AppManager:AppManager,
         Dialog:MyDialog,
         globalEventMgr:globalEventMgr,
-        deferredTasks:deferredTasks
+        deferredTasks:deferredTasks,
+        loadHandler:loadHandler
     });
     
     }catch(e){

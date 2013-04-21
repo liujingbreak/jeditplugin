@@ -27,14 +27,6 @@ YUI.add("lj-init", function(Y){
           hide:function(){
               var bar = this;
               this.get('boundingBox').hide({duration: 0.75});
-              //this.get('boundingBox').transition({
-              //        easing: 'ease-out',
-              //        duration: 0.75,
-              //        opacity:0, 
-              //        function(){
-              //            bar.set('visible', false);
-              //        }
-              //});
           }
         },{
             ATTRS:{

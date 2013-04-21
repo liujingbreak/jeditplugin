@@ -4,7 +4,11 @@
     visibility:hidden;
     top:-1000px;
 }
+.lj-dialog{
+    
+}
 .lj-dialog-content{
+    -webkit-backface-visibility: hidden;
     /*background:-o-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), #cccccc;
     background:-moz-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), #3454b4;
     background:-webkit-radial-gradient(center, circle, rgba(0,0,0,0), rgba(0,0,0,0.6)), #cccccc;
@@ -67,7 +71,7 @@
 }
 /** MyEditableGrid */
 .skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td{
-    background: #2ff;
+
     background: rgba(30, 255, 255, .9);
     color: black;
     -webkit-box-shadow: 0px 0px 10px 0px   rgba(30, 255, 255, .8);
@@ -77,8 +81,13 @@
     -pie-background: linear-gradient(to bottom, rgba(30, 255, 255, .9));
     behavior:url(PIE/PIE.htc);
 }
-.skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td:first-child{
-    color:rgb(30, 255, 255);
+.skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-tch-start td{
+    background: rgb(7, 180, 180);
+    color: black;
+}
+.skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-selItem td:first-child,
+.skin-lj .yui3-scrollgrid-content .yui3-scrollgrid-s-tch-start td:first-child{
+    color:rgb(7, 180, 180);
 }
 .skin-lj .yui3-scrollgrid-bottom .yui3-button{
     height:25px;
@@ -270,8 +279,7 @@
  }
  .skin-lj .yui3-scrollgrid-body td{
      background: rgba(0, 0, 0, 0.2);
-     padding: 4px 4px;
-     border-bottom: 1px solid #666666;
+     padding: 4px 6px;
  }
  .skin-lj .yui3-scrollgrid-body td:first-child{
      background: none;
@@ -429,7 +437,11 @@
      /*overflow:hidden;*/
  } 
  /** Hack: fix Android webkit YUI scrollView transform flickering issue */
-.yui3-scrollview{
+ .yui3-scrollview-content{
     -webkit-backface-visibility: hidden;
+} 
+.yui3-skin-sam.skin-lj .yui3-console-separate{
+    top:auto;
+    bottom:4px;
 }
 

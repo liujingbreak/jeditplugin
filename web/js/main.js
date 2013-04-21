@@ -14,19 +14,16 @@ YUI_config = {
                     path: 'lj-init/lj-init.js',
                     lang: ["zh"]
                 },
-                "dwr":{
-                    //async: false,
-                    fullpath:'/dwr/engine.js'
-                },
+                
                 'dwr-projects':{
-                    //async: false,
-                    fullpath:'/dwr/interface/ProjectController.js',
-                    requires:['dwr']
+                    async: false,
+                    fullpath:'/dwr/interface/ProjectController.js'
+                    //,requires:['dwr']
                 },
                 'dwr-filescan':{
-                    //async: false,
-                    fullpath:'/dwr/interface/FileScanController.js',
-                    requires:['dwr']
+                    async: false,
+                    fullpath:'/dwr/interface/FileScanController.js'
+                    //,requires:['dwr']
                 }
             }
         }
@@ -36,16 +33,20 @@ YUI_config = {
 
 var globalY;
 
-YUI({lang:'zh'}).use('lj-init', function(Y){
-        
+YUI({lang:'zh'}).use('lj-init','console', function(Y){
+  try{
+      //new Y.Console().render();
     Y.log("main start");
     Y.lj.statusBar.showLoading();
     Y.lj.statusBar.render();
     globalY = Y;
-        
+  }catch(e){
+      Y.log(e.stack);
+      throw e;
+  }
     // lazy loading starts ...
     setTimeout(function(){
-    Y.use('dwr-projects','dwr-filescan','lj-basic','json-stringify',initljBasic)}, 10);
+    Y.use('dwr-filescan','dwr-projects','lj-basic','json-stringify',initljBasic)}, 10);
 });
 
 
@@ -53,6 +54,12 @@ function initljBasic() {
 try{
     var Y = globalY, lj = Y.lj;
     lj.statusBar.render();
+    
+    //Y.Get.js(['/dwr/engine.js',
+    //    '/dwr/interface/ProjectController.js',
+    //'/dwr/interface/FileScanController.js'],function(err){
+    //    
+    //});
 
     dwr.engine.setErrorHandler(function(errorString, exception){
             Y.log("DWR engine error: "+ errorString);
@@ -571,7 +578,7 @@ try{
     
     
 }catch(e){
-    Y.log(e.stack);
+    Y.log("erro: "+ e.stack);
     throw e;
 }
 }
