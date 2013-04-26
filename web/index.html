@@ -52,26 +52,43 @@ html{
         position:absolute;
         top:5px;
         bottom:10px;
-        left:5px;
+        left:250;
         width:50%;
+    }
+    #rightSection{
+        position:absolute;
+        top:0px;
+        left:260px;
+        padding:0px;
+        bottom:0px;
     }
 }
 @media all and (min-width:800px){
-#leftSection{
+    #leftSection{
         position:absolute;
         top:5px;
         bottom:10px;
         left:5px;
-        width:30%;
+        width:320px;
+    }
+    #rightSection{
+        position:absolute;
+        top:0px;
+        left:330px;
+        padding:0px;
+        bottom:0px;
     }
 }
 @media all and (max-width:499px){
-#leftSection{
+    #leftSection{
         position:absolute;
         top:0px;
         bottom:1px;
         left:1px;
         right:1px;;
+    }
+    #rightSection{
+        display:none;
     }
 }
 #leftSection{
@@ -93,14 +110,7 @@ html{
     height:20%;
     overflow:hidden;
 }
-#rightSection{
-    position:absolute;
-    top:0px;
-    
-    left:485px;
-    padding:0px;
-    bottom:0px;
-}
+
 #status-bar{
     background:rgb(30,30,20);
     display:inline-block;
@@ -119,11 +129,9 @@ html{
 }
    </style>
   <body class="yui3-skin-sam skin-lj">
-  
+  <div></div>
 <div id="leftSection"></div>
 <div id="rightSection">
-    <div id="folder"></div>
-    <div id="project"></div>
 </div>
 <div style="clear:both"></div>
 </div>
