@@ -236,7 +236,7 @@ public class RootFolder extends SqlDAO{
     
     public ListPage<SrcFile> listSrcFile(Connection conn, ListPage<SrcFile> page)throws SQLException{
         ListPage<SrcFile> res = DAOUtil.loadPageByRow(conn, page, "*",
-            "from src_file s join file_tree f on s.FILE_TREE_ID=f.FILE_TREE_ID where f.ROOT_FOLDER_ID=?",
+            "from src_file s join file_tree f on s.FILE_TREE_ID=f.FILE_TREE_ID where s.ROOT_FOLDER_ID=?",
             "order by file_tree_id", srcFileRowHandler, id);
         return res;
     }

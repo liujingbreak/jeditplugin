@@ -156,13 +156,13 @@ public class ProjectDAO extends SqlDAO{
     public ListPage findFileTreeByName(Connection conn, String name,
         int findNameOption, PagingRequest pr)throws SQLException
     {
-        return findFileTreeByField(conn, name, findNameOption, "FT_NAME", pr);
+        return findFileTreeByField(conn, name, findNameOption, "FT_UPPER_NAME", pr);
     }
     
     public ListPage findFileTreeByPath(Connection conn, String name,
         int findNameOption, PagingRequest pr)throws SQLException
     {
-        return findFileTreeByField(conn, name, findNameOption, "PATH", pr);
+        return findFileTreeByField(conn, name, findNameOption, "FT_UPPER_PATH", pr);
     }
     
     private ListPage findFileTreeByField(Connection conn, String name,
@@ -181,7 +181,7 @@ public class ProjectDAO extends SqlDAO{
         }
         
         String sql = " from root_folder R  join file_tree F on  F.root_folder_id = R.root_folder_id "+ 
-            " where F.root_folder_id in (select root_folder_id from project_folders where project_id = ?)  and UPPER(F."+ field+ ") "+ cond;
+            " where F.root_folder_id in (select root_folder_id from project_folders where project_id = ?)  and F."+ field+ " "+ cond;
         
         ListPage<Object[]> page = null;
         if(pr != null && pr instanceof ListPage)
@@ -209,7 +209,7 @@ public class ProjectDAO extends SqlDAO{
         params.add(this.id);
         String cond = "", nameValue = null;
         if(byName){
-            cond = " and UPPER(S.sf_name)";
+            cond = " and S.sf_upper_name";
             if(findNameOption == FIND_NAME_START){
                 cond += " like ?";
                 nameValue = name.toUpperCase() + "%";
@@ -229,8 +229,8 @@ public class ProjectDAO extends SqlDAO{
         }
         //String sql = "from src_file S inner join file_tree F on S.file_tree_id=F.file_tree_id inner join root_folder R on F.root_folder_id = R.root_folder_id"+
         //    " where  UPPER(S.sf_name) "+ cond+ " and F.root_folder_id in (select root_folder_id from project_folders where project_id = ?) ";
-        String sql = " from root_folder R  join file_tree F on  F.root_folder_id = R.root_folder_id join src_file S on S.file_tree_id=F.file_tree_id"+ 
-            " where F.root_folder_id in (select root_folder_id from project_folders where project_id = ?) "+ cond;
+        String sql = " from root_folder R join src_file S on S.root_folder_id = R.root_folder_id join FILE_TREE F on S.file_tree_id=F.file_tree_id "+ 
+            " where S.root_folder_id in (select root_folder_id from project_folders where project_id = ?) "+ cond;
         ListPage<Object[]> page = null;
         if(pr != null && pr instanceof ListPage)
             page = (ListPage)pr;

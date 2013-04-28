@@ -19,6 +19,7 @@ public class SrcFile extends SqlDAO{
     private String path;
     private String srcType;
     private FileTree fileTree;
+    private RootFolder rootFolder;
     private Number checkFlag = 0;
     public static int IN_ZIP_FLAG = 2;
     public static final int UPDATED_FLAG = 1;
@@ -179,19 +180,22 @@ public class SrcFile extends SqlDAO{
     
     
     public void save(Connection conn, FileTree folder)throws SQLException{
+        if(rootFolder == null && fileTree != null)
+            rootFolder = fileTree.getRootFolder();
         if(id == null){
             Object[] rets = new QueryRunner().query(conn,
                 "select src_file_seq.nextval from dual", new ArrayHandler());
             id = (Number)rets[0];
+            
             new QueryRunner().update(conn,
-                    "insert into SRC_FILE (SRC_FILE_ID, SF_NAME, PACKAGE,  SRC_TYPE, GRAM_DATA, FILE_TREE_ID, SF_CHECK_FLAG, MODIFIED, SF_LAST_MODIF) values (?, ?, ?, ?, ?, ?,?, CURRENT_TIMESTAMP(), ?)",
+                    "insert into SRC_FILE (SRC_FILE_ID, SF_NAME, PACKAGE,  SRC_TYPE, GRAM_DATA, FILE_TREE_ID, ROOT_FOLDER_ID, SF_CHECK_FLAG, MODIFIED, SF_LAST_MODIF) values (?, ?, ?, ?, ?, ?,?,? CURRENT_TIMESTAMP(), ?)",
                     id, name, packageName, srcType, gramData, 
-                    folder == null? null: folder.id, checkFlag, lastModified);
+                    folder == null? null: folder.id, rootFolder.getId(), checkFlag, lastModified);
         }else{
             new QueryRunner().update(conn,
-                    "update SRC_FILE set SF_NAME=?, PACKAGE=?, SRC_TYPE=?, GRAM_DATA=?, FILE_TREE_ID=?, SF_CHECK_FLAG=?, MODIFIED=CURRENT_TIMESTAMP(), SF_LAST_MODIF=? where SRC_FILE_ID=?",
+                    "update SRC_FILE set SF_NAME=?, PACKAGE=?, SRC_TYPE=?, GRAM_DATA=?, FILE_TREE_ID=?, ROOT_FOLDER_ID=?, SF_CHECK_FLAG=?, MODIFIED=CURRENT_TIMESTAMP(), SF_LAST_MODIF=? where SRC_FILE_ID=?",
                     name, packageName, srcType, gramData, 
-                    folder == null? null: folder.id, checkFlag, lastModified,  id);
+                    folder == null? null: folder.id, rootFolder.getId(), checkFlag, lastModified,  id);
         }
     }
     
