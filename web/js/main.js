@@ -412,7 +412,6 @@ try{
     */
     var ProjectAddPortal = Y.Base.create("prjaddportal",Y.MyPortal, [Y.WidgetParent], {
          initializer:function(){
-             //ProjectAddPortal.superclass.initializer.apply(this, arguments);
              this.after('render', this.renderLayout, this);
              this.setTitle("Add Project");
          },
@@ -461,32 +460,32 @@ try{
             render:function(){
                 var container = this.get('container');
                 prjAdd = new ProjectAddPortal({ buttons: [
-                {  
-                    value:'Save',
-                    action:function(e){
-                        this.set('disabled', true);
-                        prjAdd.namefield.syncInput();
-                        prjAdd.descfield.syncInput();
-                        var button = this;
-                        ProjectController.addProject(prjAdd.namefield.get('input'), 
-                                    prjAdd.descfield.get('input'),
-                                    {   callback:function(res){
-                                            projects.refresh();
-                                            button.set('disabled', false);
-                                        },
-                                        errorHandler:function(m){ }
-                                    }
-                                    );
-                            },
-                            section: Y.WidgetStdMod.FOOTER
-                },
-                {
-                    value:'Cancel',
-                    action:function(e){
-                        history.back();
+                    {  
+                        value:'Save',
+                        action:function(e){
+                            this.set('disabled', true);
+                            prjAdd.namefield.syncInput();
+                            prjAdd.descfield.syncInput();
+                            var button = this;
+                            ProjectController.addProject(prjAdd.namefield.get('input'), 
+                                        prjAdd.descfield.get('input'),
+                                        {   callback:function(res){
+                                                projects.refresh();
+                                                button.set('disabled', false);
+                                            },
+                                            errorHandler:function(m){ }
+                                        }
+                                        );
+                       },
+                       section: Y.WidgetStdMod.FOOTER
                     },
-                    section: Y.WidgetStdMod.FOOTER
-                }
+                    {
+                        value:'Cancel',
+                        action:function(e){
+                            history.back();
+                        },
+                        section: Y.WidgetStdMod.FOOTER
+                    }
                 ]});
                 prjAdd.render(container);
             },
@@ -506,7 +505,7 @@ try{
                 container.setHTML("By    Liu Jing");
             }
     });
-    
+    /** @class leftApp */
     var leftApp = new Y.App({
             viewContainer:"#leftSection",
             serverRouting:false,
@@ -528,28 +527,7 @@ try{
                 }
             }
         });
-    
-    var appMgr = new Y.lj.AppManager("#leftSection", 
-        {
-            listView:{
-                preserve:true,
-                type:ListView
-            },
-            addProjectView:{
-                type:AddProjectView,
-                preserve:false,
-                parent:"listView"
-            },
-            aboutView:{
-                type:AboutView,
-                preserve:false,
-                parent:"listView"
-            }
-        });
-    appMgr.routes(
-        [
-            {   path: '/',
-                callbacks: function (){
+    leftApp.route("/", callbacks: function (){
                     document.title = "Wooden Axe Tool"
                     appMgr.showView("listView", null, null, 
                         function(){
@@ -561,18 +539,14 @@ try{
                                 }, 50).run();
                             }
                         });
-                }
-            },
-            {   path: '/add',callbacks: function (){
+                });
+    
+    leftApp.route('/add', function (){
                     document.title = "Wooden Axe Tool - Add Project"
                     appMgr.showView("addProjectView");
-                }
-            }
-        ]);
-    var mainApp = appMgr.apps[0], 
-    firstLoad = true;
+                });
     
-    
+    var firstLoad = true;
     
     function resizePage(){
         var p = Y.one("#leftSection"),
@@ -588,8 +562,7 @@ try{
     }
     Y.lj.globalEventMgr.onWindowResize(resizePage);
     
-    mainApp.render().save("/");
-    //new ListView({container:"#leftSection"}).render();
+    leftApp.render().save("/");
     
     
     
