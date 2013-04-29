@@ -436,16 +436,10 @@ try{
     ProjectAddPortal.CSS_PREFIX = ProjectAddPortal.superclass.constructor.CSS_PREFIX;
     var prjAdd = null;
     
-    //prjAdd.render("#project");
-    
     projects.on('add', function(){
             appMgr.save("/add");
-        //prjAdd.set('visible', true);
-        //prjAdd.focus();
     });
     
-    //projects.set("maxWidth","300");
-    //directories.set("width",350);
     /**@class ListView */
     var ListView = Y.Base.create("listView", Y.View, [],{
             initializer:function(){
@@ -512,6 +506,28 @@ try{
                 container.setHTML("By    Liu Jing");
             }
     });
+    
+    var leftApp = new Y.App({
+            viewContainer:"#leftSection",
+            serverRouting:false,
+            transitions:true,
+            views:{
+                listView:{
+                    preserve:true,
+                    type:ListView
+                },
+                addProjectView:{
+                    type:AddProjectView,
+                    preserve:false,
+                    parent:"listView"
+                },
+                aboutView:{
+                    type:AboutView,
+                    preserve:false,
+                    parent:"listView"
+                }
+            }
+        });
     
     var appMgr = new Y.lj.AppManager("#leftSection", 
         {
