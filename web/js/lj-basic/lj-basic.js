@@ -1106,7 +1106,8 @@ YUI.add("lj-basic", function(Y){
             if(Y.Lang.isNumber(h)){
                 //Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH
                 //    + " padding="+ padding);
-                this._bodyscroll.setStyle("height", (h - headerH) - padding - bottomH + this.DEF_UNIT);
+                //this._bodyscroll.setStyle("height", (h - headerH) - padding - bottomH + this.DEF_UNIT);
+                this.scrollView.set('height', (h - headerH) - padding - bottomH + this.DEF_UNIT);
             }else if(h.charAt(h.length-1) == '%'){
                 
                 var precent = parseInt(h.substring(0, h.length -1), 10);
@@ -1115,13 +1116,14 @@ YUI.add("lj-basic", function(Y){
                     var ph = parent.get("clientHeight");
                     if(ph > 0 ){
                         var cal = Math.floor(ph * precent/100) - headerH - padding - bottomH;
-                        this._bodyscroll.setStyle("height", cal + "px");
+                        //this._bodyscroll.setStyle("height", cal + "px");
+                        this.scrollView.set('height', cal + "px");
                     }
                 }
                 Y.log("---% height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH+
                     ", cal="+ cal);
             }
-            
+            this.scrollView.refresh();
             //this._syncColumnsWidth();
             
         },

@@ -436,7 +436,7 @@ try{
     var prjAdd = null;
     
     projects.on('add', function(){
-            appMgr.save("/add");
+            leftApp.save("/add");
     });
     
     /**@class ListView */
@@ -447,9 +447,7 @@ try{
             render:function(){
                 var container = this.get('container');
                 projects.render(container);
-                
                 directories.render(container);
-                
             }
     });
     /**@class AddProjectView */
@@ -514,11 +512,12 @@ try{
                 listView:{
                     preserve:true,
                     type:ListView
+                    //,parent:"addProjectView"
                 },
                 addProjectView:{
                     type:AddProjectView,
-                    preserve:false,
-                    parent:"listView"
+                    preserve:true
+                    ,parent:"listView"
                 },
                 aboutView:{
                     type:AboutView,
@@ -527,9 +526,9 @@ try{
                 }
             }
         });
-    leftApp.route("/", callbacks: function (){
+    leftApp.route("/", function (){
                     document.title = "Wooden Axe Tool"
-                    appMgr.showView("listView", null, null, 
+                    this.showView("listView", null, null, 
                         function(){
                             if(firstLoad){
                                 resizePage();
@@ -543,7 +542,7 @@ try{
     
     leftApp.route('/add', function (){
                     document.title = "Wooden Axe Tool - Add Project"
-                    appMgr.showView("addProjectView");
+                    this.showView("addProjectView");
                 });
     
     var firstLoad = true;
@@ -556,9 +555,9 @@ try{
         Y.log(" resizePage client height = "+ h
             +" client width = "+ w);
         projects.set('height', h);
-        projects.set('width', w);
+        projects.set('width', w - 1);
         directories.set('height', h);
-        directories.set("width", w);
+        directories.set("width", w - 1);
     }
     Y.lj.globalEventMgr.onWindowResize(resizePage);
     

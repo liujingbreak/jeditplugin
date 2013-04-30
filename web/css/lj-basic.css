@@ -241,17 +241,6 @@
 .skin-lj .yui3-scrollgrid-gp-1 td{
     background: black;
 }
-/*.skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-0 td{
-    
-}
-
-.skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-1 td{
-    padding-left: 1em;
-}
-
-.skin-lj .yui3-scrollgrid-body .yui3-scrollgrid-gp-2 td{
-    padding-left: 2em;
-}*/
 
 .skin-lj .yui3-scrollgrid-hover td{
     color:#1effff;
@@ -261,13 +250,13 @@
      -moz-border-radius:     4px 4px 4px 4px;
      -webkit-border-radius:  4px 4px 4px 4px;
      border-radius:          4px 4px 4px 4px;
-     border:1px inset #909090;
-     /*background: rgba(255,255,255,.1);*/
+     border:1px solid #909090;
+     background: rgba(255,255,255,.1);
      behavior: url(PIE/PIE.htc);
  }
  
  .skin-lj div.yui3-scrollgrid-header-scroll{
-     position:relative;
+     
      background:#909090;
      /*-moz-border-radius:     4px 4px 0px 0px;
      -webkit-border-radius:  4px 4px 0px 0px;
