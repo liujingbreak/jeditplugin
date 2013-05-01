@@ -1883,14 +1883,17 @@ YUI.add("lj-basic", function(Y){
         - direction 'v'/'h'
         - node bar node
         - container  container node
+      @event change
+        - value top distance in pixel
     */
     function SplitBar(config){
         SplitBar.superclass.constructor.apply(this,arguments);
     }
     SplitBar.ATTRS = {
-            
+            maxValue:{value:-1},
+            minValue:{value:1},
+            value:{value:-1}
     };
-    
     Y.extend(SplitBar, Y.Base, {
             initializer:function(cfg){
                 /**@property direction */
@@ -1898,16 +1901,26 @@ YUI.add("lj-basic", function(Y){
                 this.node = cfg.node;
                 this.container = cfg.container;
                 this.drag = new Y.DD.Drag({node:this.node}).
-                plug(Y.Plugin.DDProxy).
+                //plug(Y.Plugin.DDProxy).
                 plug(Y.Plugin.DDConstrained, {
                     constrain2node: this.container
                 });
-                
+                this.node.addClass('ver-drag');
                 this.drag.on('drag:end', this._dragEnd, this);
             },
             
             _dragEnd:function(e){
-                Y.log('drag end');
+                var bar = this;
+                deferredTasks.add(function(){
+                        bar.set('value', bar.node.get('offsetTop'));
+                }).run();
+                
+            },
+            reset:function(){
+                this.node.setStyle('top','');
+            },
+            destructor:function(){
+                this.drag.detachAll();
             }
     });
     /**@class AppManager */
@@ -1962,6 +1975,7 @@ YUI.add("lj-basic", function(Y){
         Dialog:MyDialog,
         SplitBar:SplitBar,
         
+        parseStyleLen:parseStyleLen,
         globalEventMgr:globalEventMgr,
         deferredTasks:deferredTasks,
         loadHandler:loadHandler

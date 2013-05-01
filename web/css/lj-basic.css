@@ -3,12 +3,10 @@
     height:7px;
     font-size:7px;
     background: gray;
+    cursor:ns-resize;
 }
 .yui3-dd-draggable{
     z-index:100;
-}
-.yui3-dd-proxy{
-    background: blue;
 }
 /**dialog */
 .lj-dialog-hidden{

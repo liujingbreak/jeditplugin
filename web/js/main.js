@@ -448,14 +448,20 @@ try{
                 var container = this.get('container');
                 var frag = Y.one(document.createDocumentFragment());
                 projects.render(frag);
-                var dragbarNode = Y.Node.create('<div class="ver-drag"></div>');
+                var dragbarNode = Y.Node.create('<div></div>');
                 frag.append(dragbarNode);
                 directories.render(frag);
                 container.append(frag);
-                var dragbar = new Y.lj.SplitBar({
+                /**@property dragbar */
+                this.dragbar = new Y.lj.SplitBar({
                         node:dragbarNode, 
-                        container:'#leftSection',
+                        container:"#leftSection",
                         direction:'v'
+                });
+                var bar = this.dragbar;
+                bar.after('listView|valueChange', function(e){
+                        bar.reset();
+                        resizePage();
                 });
             }
     });
@@ -557,15 +563,23 @@ try{
     var firstLoad = true;
     
     function resizePage(){
-        var p = Y.one("#leftSection"),
+        var p = Y.one("#leftSection");
         
-        h = (p.get("clientHeight") >> 1) -3,
-        w = p.get("clientWidth");
-        Y.log(" resizePage client height = "+ h
-            +" client width = "+ w);
-        projects.set('height', h);
+        var h = Y.lj.parseStyleLen(p.getComputedStyle('height')),
+            w = Y.lj.parseStyleLen(p.getComputedStyle('width')),
+            view = leftApp.get('activeView');
+        if(! view instanceof ListView)
+            return;
+        var splitValue = view.dragbar.get('value');
+        if(splitValue < 0)
+            splitValue = (h>>1) - 4;
+            
+        var hDown = h - splitValue-7;
+        //Y.log(" split :"+ splitValue + "/"+ hDown+ "/"+ Y.lj.parseStyleLen(h));
+        projects.set('height', splitValue);
+        directories.set('height', hDown);
+                        
         projects.set('width', w - 1);
-        directories.set('height', h);
         directories.set("width", w - 1);
     }
     Y.lj.globalEventMgr.onWindowResize(resizePage);
