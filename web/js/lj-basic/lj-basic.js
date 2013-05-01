@@ -819,6 +819,8 @@ YUI.add("lj-basic", function(Y){
             }else if(w.charAt(w.length-1) == '%'){
                 var percent = parseInt(w.substring(0, w.length -1), 10),
                 aa = this.get("boundingBox").ancestor();
+                if(aa == null)
+                    return;// in case it is rendered to a document fragment
                 pw = aa.get("clientWidth")*percent/100 
                 - parseStyleLen(aa.getComputedStyle("paddingLeft"))
                 - parseStyleLen(aa.getComputedStyle("paddingRight"));
@@ -999,7 +1001,7 @@ YUI.add("lj-basic", function(Y){
             _totalDIV.addClass(this.getClassName("total"));
             _totalDIV.append(this._totalNode);
             bottom.append(_totalDIV);
-            bottom.append("<div class=\"clear\"></div>");
+            //bottom.append("<div class=\"clear\"></div>");
             
             this.get('contentBox').append(bottom);
         },
@@ -1875,8 +1877,39 @@ YUI.add("lj-basic", function(Y){
     Y.mix(MyTextField.prototype, WidgetRenderTaskQ);
     Y.MySearchField = MySearchField;
         MySearchField.CSS_PREFIX = "yui3-mytextfield";
-        
-        
+    
+    /**@class SplitBar 
+    config: 
+        - direction 'v'/'h'
+        - node bar node
+        - container  container node
+    */
+    function SplitBar(config){
+        SplitBar.superclass.constructor.apply(this,arguments);
+    }
+    SplitBar.ATTRS = {
+            
+    };
+    
+    Y.extend(SplitBar, Y.Base, {
+            initializer:function(cfg){
+                /**@property direction */
+                this.direction = cfg.direction;
+                this.node = cfg.node;
+                this.container = cfg.container;
+                this.drag = new Y.DD.Drag({node:this.node}).
+                plug(Y.Plugin.DDProxy).
+                plug(Y.Plugin.DDConstrained, {
+                    constrain2node: this.container
+                });
+                
+                this.drag.on('drag:end', this._dragEnd, this);
+            },
+            
+            _dragEnd:function(e){
+                Y.log('drag end');
+            }
+    });
     /**@class AppManager */
     function AppManager(viewContainer, views){
         /**@property apps */
@@ -1927,6 +1960,8 @@ YUI.add("lj-basic", function(Y){
     Y.mix(lj,{
         AppManager:AppManager,
         Dialog:MyDialog,
+        SplitBar:SplitBar,
+        
         globalEventMgr:globalEventMgr,
         deferredTasks:deferredTasks,
         loadHandler:loadHandler
@@ -1937,4 +1972,4 @@ YUI.add("lj-basic", function(Y){
     }
 }, "1.0.0",{
 requires:['get','base','overlay','node','event','panel','widget','widget-parent','widget-child',
-'button','button-group','scrollview','node-focusmanager','app',"async-queue"]});
+'button','button-group','scrollview','node-focusmanager','app',"async-queue",'dd-drag','dd-proxy','dd-constrain']});

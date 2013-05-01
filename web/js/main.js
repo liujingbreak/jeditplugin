@@ -446,8 +446,17 @@ try{
             },
             render:function(){
                 var container = this.get('container');
-                projects.render(container);
-                directories.render(container);
+                var frag = Y.one(document.createDocumentFragment());
+                projects.render(frag);
+                var dragbarNode = Y.Node.create('<div class="ver-drag"></div>');
+                frag.append(dragbarNode);
+                directories.render(frag);
+                container.append(frag);
+                var dragbar = new Y.lj.SplitBar({
+                        node:dragbarNode, 
+                        container:'#leftSection',
+                        direction:'v'
+                });
             }
     });
     /**@class AddProjectView */
@@ -550,7 +559,7 @@ try{
     function resizePage(){
         var p = Y.one("#leftSection"),
         
-        h = p.get("clientHeight") >> 1,
+        h = (p.get("clientHeight") >> 1) -3,
         w = p.get("clientWidth");
         Y.log(" resizePage client height = "+ h
             +" client width = "+ w);

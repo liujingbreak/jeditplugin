@@ -1,4 +1,15 @@
-
+/** drag */
+.ver-drag{
+    height:7px;
+    font-size:7px;
+    background: gray;
+}
+.yui3-dd-draggable{
+    z-index:100;
+}
+.yui3-dd-proxy{
+    background: blue;
+}
 /**dialog */
 .lj-dialog-hidden{
     visibility:hidden;
@@ -96,7 +107,6 @@
 .skin-lj .yui3-scrollgrid-bottom{
     padding: 0px 5px;
     font-size: 12px;
-    text-align: right;
 }
 /** text_field */
 .skin-lj .yui3-mytextfield input[type=text]{
@@ -250,24 +260,22 @@
      -moz-border-radius:     4px 4px 4px 4px;
      -webkit-border-radius:  4px 4px 4px 4px;
      border-radius:          4px 4px 4px 4px;
-     border:1px solid #909090;
+     /* border:1px solid #909090; */
      background: rgba(255,255,255,.1);
      behavior: url(PIE/PIE.htc);
  }
  
  .skin-lj div.yui3-scrollgrid-header-scroll{
      
-     background:#909090;
-     /*-moz-border-radius:     4px 4px 0px 0px;
+     background:url('/img/header-bg.png') repeat-x, #d18f4f;
+     -moz-border-radius:     4px 4px 0px 0px;
      -webkit-border-radius:  4px 4px 0px 0px;
      border-radius:          4px 4px 0px 0px;
      behavior: url(PIE/PIE.htc);
-     background: #666666;
-     behavior: url(PIE/PIE.htc);*/
      
  }
  .skin-lj .yui3-scrollgrid-body td{
-     background: rgba(0, 0, 0, 0.2);
+     /* background: rgba(0, 0, 0, 0.2); */
      padding: 4px 6px;
  }
  .skin-lj .yui3-scrollgrid-body td:first-child{
@@ -276,7 +284,7 @@
      border-right:1px solid #666666;
  }
  .skin-lj .yui3-scrollgrid-header-scroll th{
-     color: #303030;
+     color: rgb(6,6,6);
      padding: 4px 4px;
  }
 
@@ -407,9 +415,11 @@
      border-spacing:0;
  }
  .yui3-scrollgrid-buttons{
-     float:left;
+     display:inline-block;
+     zoom:1;
+     *display:inline;
  }
- .yui3-scrollgrid-buttons button{
+ .yui3-scrollgrid-buttons .yui3-button{
      min-width:10em;
  }
  .yui3-scrollgrid-total{
@@ -417,14 +427,14 @@
      bottom:1px;
      right:2px;
  }
- div.clear{
+ .clear{
      clear:both;
  }
 /** App [hack]: avoid Android webkit flick issue*/
- .skin-lj .yui3-app-views>div{
+ /* .skin-lj .yui3-app-views>div{
      
-     /*overflow:hidden;*/
- } 
+     overflow:hidden;
+ }  */
  /** Hack: fix Android webkit YUI scrollView transform flickering issue */
  .yui3-scrollview-content{
     -webkit-backface-visibility: hidden;
