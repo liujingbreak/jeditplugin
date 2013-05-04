@@ -806,6 +806,7 @@ YUI.add("lj-basic", function(Y){
             
             this._maxWidthHandle.detach();
             this._body.one(">tbody").detach("grid|*");
+            this.scrollView.detach('grid|*');
         },
         syncWidth:function(e){
             var w = e? e.newVal: this.get("width"), pw;
@@ -859,22 +860,27 @@ YUI.add("lj-basic", function(Y){
                 srcNode: this._bodyscroll
                 });
             this.scrollView.render(frag);
-            
-            this._scrollViewHandle = this.scrollView.after('scrolling', 
-                createIntervalEventChecker(200, this._syncScrolling, null,null, this),
-                this);
+            this.scrollView.after('grid|scrollXChange', 
+                this._syncScrolling, this);
+            this.scrollView.after('grid|scrollYChange', 
+                function(e){
+                    this._syncLoadMore(e.newVal);
+                }, this);
+            //this._scrollViewHandle = this.scrollView.after('scrolling', 
+            //    createIntervalEventChecker(200, this._syncScrolling, null,null, this),
+            //    this);
         },
         _syncScrolling:function(e){
-            if(e.x >=0){
+            if(e.newVal >=0){
                 //this.headerscroll.set("scrollLeft", e.x);
-                //this._headerContent.setStyle("left", -e.x + "px");
-                this._headerContent.transition(
+                this._headerContent.setStyle("left", -e.newVal + "px");
+                
+                /* this._headerContent.transition(
                     {
-                        duration: 0.3,
-                        left: -e.x + "px"
-                    });
+                        duration: 0.2,
+                        left: -e.newVal + "px"
+                    }); */
             }
-            this._syncLoadMore(e.y);
         },
         _syncLoadMore:function(scrollTop){
             if(this.rendedHasMore && 
@@ -1335,12 +1341,6 @@ YUI.add("lj-basic", function(Y){
                 this.MyScrollView_left = 0;
                 this.m_bb = this.get('boundingBox');
             },
-            //renderUI:function(){
-            //    Y.log("myscrollview renderUI " 
-            //        + this.get("srcNode") + ", "
-            //        + this.get("boundingBox").ancestor().get("tagName"));
-            //    
-            //},
             bindUI:function(){
                 MyScrollView.superclass.bindUI.apply(this, arguments);
                 this.bindAndSyncAttr("maxWidth", function(w){
@@ -1388,6 +1388,16 @@ YUI.add("lj-basic", function(Y){
             refresh: function(){
                 deferredTasks.add(Y.bind(function(){
                     delete this._cAxis;
+                    //var sv = this,
+                    //scrollDims = sv._getScrollDims(),
+                    //width = scrollDims.offsetWidth,
+                    //height = scrollDims.offsetHeight,
+                    //scrollWidth = scrollDims.scrollWidth,
+                    //scrollHeight = scrollDims.scrollHeight;
+                    //Y.log("scrollWidth="+ scrollWidth+
+                    //    " scrollHeigh="+ scrollHeight+
+                    //    " width="+ width+ " height="+height);
+                    
                     this.syncUI();
                 }, this)).run();
             },
