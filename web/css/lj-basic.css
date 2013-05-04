@@ -1,9 +1,43 @@
-/** drag */
-.ver-drag{
-    height:7px;
-    font-size:7px;
-    background: gray;
+/** SlipBar */
+.ver-dragBar{
+    height:10px;
+    font-size:1px;
+    background: url('/img/slipPanel-ver-white.png') no-repeat center center;
     cursor:ns-resize;
+}
+.hor-dragBar{
+    width:10px;
+    height:100%;
+    font-size:1px;
+    background: url('/img/slipPanel-hor-white.png') no-repeat center center;;
+    cursor:ew-resize;
+    display:inline-block;
+    zoom:1;
+    *display:inline;
+}
+.ver-dragBar.ver-splitDragging{
+    background: #cccccc;
+    background: rgba(255,255,255, .5);
+    -ms-box-shadow:     0px 0px 9px 1px rgba(0,0,0,.7);
+    -webkit-box-shadow: 0px 0px 9px 1px rgba(0,0,0,.7);
+    -moz-box-shadow:    0px 0px 9px 1px rgba(0,0,0,.7);
+    -o-box-shadow:      0px 0px 9px 1px rgba(0,0,0,.7);
+    box-shadow:         0px 0px 9px 1px rgba(0,0,0,.7);
+}
+.hor-dragBar.hor-splitDragging{
+    background: #cccccc;
+    background: rgba(255,255,255, .5);
+    -ms-box-shadow:     0px 0px 9px 1px rgba(0,0,0,.7);
+    -webkit-box-shadow: 0px 0px 9px 1px rgba(0,0,0,.7);
+    -moz-box-shadow:    0px 0px 9px 1px rgba(0,0,0,.7);
+    -o-box-shadow:      0px 0px 9px 1px rgba(0,0,0,.7);
+    box-shadow:         0px 0px 9px 1px rgba(0,0,0,.7);
+}
+.ver-split-panel{
+    cursor:ns-resize;
+}
+.hor-split-panel{
+    cursor:ew-resize;
 }
 .yui3-dd-draggable{
     z-index:100;
@@ -31,7 +65,7 @@
     -webkit-box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
     -moz-box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
     -o-box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
-    -box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
+    box-shadow:0px 3px 10px 2px rgba(0,0,0,.6);
     border-radius:5px 5px 5px 5px;
     -ms-border-radius:5px 5px 5px 5px;
     -o-border-radius:5px 5px 5px 5px;
@@ -67,6 +101,8 @@
 }
 .yui3-skin-sam .yui3-horbox-child{
     display: inline-block;
+    zoom:1;
+    *display:inline;
 }
 /** VerBox Vertical layout box*/
 .skin-lj .yui3-verbox-border{
@@ -106,6 +142,9 @@
     padding: 0px 5px;
     font-size: 12px;
 }
+.yui3-scrollgrid-no{
+    font-size: 12px;
+}
 /** text_field */
 .skin-lj .yui3-mytextfield input[type=text]{
     width: 15em;
@@ -128,6 +167,8 @@
 .skin-lj .yui3-mytextfield{
     padding-right: 10px;
     display: inline-block;
+    zoom:1;
+    *display:inline;
 }
 /** button */
 .skin-lj .yui3-button{

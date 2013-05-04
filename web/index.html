@@ -47,50 +47,59 @@ html{
 }
 /**-- main page -- */
 
-@media all and (min-width:500px) and (max-width:800px){
+@media all and (min-width:500px){
+    .inline-parent{
+        position:relative;
+        /* font-size:0px; */
+    }
+    .inline-parent > *{
+        /* font-size:medium; */
+        display:inline-block;
+        zoom:1;
+        *display:inline;
+        vertical-align:top;
+    }
     
     #leftSection{
-        position:absolute;
-        top:5px;
-        bottom:10px;
-        left:250;
-        width:50%;
+        /* position:absolute; */
+        /* top:0px;
+        bottom:0px; */
+        width:30%;
+        height:100%;
     }
     #rightSection{
-        position:absolute;
+        /* position:absolute;
         top:0px;
         left:260px;
         padding:0px;
-        bottom:0px;
+        bottom:0px; */
+        width:65%;
+        height:100%;
+        display:inline-block;
+        zoom:1;
+        *display:inline;
     }
 }
-@media all and (min-width:800px){
-    #leftSection{
-        position:absolute;
-        top:5px;
-        bottom:10px;
-        left:5px;
-        width:320px;
-    }
-    #rightSection{
-        position:absolute;
-        top:0px;
-        left:330px;
-        padding:0px;
-        bottom:0px;
-    }
-}
+
 @media all and (max-width:499px){
     #leftSection{
         position:absolute;
         top:0px;
         bottom:1px;
         left:1px;
-        right:1px;;
+        right:1px;
     }
     #rightSection{
         display:none;
     }
+}
+#mainSection{
+    vertical-align:top;
+    position:absolute;
+    top:3px;
+    bottom:5px;
+    left:2px;
+    right:2px;
 }
 #leftSection{
     overflow:hidden;
@@ -128,14 +137,10 @@ html{
 }
    </style>
   <body class="yui3-skin-sam skin-lj">
-  <div></div>
-<div id="leftSection"></div>
-<div id="rightSection">
-</div>
-<div style="clear:both"></div>
+<div id="mainSection" class="inline-parent"><div id="leftSection"></div><div id="splitbar0"></div><div id="rightSection">dadsa</div>
 </div>
 
-<div id="status-bar"><div>...</div></div>
+<div id="status-bar"><div></div></div>
 
 <script type="text/javascript" language="javascript" src="js/main.js"></script>
 

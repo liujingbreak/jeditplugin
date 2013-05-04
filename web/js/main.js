@@ -6,6 +6,7 @@ YUI_config = {
         WoodenAxe:{
             base:'js/',
             modules: {
+                
                 "lj-basic": {
                     path: 'lj-basic/lj-basic.js'
                     ,lang:[]
@@ -24,6 +25,16 @@ YUI_config = {
                     async: false,
                     fullpath:'/dwr/interface/FileScanController.js'
                     //,requires:['dwr']
+                }
+            }
+        },
+        WoodenAxeCss:{
+            base:'css/',
+            modules:{
+                "lj-basic-css":{
+                    path:'lj-basic.css',
+                    type:'css',
+                    async:false
                 }
             }
         }
@@ -458,11 +469,29 @@ try{
                         container:"#leftSection",
                         direction:'v'
                 });
-                var bar = this.dragbar;
+                var bar = this.dragbar, view = this;
                 bar.after('listView|valueChange', function(e){
                         bar.reset();
-                        resizePage();
+                        view.app.resize();
                 });
+                Y.log("listview rendered");
+            },
+            onResize:function(p){
+                var h = Y.lj.parseStyleLen(p.getComputedStyle('height')),
+                w = Y.lj.parseStyleLen(p.getComputedStyle('width')),
+                splitH = this.dragbar.node.get('offsetHeight');
+                
+                var splitValue = this.dragbar.get('value');
+                if(splitValue < 0)
+                    splitValue = (h>>1) - Math.ceil(7/2);
+                    
+                var hDown = h - splitValue-splitH;
+                //Y.log(" split :"+ splitValue + "/"+ hDown+ "/"+ Y.lj.parseStyleLen(h));
+                projects.set('height', splitValue);
+                directories.set('height', hDown);
+                                
+                projects.set('width', w - 1);
+                directories.set("width", w - 1);
             }
     });
     /**@class AddProjectView */
@@ -519,7 +548,7 @@ try{
             }
     });
     /** @class leftApp */
-    var leftApp = new Y.App({
+    var leftApp = new Y.lj.App({
             viewContainer:"#leftSection",
             serverRouting:false,
             transitions:true,
@@ -546,7 +575,6 @@ try{
                     this.showView("listView", null, null, 
                         function(){
                             if(firstLoad){
-                                resizePage();
                                 firstLoad = false;
                                 lj.deferredTasks.add(function(){
                                         lj.statusBar.hide();
@@ -560,32 +588,22 @@ try{
                     this.showView("addProjectView");
                 });
     
-    var firstLoad = true;
+    var firstLoad = true, leftSectNode = Y.one('#leftSection');
     
-    function resizePage(){
-        var p = Y.one("#leftSection");
-        
-        var h = Y.lj.parseStyleLen(p.getComputedStyle('height')),
-            w = Y.lj.parseStyleLen(p.getComputedStyle('width')),
-            view = leftApp.get('activeView');
-        if(! view instanceof ListView)
-            return;
-        var splitValue = view.dragbar.get('value');
-        if(splitValue < 0)
-            splitValue = (h>>1) - 4;
-            
-        var hDown = h - splitValue-7;
-        //Y.log(" split :"+ splitValue + "/"+ hDown+ "/"+ Y.lj.parseStyleLen(h));
-        projects.set('height', splitValue);
-        directories.set('height', hDown);
-                        
-        projects.set('width', w - 1);
-        directories.set("width", w - 1);
-    }
-    Y.lj.globalEventMgr.onWindowResize(resizePage);
+    var splitBar0 = new Y.lj.SplitBar({
+            node:'#splitbar0', 
+            container:leftSectNode.ancestor(),
+            direction:'h'
+    });
+    splitBar0.after('valueChange', function(e){
+        this.reset();
+        leftSectNode.setStyle('width', e.newVal+'px');
+        leftApp.resize();
+    }, splitBar0);
+    
     
     leftApp.render().save("/");
-    
+
     
     
 }catch(e){

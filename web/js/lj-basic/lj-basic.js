@@ -12,8 +12,8 @@ YUI.add("lj-basic", function(Y){
         }
         Y.log('All files loaded successfully!');
     }
-    Y.Get.css('css/lj-basic.css', loadHandler);
-            
+    //Y.Get.css('css/lj-basic.css', {async:false},loadHandler);
+    //Y.log("lj-basic css loaded");
     function parseStyleLen(styleLength){
         //Y.log("parseSytleLen() "+ styleLength);
         if(Y.Lang.isString(styleLength)){
@@ -647,7 +647,7 @@ YUI.add("lj-basic", function(Y){
                  var tr = Y.Node.create("<tr></tr>");
                  this._insertTr(tbody, i, tr);
                  tr.setAttribute("data-key", this.model.getRowId(i));
-                 var idxTD = tr.append("<td>"+ (i+1) +"</td>");
+                 var idxTD = tr.append("<td class=\""+this.getClassName('no')+"\">"+ (i+1) +"</td>");
                  //idxTD.addClass(this.getClassName("idx"));
                  if(Y.Lang.isFunction(this.cellView)){
                      Y.Array.each(this.model.getColumns(), 
@@ -990,7 +990,7 @@ YUI.add("lj-basic", function(Y){
             MyEditableGrid.superclass.renderUI.apply(this, arguments);
             var bottom = this.bottom = Y.Node.create('<div></div>');
             
-            this.bottom.addClass(this.getClassName('bottom'));
+            bottom.addClass(this.getClassName('bottom')).addClass('inline-parent');
             if(this.get('buttonVisible')){
                 this._renderDefButtons(this.bottom);
             }
@@ -1107,8 +1107,7 @@ YUI.add("lj-basic", function(Y){
             padding += parseStyleLen(contentBox.getComputedStyle("paddingBottom"));
             if(Y.Lang.isNumber(h)){
                 //Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH
-                //    + " padding="+ padding);
-                //this._bodyscroll.setStyle("height", (h - headerH) - padding - bottomH + this.DEF_UNIT);
+                //    + " padding="+ padding + ", computed header height:"+ this._colheaders.getComputedStyle('height'));
                 this.scrollView.set('height', (h - headerH) - padding - bottomH + this.DEF_UNIT);
             }else if(h.charAt(h.length-1) == '%'){
                 
@@ -1141,37 +1140,6 @@ YUI.add("lj-basic", function(Y){
                 this._bodyscroll.setStyle("maxHeight", (newVal - headerH) - padding - bottomH + this.DEF_UNIT);
             }
         },
-        
-        //_selectItemNode:function(node){
-        //    this._syncSelectItemUI(node);
-        //    MyEditableGrid.superclass._selectItemNode.apply(this, arguments);
-        //},
-        ///** @param node tr
-        //*/
-        //_syncSelectItemUI:function(node){
-        //    var classname = this.getClassName('s','selItem');
-        //    if(!node.hasClass(classname)){
-        //        this._touchStartNode.removeClass(classname);
-        //        return;
-        //    }
-        //    if(this.get('singleSelection')){
-        //        
-        //        this.selectionModel.selectSingle(node.getAttribute("data-key"), node, true);
-        //        //if(!node.hasClass(classname))
-        //        //    node.addClass(classname);
-        //        if(this._lastSingleSelNode && this._lastSingleSelNode != node)
-        //            this._lastSingleSelNode.removeClass(classname);
-        //        this._lastSingleSelNode = node;
-        //    }else{
-        //        if(node.hasClass(this.getClassName('selItem'))){
-        //            node.removeClass(this.getClassName('selItem'));
-        //            this.selectionModel._removeSelection(node.getAttribute("data-key"));
-        //        }else{
-        //            node.addClass(this.getClassName('selItem'));
-        //            this.selectionModel._addSelection(node.getAttribute("data-key"), node);
-        //        }
-        //    }
-        //},
         
         _syncKeydown:function(e){
             var code = e.keyCode;
@@ -1378,6 +1346,19 @@ YUI.add("lj-basic", function(Y){
                 this.bindAndSyncAttr("maxWidth", function(w){
                         this.m_bb.setStyle("maxWidth", w + "px");
                 });
+                this.after('myScrollView|axisChange', function(e){
+                        //Y.log('axis change '+ Y.JSON.stringify(e.newVal));
+                        var newVal = e.newVal, prevVal = e.prevVal;
+                        if(prevVal == null)
+                            return;
+                        if(prevVal.x && !newVal.x)
+                            this.scrollTo(0, this.get('scrollY'));
+                        if(prevVal.y && !newVal.y)
+                            this.scrollTo(this.get('scrollX'), 0);
+                },this);
+            },
+            destructor:function(){
+                this.detach('myScrollView|*');
             },
             scrollTo: function (x, y, duration, easing, node){
                 //arguments[2]=300;
@@ -1392,10 +1373,12 @@ YUI.add("lj-basic", function(Y){
                 return ret;
             },
             getScrollTop:function(){
-                return this.MyScrollView_top;
+                //return this.MyScrollView_top;
+                return this.get('scrollY');
             },
             getScrollLeft:function(){
-                return this.MyScrollView_left;
+                //return this.MyScrollView_left;
+                return this.get('scrollX');
             },
             getScrollHeight:function(){
                 return this.m_bb.get("scrollHeight");
@@ -1403,8 +1386,10 @@ YUI.add("lj-basic", function(Y){
             /** current scrolled position is not reset to 0,0 yet, this has to be manually set if needed
             */
             refresh: function(){
-                delete this._cAxis;
-                this.syncUI();
+                deferredTasks.add(Y.bind(function(){
+                    delete this._cAxis;
+                    this.syncUI();
+                }, this)).run();
             },
             
             //_snapBack:function(){
@@ -1897,32 +1882,78 @@ YUI.add("lj-basic", function(Y){
     Y.extend(SplitBar, Y.Base, {
             initializer:function(cfg){
                 /**@property direction */
-                this.direction = cfg.direction;
-                this.node = cfg.node;
-                this.container = cfg.container;
+                this.direction = cfg.direction ? cfg.direction:'v';
+                /**@property node */
+                this.node = Y.one(cfg.node);
+                /**@property contain */
+                this.container = Y.one(cfg.container);
                 this.drag = new Y.DD.Drag({node:this.node}).
                 //plug(Y.Plugin.DDProxy).
                 plug(Y.Plugin.DDConstrained, {
                     constrain2node: this.container
                 });
-                this.node.addClass('ver-drag');
+                this.node.addClass(this.direction == 'v'? 'ver-dragBar':'hor-dragBar');
+                if(this.direction == 'v'){
+                    this._containerClass = 'ver-split-panel';
+                    this._draggingClass = 'ver-splitDragging';
+                }else{
+                    this._containerClass = 'hor-split-panel';
+                    this._draggingClass = 'hor-splitDragging';
+                }
+                
                 this.drag.on('drag:end', this._dragEnd, this);
+                this.drag.on('drag:start', function(){
+                        this.container.addClass(this._containerClass);
+                        this.node.addClass(this._draggingClass);
+                }, this);
             },
             
             _dragEnd:function(e){
                 var bar = this;
                 deferredTasks.add(function(){
-                        bar.set('value', bar.node.get('offsetTop'));
+                        bar.container.removeClass(bar._containerClass);
+                        bar.node.removeClass(bar._draggingClass);
+                        bar.set('value',
+                            bar.node.get(bar.direction == 'v'?'offsetTop': 'offsetLeft'));
                 }).run();
                 
             },
             reset:function(){
-                this.node.setStyle('top','');
+                if(this.direction == 'v')
+                    this.node.setStyle('top','');
+                else
+                    this.node.setStyle('left','');
             },
             destructor:function(){
                 this.drag.detachAll();
             }
     });
+    
+    /**@class App 
+    view may implement onResize(viewContainer)
+    and App will set itself to view.app when a view becomes activeView
+    */
+    var MyApp = Y.Base.create('myApp', Y.App, [],{
+            initializer:function(){
+                this.resizeHandler = globalEventMgr.onWindowResize(this.resize, this);
+                this.after('activeViewChange', function(e){
+                        e.newVal.app = this;
+                        Y.log("active view changed");
+                        this.resize();
+                }, this);
+            },
+            destructor:function(){
+                this.resizeHandler.detach();
+                this.detachAll();
+            },
+            resize:function(){
+                var v = this.get('activeView');
+                if(v && v.onResize)
+                    v.onResize(this.get('viewContainer'));
+            }
+    });
+    
+    
     /**@class AppManager */
     function AppManager(viewContainer, views){
         /**@property apps */
@@ -1974,7 +2005,7 @@ YUI.add("lj-basic", function(Y){
         AppManager:AppManager,
         Dialog:MyDialog,
         SplitBar:SplitBar,
-        
+        App:MyApp,
         parseStyleLen:parseStyleLen,
         globalEventMgr:globalEventMgr,
         deferredTasks:deferredTasks,
@@ -1985,5 +2016,5 @@ YUI.add("lj-basic", function(Y){
         Y.log(e.stack);
     }
 }, "1.0.0",{
-requires:['get','base','overlay','node','event','panel','widget','widget-parent','widget-child',
+requires:['lj-basic-css','get','base','overlay','node','event','panel','widget','widget-parent','widget-child',
 'button','button-group','scrollview','node-focusmanager','app',"async-queue",'dd-drag','dd-proxy','dd-constrain']});
