@@ -1,0 +1,9 @@
+globalY.mix(lang,
+        {
+            PROJECT_NAME:"项目名称",
+            PROJECT_DESC:'项目描述',
+            FOLER:'文件目录',
+            INCLUDES:'包含',
+            EXCLUDES:'排除'
+        }
+);

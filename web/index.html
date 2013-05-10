@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="yui/build/cssreset/cssreset-min.css">
     <script type='text/javascript' src='/dwr/engine.js'></script>
     <script type="text/javascript" language="javascript" src="yui/build/yui/yui.js"></script>
+    
     <!--<script type='text/javascript' src='/dwr/interface/ProjectController.js'></script>
     <script type='text/javascript' src='/dwr/interface/FileScanController.js'></script>
     -->
@@ -46,38 +47,40 @@ html{
    visibility: hidden;
 }
 /**-- main page -- */
-
-@media all and (min-width:500px){
-    .inline-parent{
+.inline-parent{
         position:relative;
         /* font-size:0px; */
     }
-    .inline-parent > *{
-        /* font-size:medium; */
-        display:inline-block;
-        zoom:1;
-        *display:inline;
-        vertical-align:top;
-    }
+.inline-block{
+    /* font-size:medium; */
+    display:inline-block;
+    zoom:1;
+    vertical-align:top;
+    *display:inline;
+}
+#leftSection{
+    /* position:absolute; */
+    /* top:0px;
+    bottom:0px; */
+    width:30%;
+    height:100%;
+}
+#centerSection{
+    /* position:absolute;
+    top:0px;
+    left:260px;
+    padding:0px;
+    bottom:0px; */
+    height:100%;
+    display:inline-block;
+    zoom:1;
+    *display:inline;
+}
+@media all and (min-width:500px){
     
-    #leftSection{
-        /* position:absolute; */
-        /* top:0px;
-        bottom:0px; */
-        width:30%;
-        height:100%;
-    }
-    #rightSection{
-        /* position:absolute;
-        top:0px;
-        left:260px;
-        padding:0px;
-        bottom:0px; */
-        height:100%;
-        display:inline-block;
-        zoom:1;
-        *display:inline;
-    }
+    
+    
+    
 }
 
 @media all and (max-width:499px){
@@ -88,7 +91,7 @@ html{
         left:1px;
         right:1px;
     }
-    #rightSection{
+    #centerSection{
         display:none;
     }
 }
@@ -99,9 +102,6 @@ html{
     bottom:5px;
     left:2px;
     right:2px;
-}
-#leftSection{
-    overflow:hidden;
 }
 #project{
     position:relative;
@@ -136,12 +136,24 @@ html{
 }
    </style>
   <body class="yui3-skin-sam skin-lj">
-<div id="mainSection" class="inline-parent"><div id="leftSection"></div><div id="splitbar0"></div><div id="rightSection">dadsa</div>
+<div id="mainSection" class="inline-parent"><div id="leftSection" class="inline-block"></div><div id="splitbar0" class="inline-block"></div><div id="centerSection" class="inline-block"></div>
 </div>
 
 <div id="status-bar"><div></div></div>
+<script>
+function addScript(url, urlToken){
+    var scriptDom = document.createElement('script');
+    if(!urlToken)
+        scriptDom.src= url+ '?'+ Math.random();
+    document.head.appendChild(scriptDom);
+}
+setTimeout(function(){
+    addScript('/JSGlobalSetupServlet');
+    
+    addScript('js/main.js');
+}, 50);
+</script>
 
-<script type="text/javascript" language="javascript" src="js/main.js"></script>
 
     
   </body>

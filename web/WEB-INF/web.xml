@@ -47,11 +47,19 @@
     </init-param>
   </servlet>
   
+  <servlet>
+    <servlet-name>JSSetupServlet</servlet-name>
+    <servlet-class>org.liujing.ironsword.servlet.JSGlobalSetupServlet</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>DwrServlet</servlet-name>
     <url-pattern>/dwr/*</url-pattern>
   </servlet-mapping>
-  
+  <servlet-mapping>
+    <servlet-name>JSSetupServlet</servlet-name>
+    <url-pattern>/JSGlobalSetupServlet</url-pattern>
+  </servlet-mapping>
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>/index.html</welcome-file>

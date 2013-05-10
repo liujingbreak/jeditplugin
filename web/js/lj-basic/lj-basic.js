@@ -1,7 +1,10 @@
 
 YUI.add("lj-basic", function(Y){
+        function run(){
   try{
-      var res = Y.Intl.get("lj-basic");
+      
+              
+      var res = LANG;
       
     function loadHandler(err){
         if (err) {
@@ -34,6 +37,23 @@ YUI.add("lj-basic", function(Y){
     
     function hasHorizontalScrolled(node) {
         return node.get("scrollWidth") - node.get("clientWidth") > 1;
+    }
+    
+    var logVarPat = /[a-zA-Z0-9_$.]+/g;
+    /** 
+        usage:
+            logVars('abc,efg',abc,efg)
+    */
+    function logVars(name, sVarListStr, var1, var2){
+        var msg =name + ': ', res = null, i=2;
+        while((res = logVarPat.exec(sVarListStr)) != null && i< arguments.length){
+            msg += res[0];
+            msg += '=';
+            msg += arguments[i++];
+            msg += ' ';
+        }
+        Y.log(msg);
+        logVarPat.lastIndex = 0;
     }
     
     /**
@@ -809,25 +829,25 @@ YUI.add("lj-basic", function(Y){
             this.scrollView.detach('grid|*');
         },
         syncWidth:function(e){
-            var w = e? e.newVal: this.get("width"), pw;
-            if(w == null)
-                return;
-            if(typeof(w) == 'number' && this.scrollView != null){
-                var cb = this.get("contentBox");
-                w = w - parseStyleLen(cb.getComputedStyle("paddingLeft"))
-                - parseStyleLen(cb.getComputedStyle("paddingRight"));
-                this.scrollView.set('width', w + this.DEF_UNIT);
-            }else if(w.charAt(w.length-1) == '%'){
-                var percent = parseInt(w.substring(0, w.length -1), 10),
-                aa = this.get("boundingBox").ancestor();
-                if(aa == null)
-                    return;// in case it is rendered to a document fragment
-                pw = aa.get("clientWidth")*percent/100 
-                - parseStyleLen(aa.getComputedStyle("paddingLeft"))
-                - parseStyleLen(aa.getComputedStyle("paddingRight"));
-                
-                this.scrollView.set('width', pw + "px");
-            }
+            //var w = e? e.newVal: this.get("width"), pw;
+            //if(w == null)
+            //    return;
+            //if(typeof(w) == 'number' && this.scrollView != null){
+            //    var cb = this.get("contentBox");
+            //    w = w - parseStyleLen(cb.getComputedStyle("paddingLeft"))
+            //    - parseStyleLen(cb.getComputedStyle("paddingRight"));
+            //    this.scrollView.set('width', w);
+            //}else if(w.charAt(w.length-1) == '%'){
+            //    var percent = parseInt(w.substring(0, w.length -1), 10),
+            //    aa = this.get("boundingBox").ancestor();
+            //    if(aa == null)
+            //        return;// in case it is rendered to a document fragment
+            //    pw = aa.get("clientWidth")*percent/100 
+            //    - parseStyleLen(aa.getComputedStyle("paddingLeft"))
+            //    - parseStyleLen(aa.getComputedStyle("paddingRight"));
+            //    
+            //    this.scrollView.set('width', pw);
+            //}
             this.scrollView.refresh();
         },
         
@@ -860,12 +880,12 @@ YUI.add("lj-basic", function(Y){
                 srcNode: this._bodyscroll
                 });
             this.scrollView.render(frag);
-            this.scrollView.after('grid|scrollXChange', 
+            this.scrollView.on('grid|scrollXChange', 
                 this._syncScrolling, this);
-            this.scrollView.after('grid|scrollYChange', 
-                function(e){
+            this.scrollView.on('grid|scrollYChange', 
+                createIntervalEventChecker(700, null, function(e){
                     this._syncLoadMore(e.newVal);
-                }, this);
+                }, null, this));
             //this._scrollViewHandle = this.scrollView.after('scrolling', 
             //    createIntervalEventChecker(200, this._syncScrolling, null,null, this),
             //    this);
@@ -1329,17 +1349,16 @@ YUI.add("lj-basic", function(Y){
     };
     var MyScrollView = Y.Base.create("myscrollview",Y.ScrollView, [Y.WidgetChild],{
             init:function(cfg){
-                cfg = cfg?cfg:{};
-                if(cfg.bounceRange == null)
-                    cfg.bounceRange = 80;//not working, dont know why
+                //cfg = cfg?cfg:{};
+                //if(cfg.bounce == null)
+                //    cfg.bounce = 0;//not working, dont know why
                 MyScrollView.superclass.init.call(this, cfg);
             },
-            initializer:function(){
+            initializer:function(cfg){
                 //this._boundingNode = this.get("boundingBox");
                 //this._contentNode = this.get("contentBox");
                 this.MyScrollView_top = 0;
                 this.MyScrollView_left = 0;
-                this.m_bb = this.get('boundingBox');
             },
             bindUI:function(){
                 MyScrollView.superclass.bindUI.apply(this, arguments);
@@ -1356,6 +1375,18 @@ YUI.add("lj-basic", function(Y){
                         if(prevVal.y && !newVal.y)
                             this.scrollTo(this.get('scrollX'), 0);
                 },this);
+                this.handleRefresh = createIntervalEventChecker(300, null, function(){
+                    delete this._cAxis;
+                    var sv = this,
+                    scrollDims = sv._getScrollDims(),
+                    width = scrollDims.offsetWidth,
+                    scrollWidth = scrollDims.scrollWidth,
+                    scrollHeight = scrollDims.scrollHeight;
+                    //logVars('myscrollView.refresh bf', 'width, scrollWidth', width, scrollWidth);
+                    //logVars('myscrollView.refresh bf bb', 'sw',sv.get('boundingBox').get('scrollWidth'));
+                    this.syncUI();
+                    
+                }, null, this);
             },
             destructor:function(){
                 this.detach('myScrollView|*');
@@ -1386,26 +1417,8 @@ YUI.add("lj-basic", function(Y){
             /** current scrolled position is not reset to 0,0 yet, this has to be manually set if needed
             */
             refresh: function(){
-                deferredTasks.add(Y.bind(function(){
-                    delete this._cAxis;
-                    //var sv = this,
-                    //scrollDims = sv._getScrollDims(),
-                    //width = scrollDims.offsetWidth,
-                    //height = scrollDims.offsetHeight,
-                    //scrollWidth = scrollDims.scrollWidth,
-                    //scrollHeight = scrollDims.scrollHeight;
-                    //Y.log("scrollWidth="+ scrollWidth+
-                    //    " scrollHeigh="+ scrollHeight+
-                    //    " width="+ width+ " height="+height);
-                    
-                    this.syncUI();
-                }, this)).run();
+                this.handleRefresh();
             },
-            
-            //_snapBack:function(){
-            //    Y.log(">>>>> snap back");
-            //    MyScrollView.superclass._snapBack.apply(this, arguments);
-            //},
             getViewportHeight:function(){
                 return this.m_bb.get("clientHeight");
             },
@@ -2024,7 +2037,12 @@ YUI.add("lj-basic", function(Y){
     
     }catch(e){
         Y.log(e.stack);
+        throw e;
     }
+    
+    }
+    
+    loadI18n('lj-basic',['zh'], run);
 }, "1.0.0",{
 requires:['lj-basic-css','get','base','overlay','node','event','panel','widget','widget-parent','widget-child',
 'button','button-group','scrollview','node-focusmanager','app',"async-queue",'dd-drag','dd-proxy','dd-constrain']});
