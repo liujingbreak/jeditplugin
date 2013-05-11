@@ -145,7 +145,7 @@ function addScript(url, urlToken){
     var scriptDom = document.createElement('script');
     if(!urlToken)
         scriptDom.src= url+ '?'+ Math.random();
-    document.head.appendChild(scriptDom);
+    document.body.appendChild(scriptDom);
 }
 setTimeout(function(){
     addScript('/JSGlobalSetupServlet');

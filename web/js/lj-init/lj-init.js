@@ -1,22 +1,22 @@
 YUI.add("lj-init", function(Y){
         
-    function loadI18n(module, availableLangs, callback){
-      var locale = Y.Intl.lookupBestLang(browser_locale, availableLangs),
-          localeSuffix = locale ? '_' + locale : '',
-          url = "/js/i18n/"+(locale ? locale + '/':'') + module + localeSuffix + '.js?'+ urlToken;
-      Y.log("load res "+ url);
-      Y.Get.js(url, function(err){
-          if(err){
-              Y.log(err);
-              Y.log('failed to load '+ url);
-          }
-          Y.log("llll");
-          callback(YUI);
-      });
-          
-    }
-    function load(){
-        var res = LANG;
+    //function loadI18n(module, availableLangs, callback){
+    //  var locale = Y.Intl.lookupBestLang(browser_locale, availableLangs),
+    //      localeSuffix = locale ? '_' + locale : '',
+    //      url = "/js/i18n/"+(locale ? locale + '/':'') + module + localeSuffix + '.js?'+ urlToken;
+    //  Y.log("load res "+ url);
+    //  Y.Get.js(url, function(err){
+    //      if(err){
+    //          Y.log(err);
+    //          Y.log('failed to load '+ url);
+    //      }
+    //      Y.log("llll");
+    //      callback(YUI);
+    //  });
+    //      
+    //}
+    //function load(){
+        var res = Y.Intl.get("lj-init");
             
         /**@class StatusBar */
         var StatusBar = Y.Base.create("statusBar", Y.Widget, 
@@ -57,12 +57,12 @@ YUI.add("lj-init", function(Y){
         };
         
         var lj = Y.namespace("lj");
-        lj.loadI18n = loadI18n;
+        //lj.loadI18n = loadI18n;
         var statusBar = new StatusBar({srcNode:"#status-bar"});
         lj.statusBar = statusBar;
-    }
-    loadI18n('lj-init', ['zh'], load);
+    //}
+    //loadI18n('lj-init', ['zh'], load);
     //load();
     
 }, "1.0.0",{
-requires:['base','overlay','transition','get']});
+requires:['intl','base','overlay','transition','get']});

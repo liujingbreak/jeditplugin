@@ -1,8 +1,8 @@
 YUI.add("woodenaxe-main", function(Y){
   try{
       
-      function run(){
-    var res = LANG;
+      //function run(){
+    var res = Y.Intl.get("woodenaxe-main");
     Y.log("lang:"+ Y.Intl.lookupBestLang(browser_locale, Y.Intl.getAvailableLangs("woodenaxe-main")));
     
     var Y = globalY, lj = Y.lj;
@@ -77,7 +77,7 @@ YUI.add("woodenaxe-main", function(Y){
     
     
     var dirModel = new Y.PagedGridModel({
-            columns:["Folder","Includes","Excludes"],
+            columns:[res.FOLER, res.INCLUDES, res.EXCLUDES],
             keyColumn:"id",
             rows:[],
             loadHandle:function(offset, size){
@@ -567,9 +567,9 @@ YUI.add("woodenaxe-main", function(Y){
         Y.log(e.stack);
         throw e;
     }
-}
+
     
-    loadI18n('lj-basic',['zh'], run);
+    //loadI18n('lj-basic',['zh'], run);
 }, "1.0.0",
 {
 requires:['intl','dwr-filescan','dwr-projects','lj-basic','json-stringify']

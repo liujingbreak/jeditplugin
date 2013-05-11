@@ -10,15 +10,15 @@ YUI_config = {
                 
                 "lj-basic": {
                     path: 'lj-basic/lj-basic.js?'+urlToken
-                    //,lang:[]
+                    ,lang:[]
                 },
                 "lj-init":{
-                    path: 'lj-init/lj-init.js?'+urlToken
-                    //lang: ["zh"]
+                    path: 'lj-init/lj-init.js?'+urlToken,
+                    lang: ["zh"]
                 },
                 "woodenaxe-main":{
-                    path: 'woodenaxe-main/woodenaxe-main.js?'+urlToken
-                    //lang: ["zh"]
+                    path: 'woodenaxe-main/woodenaxe-main.js?'+urlToken,
+                    lang: ["zh"]
                 },
                 
                 'dwr-projects':{
@@ -47,9 +47,9 @@ YUI_config = {
     
 };
 
-var globalY, lang = {}, LANG = lang;
+var globalY;
 
-YUI().use('lj-init','console', function(Y){
+YUI({lang:browser_locale}).use('lj-init','console', function(Y){
   try{
       //new Y.Console().render();
     Y.log("main start "+ browser_locale);

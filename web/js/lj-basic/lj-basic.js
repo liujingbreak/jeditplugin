@@ -1,10 +1,8 @@
 
 YUI.add("lj-basic", function(Y){
-        function run(){
+       
   try{
-      
-              
-      var res = LANG;
+     var res = Y.Intl.get("lj-basic");
       
     function loadHandler(err){
         if (err) {
@@ -2040,9 +2038,7 @@ YUI.add("lj-basic", function(Y){
         throw e;
     }
     
-    }
     
-    loadI18n('lj-basic',['zh'], run);
 }, "1.0.0",{
 requires:['lj-basic-css','get','base','overlay','node','event','panel','widget','widget-parent','widget-child',
 'button','button-group','scrollview','node-focusmanager','app',"async-queue",'dd-drag','dd-proxy','dd-constrain']});
