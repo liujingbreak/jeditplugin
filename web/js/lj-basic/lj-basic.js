@@ -1130,8 +1130,8 @@ YUI.add("lj-basic", function(Y){
             var padding = parseStyleLen(contentBox.getComputedStyle("paddingTop"));
             padding += parseStyleLen(contentBox.getComputedStyle("paddingBottom"));
             if(Y.Lang.isNumber(h)){
-                //Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH
-                //    + " padding="+ padding + ", computed header height:"+ this._colheaders.getComputedStyle('height'));
+                Y.log("---height: "+ h+ ", header Hight="+ headerH + ", bottomH="+ bottomH
+                    + " padding="+ padding + ", computed header height:"+ this._colheaders.getComputedStyle('height'));
                 this.scrollView.set('height', (h - headerH) - padding - bottomH + this.DEF_UNIT);
             }else if(h.charAt(h.length-1) == '%'){
                 

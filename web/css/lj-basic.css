@@ -160,9 +160,11 @@
     -moz-text-shadow:    0px 0px 8px   rgba(30, 255, 255, .9);
     text-shadow:         0px 0px 8px   rgba(30, 255, 255, .9);
     behavior:url(PIE/PIE.htc);
-    /*-webkit-box-shadow: inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);
-    -moz-box-shadow:    inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);
-    box-shadow:         inset 1px 1px 3px 0px   rgba(30, 255, 255, .9);*/
+    -webkit-box-shadow: inset 0px 0px 3px 0px   rgba(30, 0, 30, .9);
+    -moz-box-shadow:    inset 0px 0px 3px 0px   rgba(30, 0, 30, .9);
+    -o-box-shadow:      inset 0px 0px 3px 0px   rgba(30, 0, 30, .9);
+    -ms-box-shadow:     inset 0px 0px 3px 0px   rgba(30, 0, 30, .9);
+    box-shadow:         inset 0px 0px 3px 0px   rgba(30, 0, 30, .9);
 }
 .skin-lj .yui3-mytextfield{
     padding-right: 10px;
