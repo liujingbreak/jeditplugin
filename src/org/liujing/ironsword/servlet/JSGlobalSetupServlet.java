@@ -11,6 +11,12 @@ public class JSGlobalSetupServlet extends HttpServlet{
     static Pattern underlinePat = Pattern.compile("_");
     public static int URL_TOKEN = new Random().nextInt();
     
+    public static void refreshURLToken(){
+        int old = URL_TOKEN;
+        URL_TOKEN = new Random().nextInt();
+        log.info("URL token change from "+ old + " to " + URL_TOKEN);
+    }
+    
     protected void doGet(HttpServletRequest req, HttpServletResponse resp){
         PrintWriter out = null;
         try{

@@ -474,12 +474,22 @@
      border-spacing:0;
  }
  .yui3-scrollgrid-buttons{
+     position:relative;
      display:inline-block;
      zoom:1;
      *display:inline;
+     -moz-border-radius:4px 4px 4px 4px;
+     -webkit-border-radius:4px 4px 4px 4px;
+     -ms-border-radius:4px 4px 4px 4px;
+     -o-border-radius:4px 4px 4px 4px;
+     border-radius:4px 4px 4px 4px;
  }
  .yui3-scrollgrid-buttons .yui3-button{
-     min-width:10em;
+     min-width:8em;
+     border-radius:0;
+     margin:0;
+     padding:0;
+     
  }
  .yui3-scrollgrid-total{
      position:absolute;
@@ -495,7 +505,7 @@
      overflow:hidden;
  }  */
  /** Hack: fix Android webkit YUI scrollView transform flickering issue */
- .yui3-scrollview-content{
+ .yui3-scrollview-content,.yui3-app-views>div{
     -webkit-backface-visibility: hidden;
 } 
 .yui3-skin-sam.skin-lj .yui3-console-separate{

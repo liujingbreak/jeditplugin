@@ -11,6 +11,7 @@ import org.eclipse.jetty.servlet.*;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.directwebremoting.servlet.DwrServlet;
 import org.eclipse.jetty.webapp.*;
+import org.liujing.ironsword.servlet.JSGlobalSetupServlet;
 
 public class ServerController {
     private static Logger log = Logger.getLogger(ServerController.class.getName());
@@ -56,24 +57,18 @@ public class ServerController {
         if(server == null){
             String base = System.getProperty("webres");
             String yui = System.getProperty("yui");
-            //ResourceCollection resources = new ResourceCollection(new String[]{
-            //        yui
-            //});
-            //ResourceHandler resource_handler = new ResourceHandler();
-            //resource_handler.setDirectoriesListed(true);
-            //resource_handler.setBaseResource(resources);
-            
-            
-            
             
             server = new Server(19815);
             
             WebAppContext context0 = new WebAppContext();
-            //context0.setDescriptor(base +"/WEB-INF/web.xml");
             context0.setResourceBase(yui);
             context0.setContextPath("/yui");
             context0.setParentLoaderPriority(true);
             
+            WebAppContext jsContext = new WebAppContext();
+            jsContext.setResourceBase(base+"/js");
+            jsContext.setContextPath("/js"+ JSGlobalSetupServlet.URL_TOKEN);
+            jsContext.setParentLoaderPriority(true);
             
             
             WebAppContext context = new WebAppContext();
@@ -86,7 +81,7 @@ public class ServerController {
             //HandlerList handlers = new HandlerList();
             handlers.addHandler(context0);
             handlers.addHandler(context);
-            
+            handlers.addHandler(jsContext);
             server.setHandler(handlers);
             
         }
@@ -125,7 +120,9 @@ public class ServerController {
     
     
     public static void stopWebServer()throws Exception{
-        if(server != null && server.isStarted())
+        if(server != null && server.isStarted()){
             server.stop();
+            server = null;
+        }
     }
 }

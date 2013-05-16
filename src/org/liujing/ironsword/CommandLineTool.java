@@ -13,6 +13,7 @@ import org.liujing.ironsword.dao.*;
 import org.liujing.ironsword.ctl.*;
 import org.liujing.ironsword.bean.*;
 import org.liujing.ironsword.cmd.*;
+import org.liujing.ironsword.servlet.JSGlobalSetupServlet;
 
 public class CommandLineTool{
     private static Logger log = Logger.getLogger(CommandLineTool.class.getName());
@@ -25,7 +26,7 @@ public class CommandLineTool{
         new CommandAction(), new ViewAction(), new TreeAction(), new PropAction(),
         new DirAction(), new ScanAction(), new AddAction(), new DeleteAction(), new TestAction()
         ,new UpdateAction(), new ProjectAction(), new WebServerAction(), new DialogCommandAction(),
-        new ProxyServerAction()
+        new ProxyServerAction(), new RefreshURLAction()
     };
     
     static FileScanController scanCtl = new FileScanController("default");
@@ -611,6 +612,19 @@ public class CommandLineTool{
                 }
             }
                         
+        }
+    }
+    public static class RefreshURLAction extends CommandAction{
+        public String name(){
+            return "refreshurl";
+        }
+        public String help(){
+            return "refreshurl\t- refresh jetty's URL token";
+        }
+        public void action(Console con, String[] args)throws Exception{
+            JSGlobalSetupServlet.refreshURLToken();
+            ServerController.stopWebServer();
+            ServerController.startWebServer();
         }
     }
 }

@@ -5,8 +5,15 @@ YUI.add("woodenaxe-main", function(Y){
     var res = Y.Intl.get("woodenaxe-main");
     Y.log("lang:"+ Y.Intl.lookupBestLang(browser_locale, Y.Intl.getAvailableLangs("woodenaxe-main")));
     
-    var Y = globalY, lj = Y.lj;
+    var Y = globalY, lj = Y.lj, fullWindow = false;
     
+    if (Y.one(window).get('winWidth') < 500) {
+        var left = Y.one('#leftSection');
+        left.removeClass('leftSection').addClass('fullWindow');
+        fullWindow = true;
+        Y.one('#splitbar0').setStyle('display','none');
+        Y.one('#centerSection').setStyle('display','none');
+    }
 
     dwr.engine.setErrorHandler(function(errorString, exception){
             Y.log("DWR engine error: "+ errorString);
@@ -62,7 +69,16 @@ YUI.add("woodenaxe-main", function(Y){
                  for(id in keyset)
                      ids.push(id);
                  var model = this;
-                 commonDialog.show("Are you sure to delete project?");
+                 commonDialog.show("Are you sure to delete project?",
+                     function(){
+                         ProjectController.deleteProjects(ids,
+                             {
+                                 callback:function(res){
+                                     projects.refresh();
+                                 }
+                             });
+                         this.hide();
+                     });
                  
              }
     });
@@ -238,9 +254,11 @@ YUI.add("woodenaxe-main", function(Y){
                 
              
                 var searchGroup = new Y.VerBox({enableBorder: true});
-                var options = new Y.MyButtonGroup({type: 'radio'});
-                options.addButton("Matches","0");
-                options.addButton("Starts with", "1");
+                var options = new Y.MyButtonGroup({type: 'radio', 
+                buttons:[
+                    {name:'Matches', actionCmd:'0'},
+                    {name:'Starts with', actionCmd:'1'}
+                ]});
                 options.selectButton("1");
                 this.optionsBtn = options; 
                 
@@ -326,11 +344,11 @@ YUI.add("woodenaxe-main", function(Y){
     //var rightSection = Y.one("#rightSection");
     prjPortal.set("visible", false);
     //prjPortal.render(rightSection);
-    prjPortal.render("#project");
+    //prjPortal.render("#project");
     
 
     
-    /** @class DirectoryAddPortal
+    /** @class Directory'deleteAddPortal
     */
     var DirectoryAddPortal = Y.Base.create("diraddportal",Y.MyPortal, [Y.WidgetParent], {
          initializer:function(){
@@ -383,7 +401,7 @@ YUI.add("woodenaxe-main", function(Y){
     var prjAdd = null;
     
     projects.on('add', function(){
-            leftApp.save("/add");
+            leftApp.navigate("/add");
     });
     
     /**@class ListView */
@@ -448,6 +466,8 @@ YUI.add("woodenaxe-main", function(Y){
                             ProjectController.addProject(prjAdd.namefield.get('input'), 
                                         prjAdd.descfield.get('input'),
                                         {   callback:function(res){
+                                                if(fullWindow)
+                                                    history.back();
                                                 projects.refresh();
                                                 button.set('disabled', false);
                                             },
@@ -460,7 +480,8 @@ YUI.add("woodenaxe-main", function(Y){
                     {
                         value:'Cancel',
                         action:function(e){
-                            history.back();
+                            if(fullWindow)
+                                history.back();
                         },
                         section: Y.WidgetStdMod.FOOTER
                     }
@@ -517,14 +538,18 @@ YUI.add("woodenaxe-main", function(Y){
                             if(firstLoad){
                                 firstLoad = false;
                                 lj.deferredTasks.add(function(){
-                                        lj.statusBar.hide();
+                                        lj.hideLoading();
                                 }, 50).run();
                             }
                         });
                 });
     leftApp.route('/add', function (){
-        document.title = "Wooden Axe Tool - Add Project"
-        centerApp.showView("addProjectView");
+        if(centerApp.get('activeView') === centerApp._addProjView)
+            return;
+        document.title = "Wooden Axe Tool - Add Project";
+        centerApp.showView("addProjectView", null, null, function(view){
+                centerApp._addProjView = view;
+        });
     });
     
     
@@ -541,7 +566,11 @@ YUI.add("woodenaxe-main", function(Y){
         leftApp.resize();
     }, splitBar0);
     
-    var centerApp = new Y.lj.App({
+    var centerApp;
+    if(fullWindow)
+        centerApp = leftApp;
+    else
+        centerApp = new Y.lj.App({
             viewContainer:"#centerSection",
             serverRouting:false,
             transitions:true,
@@ -551,14 +580,16 @@ YUI.add("woodenaxe-main", function(Y){
                 },
                 addProjectView:{
                     type:AddProjectView,
+                    parent: 'emptyView',
                     preserve:false
                 }
             }
         });
     
     
-    leftApp.render().save("/");
-    centerApp.render();
+    leftApp.render().navigate("/");
+    if(!fullWindow)
+        centerApp.render();
       
       
       

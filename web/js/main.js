@@ -5,12 +5,12 @@ YUI_config = {
     filter:"raw",
     groups:{
         WoodenAxe:{
-            base:'js/',
+            base:'js'+ urlToken + '/',
             modules: {
                 
                 "lj-basic": {
                     path: 'lj-basic/lj-basic.js?'+urlToken
-                    ,lang:[]
+                    ,lang:['zh']
                 },
                 "lj-init":{
                     path: 'lj-init/lj-init.js?'+urlToken,
@@ -49,12 +49,16 @@ YUI_config = {
 
 var globalY;
 
-YUI({lang:browser_locale}).use('lj-init','console', function(Y){
+YUI({lang:browser_locale}).use('lj-init','intl','transition','console', function(Y){
   try{
-      //new Y.Console().render();
-    Y.log("main start "+ browser_locale);
-    Y.lj.statusBar.showLoading();
-    Y.lj.statusBar.render();
+      var lj = Y.namespace("lj");
+      var res = Y.Intl.get("lj-init"),
+      loading = Y.one('#loading-mask');
+      loading.one('div').setHTML(res.LOADING);
+      Y.log("main start "+ browser_locale+ ", "+res.LOADING);
+      Y.lj.hideLoading = function(){
+        loading.hide({duration: 0.75});
+    }
     globalY = Y;
     
     

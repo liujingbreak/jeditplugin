@@ -40,7 +40,7 @@ YUI.add("lj-basic", function(Y){
     var logVarPat = /[a-zA-Z0-9_$.]+/g;
     /** 
         usage:
-            logVars('abc,efg',abc,efg)
+            logVars('info()','abc,efg',abc,efg)
     */
     function logVars(name, sVarListStr, var1, var2){
         var msg =name + ': ', res = null, i=2;
@@ -809,6 +809,7 @@ YUI.add("lj-basic", function(Y){
             tbody.delegate("grid|click", this._onItemClick, "tr", this);
             tbody.delegate("grid|touchstart", this._onTouchStart, "tr", this);
             tbody.delegate("grid|touchend", this._onTouchEnd, "tr", this);
+            tbody.delegate("grid|touchmove", this._onTouchMove, "tr", this);
             //tbody.delegate("grid|touchcancel", this._onTouchCancel, "tr", this);
             //tbody.delegate("grid|touchmove", this._onTouchMove, "tr", this);
             this._maxWidthHandle = this.on("maxWidthChange", this.onMaxWidthChange, this);
@@ -906,6 +907,8 @@ YUI.add("lj-basic", function(Y){
             < this._moreRowNode.get("offsetHeight"))
             {
                 Y.log("loading more...");
+                logVars('_syncLoadMore()', 'scrollContHeight,scrollTop, viewportHeight moreNodeHeight',
+                    this.scrollContHeight, scrollTop, this.viewportHeight, this._moreRowNode.get("offsetHeight"));
                 this.fire("loadmore");
                 if(this.model && !this.model.isLoading())
                     this.model.requestMore();
@@ -926,6 +929,7 @@ YUI.add("lj-basic", function(Y){
             var classname = this.getClassName('s','tch','start');
             node.addClass(classname);
             this._touchStartNode = node;
+            
         },
         _onTouchEnd:function(e){
             var classname = this.getClassName('s','tch','start'),
@@ -933,7 +937,12 @@ YUI.add("lj-basic", function(Y){
                 if(tc.length> 0)
                     this._touchStartNode.removeClass(classname);
         },
-       
+        _onTouchMove:function(e){
+            if(this._touchStartNode){
+                var classname = this.getClassName('s','tch','start');
+                this._touchStartNode.removeClass(classname);
+            }
+        },
         _selectItemNode:function(node){
             var classname = this.getClassName('s','selItem');
             Y.log("_selectItemNode()");
@@ -989,9 +998,9 @@ YUI.add("lj-basic", function(Y){
             ScrollableGrid.superclass.syncLoadedUI.apply(this, arguments);
             this.scrollView.refresh();
             /** @property scrollContHeight*/
-            this.scrollContHeight = this.scrollView.get('boundingBox').get('scrollHeight');
+            this.scrollContHeight = this.scrollView.get('contentBox').get('scrollHeight');
             /** @property viewportHeight*/
-            this.viewportHeight = this.scrollView.get('boundingBox').get('clientHeight');
+            this.viewportHeight = this.scrollView.get('contentBox').get('clientHeight');
             this._syncLoadMore(0);
         }
     });
@@ -1073,6 +1082,7 @@ YUI.add("lj-basic", function(Y){
             var container = Y.Node.create('<div></div>'),
             delNode = Y.Node.create('<div>'+res.DELETE+'</div>');
             container.addClass(this.getClassName("buttons"));
+            
             delNode.addClass('yui3-button');
             container.append(delNode);
             
@@ -1113,7 +1123,9 @@ YUI.add("lj-basic", function(Y){
                     disabled: false
             });
             this.addBut.render(container);
+            this.butbar = new MyButtonBar({srcNode:container});
             bottom.append(container);
+            this.butbar.render(bottom);
         },
         resize:function(){
             
@@ -1342,10 +1354,50 @@ YUI.add("lj-basic", function(Y){
     /** @class MyScrollView 
         @event scrolling
     */
-    var _constrain = function (val, min, max) {
-                return Math.min(Math.max(val, min), max);
-    };
-    var MyScrollView = Y.Base.create("myscrollview",Y.ScrollView, [Y.WidgetChild],{
+    var MyScrollView = (function(){
+        var getClassName = Y.ClassNameManager.getClassName,
+        DOCUMENT = Y.config.doc,
+        IE = Y.UA.ie,
+        NATIVE_TRANSITIONS = Y.Transition.useNative,
+        vendorPrefix = Y.Transition._VENDOR_PREFIX, // Todo: This is a private property, and alternative approaches should be investigated
+        SCROLLVIEW = 'scrollview',
+        CLASS_NAMES = {
+            vertical: getClassName(SCROLLVIEW, 'vert'),
+            horizontal: getClassName(SCROLLVIEW, 'horiz')
+        },
+        EV_SCROLL_END = 'scrollEnd',
+        FLICK = 'flick',
+        DRAG = 'drag',
+        MOUSEWHEEL = 'mousewheel',
+        UI = 'ui',
+        TOP = 'top',
+        LEFT = 'left',
+        PX = 'px',
+        AXIS = 'axis',
+        SCROLL_Y = 'scrollY',
+        SCROLL_X = 'scrollX',
+        BOUNCE = 'bounce',
+        DISABLED = 'disabled',
+        DECELERATION = 'deceleration',
+        DIM_X = 'x',
+        DIM_Y = 'y',
+        BOUNDING_BOX = 'boundingBox',
+        CONTENT_BOX = 'contentBox',
+        GESTURE_MOVE = 'gesturemove',
+        START = 'start',
+        END = 'end',
+        EMPTY = '',
+        ZERO = '0s',
+        SNAP_DURATION = 'snapDuration',
+        SNAP_EASING = 'snapEasing',
+        EASING = 'easing',
+        FRAME_DURATION = 'frameDuration',
+        BOUNCE_RANGE = 'bounceRange',
+        _constrain = function (val, min, max) {
+            return Math.min(Math.max(val, min), max);
+        };
+        var ScrollView = Y.ScrollView;
+        return Y.Base.create("myscrollview",Y.ScrollView, [Y.WidgetChild],{
             init:function(cfg){
                 //cfg = cfg?cfg:{};
                 //if(cfg.bounce == null)
@@ -1420,6 +1472,44 @@ YUI.add("lj-basic", function(Y){
             getViewportHeight:function(){
                 return this.m_bb.get("clientHeight");
             },
+            _getScrollDims: function () {
+                var sv = this,
+                    cb = sv._cb,
+                    bb = sv._bb,
+                    TRANS = ScrollView._TRANSITION,
+                    // Ideally using CSSMatrix - don't think we have it normalized yet though.
+                    // origX = (new WebKitCSSMatrix(cb.getComputedStyle("transform"))).e,
+                    // origY = (new WebKitCSSMatrix(cb.getComputedStyle("transform"))).f,
+                    origX = sv.get(SCROLL_X),
+                    origY = sv.get(SCROLL_Y),
+                    origHWTransform,
+                    dims;
+        
+                // TODO: Is this OK? Just in case it's called 'during' a transition.
+                if (NATIVE_TRANSITIONS) {
+                    cb.setStyle(TRANS.DURATION, ZERO);
+                    cb.setStyle(TRANS.PROPERTY, EMPTY);
+                }
+        
+                origHWTransform = sv._forceHWTransforms;
+                sv._forceHWTransforms = false; // the z translation was causing issues with picking up accurate scrollWidths in Chrome/Mac.
+                
+                /**
+                Fix by Liujing, change to use cb instead of bb
+                */
+                //sv._moveTo(cb, 0, 0);
+                dims = {
+                    'offsetWidth': cb.get('offsetWidth'),
+                    'offsetHeight': cb.get('offsetHeight'),
+                    'scrollWidth': cb.get('scrollWidth'),
+                    'scrollHeight': cb.get('scrollHeight')
+                };
+                //sv._moveTo(cb, -(origX), -(origY));
+        
+                sv._forceHWTransforms = origHWTransform;
+        
+                return dims;
+            },
             /**
             change to YUI code,<ul>
                 <li> scrollOffset = 2
@@ -1461,6 +1551,7 @@ YUI.add("lj-basic", function(Y){
         }, {ATTRS:{
             maxWidth:{value:null}
         }});
+    })();
     Y.mix(MyScrollView.prototype, WidgetRenderTaskQ);
     MyScrollView.CSS_PREFIX = 'yui3-scrollview';
     Y.MyScrollView = MyScrollView;
@@ -1680,10 +1771,13 @@ YUI.add("lj-basic", function(Y){
             Y.mix(defCfg, cfg);
             MyDialog.superclass.init.call(this, defCfg);
         },
-        show:function(content){
+        /**
+        @param callback on OK clicked
+        */
+        show:function(content, callback){
             if(content)
                 this.set('bodyContent', content);
-            
+            this.okCallback = callback;
             this.set('visible', true);
             var bb = this.get("boundingBox"),
              parent = Y.one(window);
@@ -1712,6 +1806,10 @@ YUI.add("lj-basic", function(Y){
             self.set('visible', false);
             
         },
+        onOK:function(){
+            if(this.okCallback);
+                this.okCallback();
+        },
         onCancel:function(){
             this.hide();
         }
@@ -1721,7 +1819,15 @@ YUI.add("lj-basic", function(Y){
     }});
     MyDialog.CSS_PREFIX = "lj-dialog";
     
-    
+    /**@class MyButtonBar
+    */
+    var MyButtonBar = Y.Base.create('mybtnbar', Y.Widget, [Y.WidgetChild], {
+            renderUI:function(){
+                var cb =this.get('contentBox'), buttonNodes = cb.get('children');
+                cb.one(':first-child').addClass('barButton-first');
+                cb.one(':last-child').addClass('barButton-last');
+            }
+    });
     
     /** @class MyButtonGroup 
     */
@@ -1730,8 +1836,23 @@ YUI.add("lj-basic", function(Y){
                 this._buttonMap = {};
                 this._buttonView = this._defButtonView;
                 this._groupId = Y.guid();
+                this.after('render',function(){
+                        var cb = this.get("contentBox");
+                        if(config.buttons)
+                            for(var i=0,l=config.buttons.length;i<l;i++){
+                                var b = config.buttons[i];
+                                var node = this._buttonView.call(this, b.name, cb);
+                                node.setAttribute("my-data", b.actionCmd);
+                                this._buttonMap[b.actionCmd] = node;
+                                node.plug(Y.Plugin.Button);
+                            }
+                }, this);
             },
-            
+            renderUI:function(){
+                MyButtonGroup.superclass.renderUI.apply(this, arguments);
+                //var cb =this.get('contentBox'), buttonNodes = cb.get('children');
+                
+            },
             addButton:function(name, actionCmd){
                 this.invokeRendered(function(){
                         var node = this._buttonView.call(this, name, this.get("contentBox"));
