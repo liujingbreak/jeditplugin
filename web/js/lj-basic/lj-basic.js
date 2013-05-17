@@ -810,8 +810,7 @@ YUI.add("lj-basic", function(Y){
             tbody.delegate("grid|touchstart", this._onTouchStart, "tr", this);
             tbody.delegate("grid|touchend", this._onTouchEnd, "tr", this);
             tbody.delegate("grid|touchmove", this._onTouchMove, "tr", this);
-            //tbody.delegate("grid|touchcancel", this._onTouchCancel, "tr", this);
-            //tbody.delegate("grid|touchmove", this._onTouchMove, "tr", this);
+            tbody.delegate("grid|touchcancel", this._onTouchCancel, "tr", this);
             this._maxWidthHandle = this.on("maxWidthChange", this.onMaxWidthChange, this);
         },
         _unbind:function(){
@@ -915,15 +914,7 @@ YUI.add("lj-basic", function(Y){
             }
         },
         _onItemClick: function (e){
-            if(this.touchLatency){
-                    clearTimeout(this.touchLatency);
-                    delete this.touchLatency;
-            }
-            if(this._touchStartNode){
-                var classname = this.getClassName('s','tch','start');
-                this._touchStartNode.removeClass(classname);
-                delete this._touchStartNode;
-            }
+            this.onTouchCancel(e);
             this._selectItemNode(e.currentTarget);
         },
         
@@ -932,36 +923,31 @@ YUI.add("lj-basic", function(Y){
             var classname = this.getClassName('s','tch','start');
             this.touchLatency = setTimeout(function(){
                     node.addClass(classname);
-            }, 100);
+            }, 200);
             
             this._touchStartNode = node;
             
         },
         _onTouchEnd:function(e){
-            var classname = this.getClassName('s','tch','start');
-            if(this.touchLatency){
-                    clearTimeout(this.touchLatency);
-                    delete this.touchLatency;
-            }
-            this._touchStartNode.removeClass(classname);
+            this.onTouchCancel(e);
         },
         _onTouchMove:function(e){
-            if(this._touchStartNode){
+            this.onTouchCancel(e);
+        },
+        onTouchCancel:function(e){
+            if( this._touchStartNode){
                 var classname = this.getClassName('s','tch','start');
                 if(this.touchLatency){
                     clearTimeout(this.touchLatency);
                     delete this.touchLatency;
-                    this._touchStartNode.removeClass(classname);
                 }
+                this._touchStartNode.removeClass(classname);
+                delete this._touchStartNode;
             }
         },
         _selectItemNode:function(node){
             var classname = this.getClassName('s','selItem');
             Y.log("_selectItemNode()");
-            //if(node!= this._touchStartNode){
-            //    this._touchStartNode.removeClass(classname);
-            //    return;
-            //}
             if(this.get('singleSelection')){
                 
                 this.selectionModel.selectSingle(node.getAttribute("data-key"), node, true);

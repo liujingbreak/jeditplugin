@@ -69,11 +69,25 @@ YUI({lang:browser_locale}).use('lj-init','intl','transition','console', function
   
     // lazy loading starts ...
     setTimeout(function(){
-    Y.use('woodenaxe-main',initljBasic)}, 10);
+    //Y.use('woodenaxe-main',initWoo)
+    Y.use('app','json', initHome);
+    }, 10);
 });
 
+function initHome(){
+    var Y = globalY;
+    Y.lj.hideLoading();
+    
+    if(Y.UA.webkit >0 && Y.UA.webkit <= 534){
+        
+        Y.one('body').append('<div class="leftBackbg"></div>');
+        
+    }
+    var MainApp = new Y.App();
+    Y.log(Y.JSON.stringify(Y.UA.webkit));
+}
 
-function initljBasic() {
+function initWoo() {
 try{
     var Y = globalY;
     var woo = new Y.lj.WoodenaxeView({container:'body'});
