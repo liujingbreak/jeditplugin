@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="yui/build/cssreset/cssreset-min.css">
     <script type='text/javascript' src='/dwr/engine.js'></script>
     <script type="text/javascript" language="javascript" src="yui/build/yui/yui.js"></script>
-    
+    <script type="text/javascript" language="javascript" src="/JSGlobalSetupServlet"></script>
     <!--<script type='text/javascript' src='/dwr/interface/ProjectController.js'></script>
     <script type='text/javascript' src='/dwr/interface/FileScanController.js'></script>
     -->
@@ -31,7 +31,6 @@
     color:#c9c9c9;
 }
 body {
-    
     padding:0px;
     margin:0px;
     height:100%;
@@ -73,7 +72,7 @@ html{
     width:100%;
     height:100%;
 }
-#centerSection{
+.centerSection{
     /* position:absolute;
     top:0px;
     left:260px;
@@ -116,8 +115,7 @@ html{
 }
    </style>
   <body class="yui3-skin-sam darkBody skin-lj">
-<div id="mainSection" class="inline-parent"><div id="leftSection" class="leftSection inline-block"></div><div id="splitbar0" class="inline-block"></div><div id="centerSection" class="inline-block"></div>
-</div>
+
 
 <div id="loading-mask"><div>...</div></div>
 <script>
@@ -128,7 +126,7 @@ function addScript(url, urlToken){
     document.body.appendChild(scriptDom);
 }
 setTimeout(function(){
-    addScript('/JSGlobalSetupServlet');
+    //addScript('/JSGlobalSetupServlet');
     
     addScript('js/main.js');
 }, 50);

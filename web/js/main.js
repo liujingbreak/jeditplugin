@@ -75,7 +75,9 @@ YUI({lang:browser_locale}).use('lj-init','intl','transition','console', function
 
 function initljBasic() {
 try{
-    
+    var Y = globalY;
+    var woo = new Y.lj.WoodenaxeView({container:'body'});
+    woo.render();
     
     
 }catch(e){

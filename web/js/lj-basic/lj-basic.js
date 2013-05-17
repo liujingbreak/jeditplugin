@@ -915,32 +915,44 @@ YUI.add("lj-basic", function(Y){
             }
         },
         _onItemClick: function (e){
-            
-            this._selectItemNode(e.currentTarget);
+            if(this.touchLatency){
+                    clearTimeout(this.touchLatency);
+                    delete this.touchLatency;
+            }
             if(this._touchStartNode){
                 var classname = this.getClassName('s','tch','start');
                 this._touchStartNode.removeClass(classname);
                 delete this._touchStartNode;
             }
+            this._selectItemNode(e.currentTarget);
         },
         
         _onTouchStart:function(e){
             var node = e.currentTarget;
             var classname = this.getClassName('s','tch','start');
-            node.addClass(classname);
+            this.touchLatency = setTimeout(function(){
+                    node.addClass(classname);
+            }, 100);
+            
             this._touchStartNode = node;
             
         },
         _onTouchEnd:function(e){
-            var classname = this.getClassName('s','tch','start'),
-                tc = e.changedTouches;
-                if(tc.length> 0)
-                    this._touchStartNode.removeClass(classname);
+            var classname = this.getClassName('s','tch','start');
+            if(this.touchLatency){
+                    clearTimeout(this.touchLatency);
+                    delete this.touchLatency;
+            }
+            this._touchStartNode.removeClass(classname);
         },
         _onTouchMove:function(e){
             if(this._touchStartNode){
                 var classname = this.getClassName('s','tch','start');
-                this._touchStartNode.removeClass(classname);
+                if(this.touchLatency){
+                    clearTimeout(this.touchLatency);
+                    delete this.touchLatency;
+                    this._touchStartNode.removeClass(classname);
+                }
             }
         },
         _selectItemNode:function(node){
@@ -1510,6 +1522,7 @@ YUI.add("lj-basic", function(Y){
         
                 return dims;
             },
+            
             /**
             change to YUI code,<ul>
                 <li> scrollOffset = 2
@@ -1517,22 +1530,26 @@ YUI.add("lj-basic", function(Y){
                 </ul>
             */
             _mousewheel:function(e){
-                MyScrollView.superclass._mousewheel.apply(this, arguments);
+                //MyScrollView.superclass._mousewheel.apply(this, arguments);
                 //Y.log("wheelDelta: " + e.wheelDelta);
                 var sv = this,
                     scrollY = sv.get("scrollY"),
                     bb = sv._bb,
-                    scrollOffset = 2, // 10px
+                    scrollOffset = 10,
                     isForward = (e.wheelDelta > 0),
                     // change from YUI code
                     scrollToY = scrollY - ((e.wheelDelta) * scrollOffset);
                     //scrollToY = scrollY - ((isForward ? 1 : -1) * scrollOffset);
-        
+                if(e._event && e._event.wheelDeltaX !== undefined)
+                    var scrollToX = sv.get('scrollX') - (e._event.wheelDeltaX);
+                //logVars('_mousewheel()', 'scrollToX,e.wheelDeltaX', scrollToX,e._event.wheelDeltaX);
                 scrollToY = _constrain(scrollToY, sv._minScrollY, sv._maxScrollY);
-        
-                if (bb.contains(e.target) && sv._cAxis["y"]) {
+                scrollToX = _constrain(scrollToX, sv._minScrollX, sv._maxScrollX);
+                
+                if (bb.contains(e.target) && (sv._cAxis["y"]||sv._cAxis['x'])) {
                     sv.lastScrolledAmt = 0;
                     sv.set("scrollY", scrollToY);
+                    sv.set('scrollX', scrollToX);
                     if (sv.scrollbars) {
                         // @TODO: The scrollbars should handle this themselves
                         sv.scrollbars._update();
@@ -1547,6 +1564,27 @@ YUI.add("lj-basic", function(Y){
                     // prevent browser default behavior on mouse scroll
                     e.preventDefault();
                 }
+            },
+            modernEvent:function(orgEvent){
+                var delta = 0, returnValue = true, deltaX = 0, deltaY = 0;
+                // Old school scrollwheel delta
+                if ( orgEvent.wheelDelta ) { delta = orgEvent.wheelDelta/120; }
+                if ( orgEvent.detail     ) { delta = -orgEvent.detail/3; }
+                
+                // New school multidimensional scroll (touchpads) deltas
+                deltaY = delta;
+                
+                // Gecko
+                if ( orgEvent.axis !== undefined && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
+                    deltaY = 0;
+                    deltaX = -1*delta;
+                }
+                
+                // Webkit
+                if ( orgEvent.wheelDeltaY !== undefined ) { deltaY = orgEvent.wheelDeltaY/120; }
+                if ( orgEvent.wheelDeltaX !== undefined ) { deltaX = -1*orgEvent.wheelDeltaX/120; }
+                
+                return [deltaX, deltaY];
             }
         }, {ATTRS:{
             maxWidth:{value:null}

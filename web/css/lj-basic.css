@@ -14,6 +14,7 @@
     display:inline-block;
     zoom:1;
     *display:inline;
+    vertical-align:top;
 }
 .ver-dragBar.ver-splitDragging{
     background: #cccccc;
