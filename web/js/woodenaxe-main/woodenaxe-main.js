@@ -8,7 +8,7 @@ YUI.add("woodenaxe-main", function(Y){
         Y.log("lang:"+ Y.Intl.lookupBestLang(browser_locale, Y.Intl.getAvailableLangs("woodenaxe-main")));
         
         var firstLoad = true, leftSectNode = Y.Node.create('<div class="leftSection inline-block"></div>'),
-        splitBarNode = Y.Node.create('<div class="xx">xxx</div>'),
+        splitBarNode = Y.Node.create('<div></div>'),
         centerSection = Y.Node.create('<div class="centerSection"></div>');
         var frag = Y.one(document.createDocumentFragment());
         //frag = Y.one(document.body);
@@ -452,7 +452,7 @@ YUI.add("woodenaxe-main", function(Y){
                 }
         });
         /**@class AddProjectView */
-        var AddProjectView = Y.Base.create("addProjectView", Y.View, [],{
+        var AddProjectView = Y.Base.create("addprjview", Y.View, [],{
                 initializer:function(){
                     Y.log("init AddProjectView");
                 },
@@ -483,8 +483,8 @@ YUI.add("woodenaxe-main", function(Y){
                         {
                             value:'Cancel',
                             action:function(e){
-                                if(fullWindow)
-                                    history.back();
+                                history.back();
+                                fullWindow || prjAdd.hide('fadeOut');
                             },
                             section: Y.WidgetStdMod.FOOTER
                         }
@@ -508,7 +508,11 @@ YUI.add("woodenaxe-main", function(Y){
                 }
         });
         /**@class EmptyView */
-        var EmptyView = Y.Base.create("addProjectView", Y.View, [],{
+        var EmptyView = Y.Base.create("emptyView", Y.View, [],{
+        });
+        
+        /**@class CenterView */
+        var CenterView = Y.Base.create("centerView", Y.View, [],{
         });
                 
         /** @class leftApp */
@@ -549,8 +553,8 @@ YUI.add("woodenaxe-main", function(Y){
                             });
                     });
         leftApp.route('/add', function (){
-            if(centerApp.get('activeView') === centerApp._addProjView)
-                return;
+            //if(centerApp.get('activeView') === centerApp._addProjView)
+            //    return;
             document.title = "Wooden Axe TmainSectionool - Add Project";
             centerApp.showView("addProjectView", null, null, function(view){
                     centerApp._addProjView = view;
@@ -570,8 +574,8 @@ YUI.add("woodenaxe-main", function(Y){
                     emptyView:{
                         type:EmptyView
                     },
-                    addProjectView:{
-                        type:AddProjectView,
+                    centerView:{
+                        type:CenterView,
                         parent: 'emptyView',
                         preserve:false
                     }
