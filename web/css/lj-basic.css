@@ -491,6 +491,7 @@
      border-spacing:0;
  }
  .yui3-scrollgrid-buttons{
+     padding:2px;
      position:relative;
      display:inline-block;
      zoom:1;

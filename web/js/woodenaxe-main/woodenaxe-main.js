@@ -541,13 +541,14 @@ YUI.add("woodenaxe-main", function(Y){
                 }
             });
         leftApp.route("/", function (){
-                        document.title = "Wooden Axe Tool"
+                        document.title = "Wooden Axe Tool";
+                        var self = this;
                         this.showView("listView", null, null, 
                             function(){
                                 if(firstLoad){
                                     firstLoad = false;
                                     Y.lj.deferredTasks.add(function(){
-                                            lj.hideLoading();
+                                            leftApp.fire('loaded');
                                     }, 50).run();
                                 }
                             });
@@ -556,16 +557,44 @@ YUI.add("woodenaxe-main", function(Y){
             //if(centerApp.get('activeView') === centerApp._addProjView)
             //    return;
             document.title = "Wooden Axe TmainSectionool - Add Project";
-            centerApp.showView("addProjectView", null, null, function(view){
-                    centerApp._addProjView = view;
-            });
+            if(fullWindow)
+                centerApp.showView("addProjectView", null, null, function(view){
+                        centerApp._addProjView = view;
+                });
+            else
+                centerApp.addContent("addProjectView", AddProjectView);
         });
+        
+        /**@class CenterApp */
+        var CenterApp = Y.Base.create('centerapp', Y.lj.App,[],
+            {
+                initializer:function(){
+                    this.contentViews = {};
+                },
+                addContent:function(viewName, viewContructor){
+                    var container = this.get('activeView').get('container'), 
+                        node = Y.Node.create('<div></div>');
+                    node.hide('fadeOut',{duration:0});
+                    if(!this.contentViews[viewName]){
+                        var childView = new viewContructor({
+                                container:node
+                        }),
+                            it = this.contentViews[viewName] = {
+                            view: childView,
+                            node: node
+                        };
+                        childView.render();
+                        container.append(node);
+                        node.show('fadeIn');
+                    }
+                }
+            });
         
         var centerApp;
         if(fullWindow)
             centerApp = leftApp;
         else
-            centerApp = new Y.lj.App({
+            centerApp = new CenterApp({
                 viewContainer:centerSection,
                 container:centerSection,
                 serverRouting:false,
@@ -614,16 +643,24 @@ YUI.add("woodenaxe-main", function(Y){
         return frag;
     }
     
-    
+    /** @class WoodenaxeView 
+        @event loaded
+    */
     Y.lj.WoodenaxeView = Y.Base.create('wooView', Y.View, [], {
+
         render: function () {
             
             var container = this.get('container'), view = this;
             //initWoo.apply(this);
             container.append(initWoo.call(this, container));
+            this.leftApp.on('loaded', this.onLoaded, this);
             lj.deferredTasks.add(function(){
                     view.leftApp.navigate("/");
+                    view.centerApp.showView('emptyView');
             }).run();
+        },
+        onLoaded:function(e){
+            this.fire('loaded');
         },
         /** Invoked by lj.App */
         onResize:function(){
@@ -647,5 +684,5 @@ YUI.add("woodenaxe-main", function(Y){
     //loadI18n('lj-basic',['zh'], run);
 }, "1.0.0",
 {
-requires:['intl','dwr-filescan','dwr-projects','lj-basic','json-stringify']
+requires:['intl','dwr-filescan','dwr-projects','lj-basic','json-stringify','transition']
 });

@@ -77,7 +77,7 @@ YUI({lang:browser_locale}).use('lj-init','intl','transition','console', function
 
 function initHome(){
     var Y = globalY, ua = Y.UA;
-    Y.lj.hideLoading();
+    //Y.lj.hideLoading();
     
     if( (ua.ie>0 && ua.ie<10) ||
         (ua.webkit >0 && ua.webkit <= 534) ){
@@ -92,6 +92,7 @@ function initWoo() {
 try{
     var Y = globalY;
     var woo = new Y.lj.WoodenaxeView({container:'body'});
+    woo.on('loaded', Y.lj.hideLoading);
     woo.render();
     
     
