@@ -8,6 +8,7 @@ import java.sql.*;
 import org.eclipse.jetty.server.handler.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.*;
+import org.eclipse.jetty.xml.XmlConfiguration;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.directwebremoting.servlet.DwrServlet;
 import org.eclipse.jetty.webapp.*;
@@ -24,6 +25,10 @@ public class ServerController {
             String yui = System.getProperty("yui");
             
             server = new Server(19815);
+            XmlConfiguration configPlus = new XmlConfiguration(
+                new File(base+"/WEB-INF/jetty-plus.xml").toURI().toURL()
+                );
+            configPlus.configure(server);
             
             WebAppContext context0 = new WebAppContext();
             context0.setResourceBase(yui);
@@ -37,10 +42,10 @@ public class ServerController {
             
             
             WebAppContext context = new WebAppContext();
-            context.setDescriptor(base +"/WEB-INF/web.xml");
+            //context.setParentLoaderPriority(true);
+            //context.setDescriptor(base +"/WEB-INF/web.xml");
             context.setResourceBase(base);
             context.setContextPath("/");
-            context.setParentLoaderPriority(true);
             
             ContextHandlerCollection handlers = new ContextHandlerCollection();
             //HandlerList handlers = new HandlerList();

@@ -3,29 +3,41 @@ package org.liujing.ironsword.dao;
 import org.apache.commons.dbutils.*;
 import java.util.*;
 import java.sql.*;
+import javax.sql.DataSource;
 import java.io.*;
 import java.util.logging.*;
 import org.antlr.runtime.*;
 import org.liujing.ironsword.*;
 import org.liujing.parser.*;
+import javax.naming.*;
 
+/**
+   JDBC Transaction management
+*/
 public class DBWorker{
   private static Logger log = Logger.getLogger(DBWorker.class.getName());
   private static boolean db_inited =false;
+  private static DataSource dataSource;
+  private static ThreadLocal<Connection> threadConn = new ThreadLocal();
   static{
     try{
-    Class.forName("org.h2.Driver");
+        //Class.forName("org.h2.Driver");
+        Context ctx = new InitialContext();
+        dataSource = (DataSource)ctx.lookup("java:comp/env/jdbc/irondb");
+        
+    
     }catch(Exception e){
       log.log(Level.SEVERE, "Failed to load driver", e);
     }
   }
   
-  protected Connection conn;
+  //protected Connection conn;
   protected int commandNestedLevel = 0;
   protected String dbUrl;
   
   private DBWorker(){
       this(System.getProperty("dbpath"));
+      log.info("datasource:"+ dataSource);
   }
   
   private DBWorker(String dbname){
@@ -41,15 +53,23 @@ public class DBWorker{
   }
   
   public <T> T execute(SQLCommand<T> cmd){
-      commandNestedLevel++;
+      
+      Connection conn = null;
     try{
+        conn = threadConn.get();
+        if(conn == null){
+            conn = dataSource.getConnection();
+            threadConn.set(conn);
+        }
+      commandNestedLevel++;
       long time = System.nanoTime();
-      if(conn == null){
-          renewConnection();
-          if(conn == null){
-              throw new IronException("DB connection encounters previous problem");
-          }
-      }
+      log.fine("connection gotten "+ conn.hashCode());
+      //if(conn == null){
+      //    renewConnection();
+      //    if(conn == null){
+      //        throw new IronException("DB connection encounters previous problem");
+      //    }
+      //}
       T result = cmd.run(conn);
       log.fine("time used: "+ (System.nanoTime() - time));
       if(commandNestedLevel == 1)
@@ -62,7 +82,6 @@ public class DBWorker{
             log.info("rollback DB");
         }catch(Exception de){
             log.log(Level.SEVERE, "failed to rollback DB connection", de);
-            //renewConnection();
         }
         conn = null;
         throw new IronException("", e);
@@ -73,32 +92,35 @@ public class DBWorker{
             log.info("rollback DB");
         }catch(Exception de){
             log.log(Level.SEVERE, "failed to rollback DB connection", de);
-            //renewConnection();
         }
         throw new IronException("", e);
     }finally{
+        if(commandNestedLevel == 1)
+        DbUtils.closeQuietly(conn);
+        threadConn.set(null);
+        
         commandNestedLevel--;
     }
   }
   
   private void initConnection(String dbname){
-    try{
-        this.dbUrl = "jdbc:h2:"+ dbname;
-        log.fine(dbUrl);
-        conn = DriverManager.getConnection(dbUrl, "sa", "");
-        conn.setAutoCommit(false);
-    }catch(SQLException dbe){
-        try{
-            renewConnection();
-        }catch(IronException ie){
-            log.warning("reconnect failed");
-        }
-    }catch(Exception e){
-      log.log(Level.SEVERE, "", e);
-    }
+    //try{
+    //    this.dbUrl = "jdbc:h2:"+ dbname;
+    //    log.fine(dbUrl);
+    //    conn = DriverManager.getConnection(dbUrl, "sa", "");
+    //    conn.setAutoCommit(false);
+    //}catch(SQLException dbe){
+    //    try{
+    //        renewConnection();
+    //    }catch(IronException ie){
+    //        log.warning("reconnect failed");
+    //    }
+    //}catch(Exception e){
+    //  log.log(Level.SEVERE, "", e);
+    //}
   }
   
-  public void renewConnection(){
+  /* public void renewConnection(){
       SQLException lastDbe = null;
       for(int i =0; i<4; i++){
           log.info("retry connecting");
@@ -117,7 +139,7 @@ public class DBWorker{
           }
       }
       throw new IronException("DB Connection", lastDbe);
-  }
+  } */
   
   protected void initdatabase(){
     try{
@@ -169,12 +191,12 @@ public class DBWorker{
   
   @Override
   protected void finalize(){
-      close();// it seems not be invoked when jvm shutdown
+      //close();// it seems not be invoked when jvm shutdown
   }
   
   public void close(){
-      log.fine("close DB");
-      DbUtils.closeQuietly(conn);
+      //log.fine("close DB");
+      //DbUtils.closeQuietly(conn);
   }
   
   public static void closeAll(){

@@ -49,7 +49,7 @@ YUI_config = {
 
 var globalY;
 
-YUI({lang:browser_locale}).use('lj-init','intl','transition','console', function(Y){
+YUI({lang:browser_locale}).use('lj-init','intl','transition', function(Y){
   try{
       var lj = Y.namespace("lj");
       var res = Y.Intl.get("lj-init"),
