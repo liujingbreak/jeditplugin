@@ -1843,7 +1843,7 @@ YUI.add("lj-basic", function(Y){
     }});
     MyDialog.CSS_PREFIX = "lj-dialog";
     
-    /**@class MyButtonBar
+    /**@class ButtonBar
     */
     var MyButtonBar = Y.Base.create('mybtnbar', Y.Widget, [Y.WidgetChild], {
             renderUI:function(){
@@ -2172,6 +2172,7 @@ YUI.add("lj-basic", function(Y){
         Dialog:MyDialog,
         SplitBar:SplitBar,
         App:MyApp,
+        buttonBar:MyButtonBar,
         parseStyleLen:parseStyleLen,
         globalEventMgr:globalEventMgr,
         deferredTasks:deferredTasks,

@@ -2,7 +2,10 @@ package org.liujing.ironsword.ctl;
 
 
 import org.directwebremoting.fluent.FluentConfigurator;
-
+/**
+Use sprint-dwr configuration instead
+*/
+@Deprecated
 public class DWRConfiguration extends FluentConfigurator{
     public void configure(){
         withConverterType("number", "org.liujing.ironsword.ctl.util.DWRNumberConverter");

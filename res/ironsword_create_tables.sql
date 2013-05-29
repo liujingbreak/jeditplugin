@@ -101,7 +101,24 @@ create table if not exists snap_shot_file(
     FOREIGN KEY(root_folder_id) REFERENCES ROOT_FOLDER(root_folder_id) ON DELETE CASCADE
 );
 
-
+create table if not exists users(
+    username        VARCHAR(50) not null,
+    password        varchar(50) not null,
+    enabled         boolean,
+    email           varchar,
+    tel             varchar(30),
+    birthday        date,
+    gender          char(1),
+    PRIMARY KEY (username)
+    
+);
+create table if not exists authorities(
+    username varchar(50) not null,
+    authority varchar(50) not null,
+    constraint fk_authorities_users foreign key(username) references users(username)
+);
+create unique index ix_auth_username on authorities (username,authority);
+    
 --------------------  temporary tablers ----------------------
 create cached local temporary table if not exists SRC_FILE_UPDATED(
     SRC_FILE_ID   INT, 

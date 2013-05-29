@@ -1,0 +1,10 @@
+<ivy-module version="1.0">
+    <info organisation="org.liujing" module="woodenaxe"/>
+    
+    <dependencies>
+        <dependency org="org.springframework.security" name="spring-security-core" rev="3.1.4.RELEASE"/>
+        <dependency org="org.springframework.security" name="spring-security-web" rev="3.1.4.RELEASE"/>
+        <dependency org="org.springframework.security" name="spring-security-config" rev="3.1.4.RELEASE"/>
+        
+    </dependencies>
+</ivy-module>

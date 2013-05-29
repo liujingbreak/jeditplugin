@@ -189,6 +189,7 @@
     border-radius:          0 5px 5px 0;
 }
 .skin-lj .yui3-button{
+    outline:none;
     position:relative;
     background-color:#303030;
     -webkit-text-shadow: 0px 0px 8px   rgba(30, 255, 255, .9);
@@ -461,6 +462,8 @@
      color:black;
      -webkit-box-shadow: 0px 0px 14px 0px   rgba(255, 255, 153, .9);
      -moz-box-shadow:    0px 0px 14px 0px   rgba(255, 255, 153, .9);
+     -ms-box-shadow:         0px 0px 14px 0px   rgba(255, 255, 153, .9);
+     -o-box-shadow:         0px 0px 14px 0px   rgba(255, 255, 153, .9);
      box-shadow:         0px 0px 14px 0px   rgba(255, 255, 153, .9);
  }
  .yui3-scrollgrid-item-tapped{

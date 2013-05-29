@@ -9,18 +9,21 @@ YUI_config = {
             modules: {
                 
                 "lj-basic": {
-                    path: 'lj-basic/lj-basic.js?'+urlToken
+                    path: 'lj-basic/lj-basic.js?'
                     ,lang:['zh']
                 },
                 "lj-init":{
-                    path: 'lj-init/lj-init.js?'+urlToken,
+                    path: 'lj-init/lj-init.js?',
                     lang: ["zh"]
                 },
                 "woodenaxe-main":{
-                    path: 'woodenaxe-main/woodenaxe-main.js?'+urlToken,
+                    path: 'woodenaxe-main/woodenaxe-main.js?',
                     lang: ["zh"]
                 },
-                
+                "lj-home":{
+                    path: 'lj-home/lj-home.js?',
+                    lang: ["zh"]
+                },
                 'dwr-projects':{
                     async: false,
                     fullpath:'/dwr/interface/ProjectController.js?'+urlToken
@@ -38,6 +41,11 @@ YUI_config = {
             modules:{
                 "lj-basic-css":{
                     path:'lj-basic.css?'+urlToken,
+                    type:'css',
+                    async:false
+                },
+                "lj-home-css":{
+                    path:'lj-home.css?'+urlToken,
                     type:'css',
                     async:false
                 }
@@ -70,8 +78,8 @@ YUI({lang:browser_locale}).use('lj-init','intl','transition', function(Y){
     // lazy loading starts ...
     setTimeout(function(){
     
-        Y.use('app','json', initHome);
-        Y.use('woodenaxe-main',initWoo)
+        Y.use('lj-home', initHome);
+        //Y.use('woodenaxe-main',initWoo)
     }, 10);
 });
 
@@ -80,12 +88,18 @@ function initHome(){
     //Y.lj.hideLoading();
     
     if( (ua.ie>0 && ua.ie<10) ||
-        (ua.webkit >0 && ua.webkit <= 534) ){
-        Y.one('body').append('<div class="leftBackbg"></div>')
-        .append('<div class="rightBackbg"></div>');
+        (ua.webkit >0 && ua.webkit <= 534)){
+        /**@property lj.OLD_FASION_BROWSER */
+        Y.lj.OLD_FASION_BROWSER = true;
+        var b = Y.one('body').append('<div class="leftBackbg"><div class="rightBackbg"></div></div>');
+        var container = b.one('.leftBackbg > .rightBackbg');
+    }else{
+        var container = Y.one('body');
     }
-    var MainApp = new Y.App();
-    Y.log(Y.JSON.stringify(Y.UA));
+    new Y.lj.HomeApp({container:container}).render().navigate('/');
+    Y.lj.hideLoading();
+    
+    //Y.log(Y.JSON.stringify(Y.UA));
 }
 
 function initWoo() {

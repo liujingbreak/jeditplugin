@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:sec="http://www.springframework.org/schema/security" 
+    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/security
+http://www.springframework.org/schema/security/spring-security-3.1.xsd
+http://www.directwebremoting.org/schema/spring-dwr
+    http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
+
+<!-- <bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+<constructor-arg>
+<list>
+    <sec:filter-chain pattern="/dwr/**" filters="
+        securityContextPersistenceFilterWithASCTrue,
+        formLoginFilter,
+        exceptionTranslationFilter,
+        filterSecurityInterceptor" />
+    </list>
+  </constructor-arg>
+</bean> -->
+
+  <sec:global-method-security secured-annotations="enabled"/>
+  <dwr:configuration>
+    <dwr:init>
+        <dwr:converter id="numberConverter" class="org.liujing.ironsword.ctl.util.DWRNumberConverter"/>
+    </dwr:init>
+    <!-- not useful?
+    <dwr:convert type="numberConverter" class="java.lang.Number" /> -->
+    <dwr:convert type="bean" class="org.liujing.ironsword.bean.ListPage" />
+  </dwr:configuration>
+  <dwr:annotation-config id="dwrAnnotationConfig"/>
+  <dwr:annotation-scan base-package="org.liujing.ironsword.ctl" scanDataTransferObject="true" scanRemoteProxy="true" />
+  <dwr:annotation-scan base-package="org.liujing.ironsword.bean" scanDataTransferObject="true" scanRemoteProxy="true" />
+  <dwr:annotation-scan base-package="org.liujing.ironsword.dao" scanDataTransferObject="true" scanRemoteProxy="true" />
+
+  <!-- <bean id="authenticationFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+    <property name="authenticationManager" ref="authenticationManager"/>
+    <property name="filterProcessesUrl" value="/j_spring_security_check"/> 
+  </bean>
+  
+  <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+    <property name="providers">
+        <list>
+            <ref local="daoAuthenticationProvider"/>
+            <ref local="anonymousAuthenticationProvider"/>
+        </list>
+    </property>
+  </bean>
+  
+  <bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+    <property name="userDetailsService" ref="userDetailsService"/>
+    <property name="passwordEncoder" ref="passwordEncoder"/>
+  </bean>
+  
+  <bean id="userDetailsService" class="org.springframework.security.provisioning.JdbcUserDetailsManager">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+  
+  <bean id="securityContextPersistenceFilterWithASCTrue" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
+    <property name="securityContextRepository">
+        <bean class="org.springframework.security.web.context.HttpSessionSecurityContextRepository">
+        </bean>
+        </property>
+  </bean> -->
+  
+  
+
+ </beans>
+
+  

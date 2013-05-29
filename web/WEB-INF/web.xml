@@ -4,21 +4,29 @@
               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
-<!--
-  <filter>
-    <filter-name></filter-name>
-    <filter-class></filter-class>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/applicationContext*.xml</param-value>
+  </context-param>
+
+  <!-- <filter>
+    <filter-name>filterChainProxy</filter-name>
+    <filter-class>org.springframework.security.web.FilterChainProxy</filter-class>
   </filter>
   <filter-mapping>
-    <filter-name></filter-name>
-    <filter-mapping></filter-mapping>
-  </filter-mapping>
-  -->
+    <filter-name>filterChainProxy</filter-name>
+    <filter-mapping>/dwr/*</filter-mapping>
+  </filter-mapping> -->
+  
+  
   <!-- Servlets -->
   <servlet>
     <servlet-name>DwrServlet</servlet-name>
-    <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
-    <init-param>
+    <servlet-class>org.directwebremoting.spring.DwrSpringServlet</servlet-class>
+    <!-- <init-param>
         <param-name>classes</param-name>
         <param-value>org.liujing.ironsword.ctl.ProjectController
         ,org.liujing.ironsword.bean.DaoPagination
@@ -32,7 +40,7 @@
         ,org.liujing.ironsword.bean.TableRowVO
         ,org.liujing.ironsword.ctl.FileScanController
         </param-value>
-    </init-param>
+    </init-param> -->
     <init-param>
         <param-name>debug</param-name>
         <param-value>true</param-value>
@@ -41,10 +49,10 @@
         <param-name>generateDtoClasses</param-name>
         <param-value></param-value>
     </init-param>
-    <init-param>
+    <!-- <init-param>
         <param-name>customConfigurator</param-name>
         <param-value>org.liujing.ironsword.ctl.DWRConfiguration</param-value>
-    </init-param>
+    </init-param> -->
   </servlet>
   
   <servlet>
