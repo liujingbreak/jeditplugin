@@ -1,8 +1,8 @@
 YUI.add("lj-home", function(Y){
     var lj = Y.namespace("lj");
-    var res = Y.Intl.get("lj-home");
-    
-    var HeaderView = Y.Base.create('headerView', Y.View, [], {
+    var res = Y.Intl.get("lj-home"),
+    ie = Y.UA.ie,
+    HeaderView = Y.Base.create('headerView', Y.View, [], {
 
         render: function () {
             var container = this.get('container'), view = this;
@@ -23,9 +23,7 @@ YUI.add("lj-home", function(Y){
         },
         
         renderLogo:function(node){
-            
             node.append('<div class="logotext inline-block">'+ res.LOGO );
-            
         },
         
         renderRight:function(node){
@@ -40,11 +38,16 @@ YUI.add("lj-home", function(Y){
                             this.get('contentBox').addClass('mousedown');
                         },
                         mouseleave:function(){
-                            this.get('contentBox').removeClass('mousedown');
+                            this.get('contentBox').removeClass('mousedown').removeClass('hover-ie8');
                         },
                         mouseup:function(){
                             this.get('contentBox').removeClass('mousedown');
                         },
+                        mouseenter:function(){
+                            
+                            if(ie>0 && ie <9)
+                                this.get('contentBox').addClass('hover-ie8');
+                        }
                     },
                     disabled: false
             });
