@@ -87,8 +87,8 @@ function initHome(){
     var Y = globalY, ua = Y.UA;
     //Y.lj.hideLoading();
     
-    if( false && (ua.ie>0 && ua.ie<10) ||
-        (ua.webkit >0 && ua.webkit <= 534)){
+    if( (ua.ie>0 && ua.ie<10) /* ||
+        (ua.webkit >0 && ua.webkit <= 534) */){
         /**@property lj.OLD_FASION_BROWSER */
         Y.lj.OLD_FASION_BROWSER = true;
         var b = Y.one('body').append('<div class="leftBackbg"><div class="rightBackbg"></div></div>');

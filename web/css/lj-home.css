@@ -25,7 +25,7 @@
     line-height:normal;
     vertical-align:middle;
     color:#e0e0e0;
-    filter:progid:DXImageTransform.Microsoft.Glow(Color=#FAF900,Strength=2);
+    filter:progid:DXImageTransform.Microsoft.Glow(Color=blue, Strength=5);
     -webkit-text-shadow: 0 0 2px black, 0 0 3px rgb(230,230,230), 0 0 15px #fbd17c;
     -moz-text-shadow: 0 0 2px black, 0 0 3px rgb(230,230,230), 0 0 15px #fbd17c;
     -ms-text-shadow: 0 0 2px black, 0 0 3px rgb(230,230,230), 0 0 15px #fbd17c;
