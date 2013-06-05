@@ -2,15 +2,17 @@
     position:relative;
     max-width:1200px;
     margin:0 auto;
+    line-height:50px;
 }
 .home-header .placeHolder{
     height:80px;
 }
- .home-header .header-logo{
-    line-height:56px;
+.home-header .header-logo{
+    
     vertical-align:middle;
     width:300px;
     font-size:34px;
+    font-weight:bold;
     font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif; 
     padding:0 1px 0 10px;
     -moz-border-radius:     6px 0 0 6px;
@@ -25,12 +27,12 @@
     line-height:normal;
     vertical-align:middle;
     color:#e0e0e0;
-    filter:progid:DXImageTransform.Microsoft.Glow(Color=blue, Strength=5);
-    -webkit-text-shadow: 0 0 2px black, 0 0 3px rgb(230,230,230), 0 0 15px #fbd17c;
-    -moz-text-shadow: 0 0 2px black, 0 0 3px rgb(230,230,230), 0 0 15px #fbd17c;
-    -ms-text-shadow: 0 0 2px black, 0 0 3px rgb(230,230,230), 0 0 15px #fbd17c;
-    -o-text-shadow: 0 0 2px black, 0 0 3px rgb(230,230,230), 0 0 15px #fbd17c;
-    text-shadow: 0 0 2px black, 0 0 3px rgb(230,230,230), 0 0 15px #fbd17c;
+    filter:progid:DXImageTransform.Microsoft.Glow(Color=#606060, Strength=5);
+    -webkit-text-shadow: 0 0 2px black, 0 1px 3px rgb(230,230,230), 0 0 15px #fbd17c;
+    -moz-text-shadow: 0 0 2px black, 0 1px 3px rgb(230,230,230), 0 0 15px #fbd17c;
+    -ms-text-shadow: 0 0 2px black, 0 1px 3px rgb(230,230,230), 0 0 15px #fbd17c;
+    -o-text-shadow: 0 0 2px black, 0 1px 3px rgb(230,230,230), 0 0 15px #fbd17c;
+    text-shadow: 0 0 2px black, 0 1px 3px rgb(230,230,230), 0 0 15px #fbd17c;
 }
 .logo-triangle{
     width:1px;
@@ -40,15 +42,15 @@
     background:white;
 }
 /** header right */
-.header-right{
+.home-header .header-right{
     /* behavior: url(PIE/PIE.htc); */
     position:absolute;
     right:10px;
-    height:56px;
-    line-height:54px;
+    /* height:56px;
+    line-height:54px; */
     border-left:2px groove rgb(55,55,55);
     margin:2px 0;
-    
+    vertical-align:bottom;
 }
 .home-header .header-right button.mousedown{
     background: rgb(30,255,255);
@@ -110,6 +112,11 @@
     -moz-box-shadow:    0px 1px 3px 0px rgba(0,0,0,.7);
     -o-box-shadow:      0px 1px 3px 0px rgba(0,0,0,.7);
     box-shadow:         0px 1px 3px 0px rgba(0,0,0,.7);
+    
+}
+.home-view-c{
+    max-width:1200px;
+    margin:10px auto;
 }
 ::selection { background: #009999; }
 ::-moz-selection { background: #009999; }

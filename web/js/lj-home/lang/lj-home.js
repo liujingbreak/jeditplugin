@@ -9,7 +9,12 @@ YUI.add("lang/lj-home", function(Y) {
         {
             TITLE: "Whose Site",
             LOGO: "Whose site",
-            SIGNIN: 'Sign in'
+            SIGNIN: 'Sign in',
+            USER_NAME:'User Name / Email: ',
+            USER_PASSWD:'Password: ',
+            LOGIN: 'Login',
+            BT_LOGIN:'Login',
+            BT_CANCEL:'Cancel'
         }
     );
 }, "1.0.0");

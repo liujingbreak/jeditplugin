@@ -2,8 +2,8 @@
 YUI.add("lj-basic", function(Y){
        
   try{
-     var res = Y.Intl.get("lj-basic");
-      
+     var res = Y.Intl.get("lj-basic"),
+     lj = Y.namespace('lj');
     function loadHandler(err){
         if (err) {
             Y.Array.each(err, function (error) {
@@ -1700,16 +1700,16 @@ YUI.add("lj-basic", function(Y){
                 node.insert(this._titleNode, 0);
                 Y.log("title: "+ this.get('title'));
                 this.bindAndSyncAttr('title', this._setTitleUI);
-                this.bindAndSyncAttr('focused', 
-                    function(focused){
-                        if(focused){
-                            this._bindBlur();
-                            this._unbindFocus();
-                        }else{
-                            this._bindFocus();
-                            this._unbindBlur();
-                        }
-                    });
+                //this.bindAndSyncAttr('focused', 
+                //    function(focused){
+                //        if(focused){
+                //            this._bindBlur();
+                //            this._unbindFocus();
+                //        }else{
+                //            this._bindFocus();
+                //            this._unbindBlur();
+                //        }
+                //    });
             }, this);
         },
         _bindFocus:function(){
@@ -1759,7 +1759,7 @@ YUI.add("lj-basic", function(Y){
     
     Y.mix(MyPortal.prototype, WidgetRenderTaskQ);
     Y.MyPortal = MyPortal;
-    MyPortal.CSS_PREFIX = "yui3-panel";
+    //MyPortal.CSS_PREFIX = "lj-panel";
     
     /**@class Dialog 
     useful attribute:
@@ -1847,12 +1847,32 @@ YUI.add("lj-basic", function(Y){
     */
     var MyButtonBar = Y.Base.create('mybtnbar', Y.Widget, [Y.WidgetChild], {
             renderUI:function(){
-                var cb =this.get('contentBox'), buttonNodes = cb.get('children');
-                cb.one(':first-child').addClass('barButton-first');
-                cb.one(':last-child').addClass('barButton-last');
+                var cb = this.get('contentBox'), buttonNodes = cb.all('.yui3-button');
+                (function($){
+                        var jd = $(cb.getDOMNode());
+                        jd.find('.yui3-button:first').addClass('barButton-first');
+                        jd.find('.yui3-button:last').addClass('barButton-last');
+                })(jQuery);
+                //if(buttonNodes.size() > 0){
+                //    buttonNodes.item(0).addClass('barButton-first');
+                //    buttonNodes.item(buttonNodes.size() - 1).addClass('barButton-last');
+                //}
             }
     });
-    
+    /**@class ButtonBarView */
+    var ButtonBarView = Y.Base.create('btnbarview', Y.View,[],{
+        render:function(){
+            var cb = this.get('container'),
+                buttonNodes = cb.all('.yui3-button');
+            cb.addClass('yui3-mybtnbar-content');
+            if(buttonNodes.size() > 0){
+                    buttonNodes.item(0).addClass('barButton-first');
+                    buttonNodes.item(buttonNodes.size() - 1).addClass('barButton-last');
+            }
+            return this;
+        }
+    });
+    Y.lj.ButtonVarView = ButtonBarView;
     /** @class MyButtonGroup 
     */
     var MyButtonGroup = Y.Base.create("mybtngroup", Y.ButtonGroup, [Y.WidgetChild], {
@@ -1908,17 +1928,21 @@ YUI.add("lj-basic", function(Y){
         {
             initializer:function(config){
                 this._textLabel = config.label;
+                /**@property _password */
+                this._password = config.password;
                 /**@attribute input */
                 this.addUIAttr('input', {value: ''}, 
                     function(value){
-                        this.get('contentBox').one('input[type="text"]').set('value', value);
+                        this.get('contentBox').one('input').set('value', value);
                     });
                 /**@attribute label */
                 this.addUIAttr('label', {value: 'Label'}, 
                     function(label){
-                        this.lbDom.data = label;
+                        //this.lbDom.data = label;
+                        this.lbDom.setHTML(label);
                         //this.get('contentBox').one('> div').setHTML(label);
                     });
+                /** @attribute required */
                 this.setupUIAttr('required',
                     function(newVal, preVal){
                         if(newVal === true){
@@ -1928,6 +1952,14 @@ YUI.add("lj-basic", function(Y){
                             if(preVal === true)
                                 this.get('contentBox').one('>font').remove(true);
                         }
+                    });
+                this.setupUIAttr('labelWidth',
+                    function(nv, pv){
+                        if(nv!=null ) this.lbDom.setStyle('minWidth',nv);
+                    });
+                this.setupUIAttr('inputWidth',
+                    function(nv, pv){
+                        if(nv!=null ) this.get('contentBox').one('input').setStyle('minWidth',nv);
                     });
                 if(config.value != null)
                     this.set('input', config.value);
@@ -1974,15 +2006,17 @@ YUI.add("lj-basic", function(Y){
                 this._initValueChange = true;
             },
             renderUI:function(){
-                this.lbDom = document.createTextNode("");
+                var lbNode = Y.Node.create("<div></div>");
+                lbNode.addClass('inline-block').addClass(this.getClassName("label"));
+                this.lbDom = lbNode;
                 this.get('contentBox').append(this.lbDom);
-                var textbox = Y.Node.create('<input type="text" value="">');
+                var textbox = Y.Node.create('<input type="'+ (this._password?'password':'text')+'" value="">');
                 this.get('contentBox').append(textbox);
                 /** @property inputField */
-                this.inputField = this.get('contentBox').one('input[type="text"]');
+                this.inputField = this.get('contentBox').one('input');
             },
             syncInput:function(){
-                var val = this.get('contentBox').one('input[type="text"]').get('value');
+                var val = this.get('contentBox').one('input[type]').get('value');
                 //Y.log(val);
                 this.set('input', val,
                     {src:'ui'});
@@ -1995,8 +2029,9 @@ YUI.add("lj-basic", function(Y){
                     this._valueChangeHandle.detach();
             }
         }, {ATTRS:{
-            /** @attribute required */
-            'required': {value: 'false'}
+            'required': {value: 'false'},
+            'labelWidth':{value:null},
+            'inputWidth':{value:null}
         }});
     
     Y.mix(MyTextField.prototype, WidgetRenderTaskQ);
@@ -2166,7 +2201,6 @@ YUI.add("lj-basic", function(Y){
     };
     Y.augment(AppManager, Y.EventTarget);
     
-    var lj = Y.namespace('lj');
     Y.mix(lj,{
         AppManager:AppManager,
         Dialog:MyDialog,
@@ -2186,5 +2220,5 @@ YUI.add("lj-basic", function(Y){
     
     
 }, "1.0.0",{
-requires:['lj-basic-css','get','base','overlay','node','event','panel','widget','widget-parent','widget-child',
+requires:['get','base','overlay','node','event','panel','widget','widget-parent','widget-child','jquery',
 'button','button-group','scrollview','node-focusmanager','app',"async-queue",'dd-drag','dd-proxy','dd-constrain']});
