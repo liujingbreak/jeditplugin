@@ -87,7 +87,7 @@ cssUnit
     ;
 selector
     @after{ if(agh != null) agh.setName(ruleText($start, $stop)); }:
-    ~('@'|'{'|'}')(~('{'|'}'))+
+    ~('@'|'{'|'}')(~('{'|'}'))*
     ;
 STRING_LITERAL: (
     '"' DOUBLE_STRING_CHARACTERS '"'

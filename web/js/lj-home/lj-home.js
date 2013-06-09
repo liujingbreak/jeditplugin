@@ -29,6 +29,7 @@ YUI.add("lj-home", function(Y){
         renderRight:function(node){
             var view = this;
             node.append('<button class="headerButton">'+ res.SIGNIN +'</button>');
+            //node.one('button').on('touchstart', function(){});
             this.signinBtn = new Y.Button({
                     srcNode:node.one('button'),
                     on:{
@@ -38,9 +39,7 @@ YUI.add("lj-home", function(Y){
                         mousedown:function(){
                             this.get('contentBox').addClass('mousedown');
                         },
-                        touchStart:function(){
-                            this.get('contentBox').addClass('mousedown');
-                        },
+                        
                         mouseleave:function(){
                             this.get('contentBox').removeClass('mousedown').removeClass('hover-ie8');
                         },
@@ -48,9 +47,20 @@ YUI.add("lj-home", function(Y){
                             this.get('contentBox').removeClass('mousedown');
                         },
                         mouseenter:function(){
-                            
                             if(ie>0 && ie <9)
                                 this.get('contentBox').addClass('hover-ie8');
+                        },
+                        touchstart:function(e){
+                            this.get('contentBox').addClass('mousedown');
+                        },
+                        touchcancel:function(){
+                            this.get('contentBox').removeClass('mousedown');
+                        },
+                        touchmove:function(){
+                            this.get('contentBox').removeClass('mousedown');
+                        },
+                        touchend:function(){
+                            this.get('contentBox').removeClass('mousedown');
                         }
                     },
                     disabled: false
