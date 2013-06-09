@@ -10,7 +10,7 @@
 .home-header .header-logo{
     
     vertical-align:middle;
-    width:300px;
+    /* width:300px; */
     font-size:34px;
     font-weight:bold;
     font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif; 
@@ -48,7 +48,7 @@
     right:10px;
     /* height:56px;
     line-height:54px; */
-    border-left:2px groove rgb(55,55,55);
+    border-left:2px groove rgb(117,117,117);
     margin:2px 0;
     vertical-align:bottom;
 }
@@ -92,7 +92,7 @@
     right:200px;
     height:100%;*/ 
     /* background:#6699ff; */
-    min-width:600px;
+    
     vertical-align:bottom;
 }
 .header-seperate{

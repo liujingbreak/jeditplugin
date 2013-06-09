@@ -107,11 +107,14 @@ function initHome(){
         (ua.webkit >0 && ua.webkit <= 534) */){
         /**@property lj.OLD_FASION_BROWSER */
         Y.lj.OLD_FASION_BROWSER = true;
-        var b = Y.one('body').append('<div class="leftBackbg"><div class="rightBackbg"></div></div>');
-        var container = b.one('.leftBackbg > .rightBackbg');
+        var b = Y.one('body').append('<div class="leftBackbg"></div>');
+        var container = b.one('.leftBackbg');
+        
     }else{
         var container = Y.one('body');
     }
+    var jq = jQuery(container.getDOMNode());
+        Y.log(jq[0]);
     var homeApp = new Y.lj.HomeApp({container:container});
     homeApp.once('loaded', function(){
             Y.lj.hideLoading();
