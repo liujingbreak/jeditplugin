@@ -2206,6 +2206,7 @@ YUI.add("lj-basic", function(Y){
         Dialog:MyDialog,
         SplitBar:SplitBar,
         App:MyApp,
+        ButtonBar:MyButtonBar,
         buttonBar:MyButtonBar,
         parseStyleLen:parseStyleLen,
         globalEventMgr:globalEventMgr,

@@ -28,7 +28,7 @@ YUI.add("lj-home", function(Y){
         
         renderRight:function(node){
             var view = this;
-            node.append('<button class="headerButton">'+ res.SIGNIN +'</button>');
+            node.append('<button>'+ res.SIGNIN +'</button>');
             //node.one('button').on('touchstart', function(){});
             this.signinBtn = new Y.Button({
                     srcNode:node.one('button'),
@@ -47,8 +47,10 @@ YUI.add("lj-home", function(Y){
                             this.get('contentBox').removeClass('mousedown');
                         },
                         mouseenter:function(){
+                            var cb = this.get('contentBox');
                             if(ie>0 && ie <9)
-                                this.get('contentBox').addClass('hover-ie8');
+                                cb.addClass('hover-ie8');
+                            
                         },
                         touchstart:function(e){
                             this.get('contentBox').addClass('mousedown');
@@ -66,6 +68,7 @@ YUI.add("lj-home", function(Y){
                     disabled: false
             });
             this.signinBtn.render(node);
+            this.signinBtn.get("contentBox").addClass("button-hl");
         },
         onResize:function(){
             
@@ -91,16 +94,17 @@ YUI.add("lj-home", function(Y){
     /** @class LoginView*/
     var LoginView = Y.Base.create('loginView', Y.View, [], {
             render:function(){
-                var c = this.get('container');
+                var c = Y.one(document.createDocumentFragment());
+                
                 var p = new Y.MyPortal({title:res.LOGIN, buttons:[
                     {   value:res.BT_LOGIN, 
                         action:function(){
-                            
+                            this.getButton(0).set("disabled",true);
                         }
                     },
                     {   value:res.BT_CANCEL,
                         action:function(){
-                            
+                            history.back();
                         }
                     }
                 ]});
@@ -116,8 +120,20 @@ YUI.add("lj-home", function(Y){
                 var bar = new lj.buttonBar(
                     {srcNode: p.get("contentBox").one(".yui3-widget-buttons")});
                 bar.render(p.getStdModNode(Y.WidgetStdMod.FOOTER, false));
+                
+                var signUpNode = Y.Node.create('<div class="signupLayer">' + res.IS_NEW_USER + '  <button>'+res.SIGN_UP+'</button></div>');
+                c.append(signUpNode);
+                signupBtn = new Y.Button(
+                    {srcNode: signUpNode.one("button")});
+                signupBtn.render(signUpNode, false);
+                
+                this.get('container').append(c);
                 Y.log('login rendered');
                 return this;
+            },
+            
+            renderSignup:function(){
+                
             }
     });
     /** @class HomeApp */

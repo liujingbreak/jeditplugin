@@ -95,6 +95,24 @@
     
     vertical-align:bottom;
 }
+/** sign up */
+.signupLayer{
+    color:black;
+    behavior:url(PIE/PIE.htc);
+    margin-top:10px;
+    padding-left:15px;
+    font-weight:bold;
+    font-size:2em;
+    /* background:rgb(0,102,204); */
+    background:rgb(244,137,1);
+    -moz-border-radius:     4px 4px 4px 4px;
+    -webkit-border-radius:  4px 4px 4px 4px;
+    -o-border-radius:       4px 4px 4px 4px;
+    -ms-border-radius:      4px 4px 4px 4px;
+    border-radius:          4px 4px 4px 4px;
+    /* -pie-background:rgba(0,102,204,0.5); */
+}
+
 .header-seperate{
     behavior: url(PIE/PIE.htc);
     position:relative;
