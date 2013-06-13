@@ -2,10 +2,11 @@
     position:relative;
     max-width:1200px;
     margin:0 auto;
-    line-height:50px;
+    /* line-height:50px; */
+    height:54px;/* ie7 doesn't recoganize line-height */
 }
-.home-header .placeHolder{
-    height:80px;
+.home-header > *{
+    line-height:50px;
 }
 .home-header .header-logo{
     
@@ -51,6 +52,7 @@
     border-left:2px groove rgb(117,117,117);
     margin:2px 0;
     vertical-align:bottom;
+    height:50px;
 }
 .home-header .header-right button.mousedown{
     background: rgb(30,255,255);
@@ -99,12 +101,12 @@
 .signupLayer{
     color:black;
     behavior:url(PIE/PIE.htc);
-    margin-top:10px;
+    margin-top:30px;
     padding-left:15px;
     font-weight:bold;
     font-size:2em;
-    /* background:rgb(0,102,204); */
-    background:rgb(244,137,1);
+    background:rgb(0,102,204);
+    /* background:rgb(244,137,1); */
     -moz-border-radius:     4px 4px 4px 4px;
     -webkit-border-radius:  4px 4px 4px 4px;
     -o-border-radius:       4px 4px 4px 4px;
@@ -132,9 +134,24 @@
     box-shadow:         0px 1px 3px 0px rgba(0,0,0,.7);
     
 }
-.home-view-c{
+body.skin-lj .home-view-c{
+    left:0;
+    right:0;
+    /* margin:10px auto; */
+    position:absolute;
+    top:66px;
+    bottom:0;
+}
+.home-view-c > *{
+    height:100%;
     max-width:1200px;
-    margin:10px auto;
+    margin:0 auto;
+}
+.home-view-layout{
+    position:relative;
+    
+    
+    height:100%;
 }
 ::selection { background: #009999; }
 ::-moz-selection { background: #009999; }

@@ -16,7 +16,9 @@ YUI.add("lang/lj-home_zh", function(Y) {
             BT_LOGIN:'登录',
             BT_CANCEL:'返回',
             SIGN_UP:'新用户注册',
-            IS_NEW_USER:'还没有用户名？'
+            IS_NEW_USER:'还没有用户名？',
+            BT_SIGNUP:'注册',
+            SIGNUP:"新用户注册"
         }
     );
 }, "1.0.0");

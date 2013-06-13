@@ -12,7 +12,6 @@ YUI.add("lj-home", function(Y){
                 right = Y.Node.create('<div class="inline-block header-right"></div>');
             this.renderLogo(logo);
             this.renderRight(right);
-            //container.append('<div class="inline-block placeHolder">o</div>');
             right.append();
             
             container.append(logo);
@@ -77,12 +76,12 @@ YUI.add("lj-home", function(Y){
             
         }
     });
+    /**@class HomeContentView*/
     var HomeContentView = Y.Base.create('wooView', Y.View, [], {
 
         render: function () {
             
             var container = this.get('container'), view = this;
-            container.append('.');
         },
         /** Invoked by lj.App */
         onResize:function(){
@@ -91,10 +90,12 @@ YUI.add("lj-home", function(Y){
         destructor:function(){
         }
     });
+    
     /** @class LoginView*/
     var LoginView = Y.Base.create('loginView', Y.View, [], {
             render:function(){
-                var c = Y.one(document.createDocumentFragment());
+                var c = Y.one(document.createDocumentFragment()),
+                    view = this;
                 
                 var p = new Y.MyPortal({title:res.LOGIN, buttons:[
                     {   value:res.BT_LOGIN, 
@@ -104,7 +105,7 @@ YUI.add("lj-home", function(Y){
                     },
                     {   value:res.BT_CANCEL,
                         action:function(){
-                            history.back();
+                            view.app.navigate("/");
                         }
                     }
                 ]});
@@ -124,16 +125,85 @@ YUI.add("lj-home", function(Y){
                 var signUpNode = Y.Node.create('<div class="signupLayer">' + res.IS_NEW_USER + '  <button>'+res.SIGN_UP+'</button></div>');
                 c.append(signUpNode);
                 signupBtn = new Y.Button(
-                    {srcNode: signUpNode.one("button")});
+                    {
+                        srcNode: signUpNode.one("button"),
+                        on:{
+                            click: function(){
+                                view.fire("goSignUp", {src:"ui"});
+                                }
+                        }
+                    });
+                //signupBtn.on('click', function(){
+                //        this.fire("goSignUp", {src:"ui"});
+                //});
                 signupBtn.render(signUpNode, false);
-                
-                this.get('container').append(c);
+                var layout = Y.Node.create('<div class="home-view-layout"></div>');
+                layout.append(c);
+                this.get('container').append(layout);
                 Y.log('login rendered');
                 return this;
-            },
-            
-            renderSignup:function(){
+            }
+    });
+    
+    /** @class SignUpView */
+    var SignUpView = Y.Base.create('loginView', Y.View, [], {
+            render:function(){
+                var c = Y.Node.create('<div class="home-view-layout"></div>'),
+                    view = this;
+                var p = this.portal = new Y.MyPortal({title:res.SIGNUP, buttons:[
+                    {   value:res.BT_SIGNUP, 
+                        //section:"header",
+                        action:function(){
+                            this.getButton(0).set("disabled",true);
+                        }
+                    },
+                    {   value:res.BT_CANCEL,
+                        //section:"header",
+                        action:function(){
+                            view.app.navigate("/");
+                        }
+                    }
+                ]});
+                p.render(c);
+                var pn = p.getStdModNode(Y.WidgetStdMod.BODY, true);
+                var email = new Y.MyTextField({label:res.EMAIL, input:'',
+                    labelWidth:'10em'});
+                var username = new Y.MyTextField({label:res.USERNAME, input:'',
+                    labelWidth:'10em'});
+                var password = new Y.MyTextField({label:res.USER_PASSWD, input:'', 
+                    password:true, labelWidth:'10em', alt:res.PASSWORD_ALT});
+                var passwordRep = new Y.MyTextField({label:res.USER_PASSWD_CONFIRM, input:'', 
+                    password:true, labelWidth:'10em'});
+                var nickName = new Y.MyTextField({label:res.VIEW_NAME, input:'', 
+                    password:true, labelWidth:'10em'});
+                var intro = new Y.MyTextField({label:res.SELF_INTRODUCT, input:'', 
+                    password:true, labelWidth:'10em'});
+                email.render(pn);
+                username.render(pn);
+                password.render(pn);
+                passwordRep.render(pn);
+                nickName.render(pn);
                 
+                
+                p.get("boundingBox").addClass("expand-height");
+                this.get('container').append(c);
+            },
+            onResize:function(){
+               // if(!this._layouted){
+                    var p = this.portal;
+                    this._layouted = true;
+                    var hf = p.getStdModNode("footer", false).get("offsetHeight"),
+                        hh = p.getStdModNode("header", false).get("offsetHeight"),
+                        body = p.getStdModNode("body", false),
+                        content = body.ancestor(),
+                        ch = lj.parseStyleLen(content.getComputedStyle("height")),
+                        
+                        padding = lj.parseStyleLen(body.getComputedStyle("paddingTop")) + 
+                            lj.parseStyleLen(body.getComputedStyle("paddingBottom"));
+                   
+                //}
+                //lj.logVars("foot()", "h,hf,hh, jq", h,hf,hh, jQuery(p.getStdModNode(Y.WidgetStdMod.FOOTER, false).getDOMNode()).outerHeight());
+                this.portal.getStdModNode("body", false).setStyles({height: ch - padding - hf - hh + "px"});
             }
     });
     /** @class HomeApp */
@@ -150,6 +220,7 @@ YUI.add("lj-home", function(Y){
         },
         initializer:function(){
             Y.log('HomeApp.initializer()');
+            var app = this;
             this.route('/', function(){
                     Y.log('HomeApp.initializer() show home');
                     this.showView('home', null,null,function(){
@@ -161,14 +232,28 @@ YUI.add("lj-home", function(Y){
                     if(this.get('activeView') instanceof LoginView)
                         return;
                     Y.log('HomeApp.initializer() show login');
-                    this.showView('login',  null,null,function(){
+                    this.showView('login',  null,null,function(view){
+                             view.on('goSignUp',
+                                 function(){
+                                     app.navigate("/signup");
+                                 });
                             this.fire('loaded');
                     });
+            });
+            this.route('/signup', function(){
+                    if(this.get('activeView') instanceof SignUpView)
+                        return;
+                    this.showView('signup',  null,null,function(){
+                           
+                            this.fire('loaded');
+                    });
+                    
             });
         },
         views:{
             home:{type:HomeContentView, preserve: false},
-            login:{type:LoginView, preserve: false, parent:'home'}
+            login:{type:LoginView, preserve: false, parent:'home'},
+            signup:{type:SignUpView, preserve:false, parent:'login'}
         },
         render:function(){
             var headerNode = Y.Node.create('<div></div>').addClass('home-header');
@@ -179,6 +264,7 @@ YUI.add("lj-home", function(Y){
                 this.navigate('/login');}, this);
             header.render();
             this.get('container').append(headerNode).append('<div class="header-seperate"></div>');
+            
             lj.HomeApp.superclass.render.apply(this, arguments);
             this.get('viewContainer').addClass('home-view-c');
             return this;

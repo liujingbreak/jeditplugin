@@ -53,7 +53,7 @@ YUI.add("lj-basic", function(Y){
         Y.log(msg);
         logVarPat.lastIndex = 0;
     }
-    
+    lj.logVars = logVars;
     /**
     Utilize setTimeout to asynchronously execute some event listeners, yield control 
     back to other UI operations during hanlding some continous event, like onScroll, onResize, onMousemove.
@@ -1847,12 +1847,13 @@ YUI.add("lj-basic", function(Y){
     */
     var MyButtonBar = Y.Base.create('mybtnbar', Y.Widget, [Y.WidgetChild], {
             renderUI:function(){
-                var cb = this.get('contentBox'), buttonNodes = cb.all('.yui3-button');
-                (function($){
-                        var jd = $(cb.getDOMNode());
-                        jd.find('.yui3-button:first').addClass('barButton-first');
-                        jd.find('.yui3-button:last').addClass('barButton-last');
-                })(jQuery);
+                //var cb = this.get('contentBox'), buttonNodes = cb.all('.yui3-button');
+                //(function($){
+                //        var jd = $(cb.getDOMNode());
+                //        jd.find('.yui3-button:first').addClass('barButton-first');
+                //        jd.find('.yui3-button:last').addClass('barButton-last');
+                //})(jQuery);
+                
                 //if(buttonNodes.size() > 0){
                 //    buttonNodes.item(0).addClass('barButton-first');
                 //    buttonNodes.item(buttonNodes.size() - 1).addClass('barButton-last');
@@ -1967,6 +1968,16 @@ YUI.add("lj-basic", function(Y){
                     this.set('label', config.label);
                 this._onEnterKeySet = false;
                 this._onChangeSet = false;
+                
+                this.setupUIAttr('alt',
+                    function(nv, pv){
+                        if(this.altNode == null){
+                            this.altNode = Y.Node.create('<div class="alt inline-block"></div>');
+                            this.get('contentBox').append(this.altNode);
+                        }
+                        if(nv!=null )
+                            this.altNode.append(nv);
+                    });
             },
             /**
             event object:
@@ -2014,6 +2025,7 @@ YUI.add("lj-basic", function(Y){
                 this.get('contentBox').append(textbox);
                 /** @property inputField */
                 this.inputField = this.get('contentBox').one('input');
+                
             },
             syncInput:function(){
                 var val = this.get('contentBox').one('input[type]').get('value');
@@ -2030,8 +2042,11 @@ YUI.add("lj-basic", function(Y){
             }
         }, {ATTRS:{
             'required': {value: 'false'},
+            /** @attribute labelWidth*/
             'labelWidth':{value:null},
-            'inputWidth':{value:null}
+            /** @attribute inputWidth*/
+            'inputWidth':{value:null},
+            alt:{value:null}
         }});
     
     Y.mix(MyTextField.prototype, WidgetRenderTaskQ);

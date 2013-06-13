@@ -176,19 +176,28 @@
     padding-right: 10px;
     line-height:2em;
 }
+.yui3-mytextfield-content > .alt{
+    padding-left: 10px;
+    font-style:italic;
+}
+.yui3-myportal .yui3-mytextfield-content{
+    padding-top:4px;
+    padding-bottom:6px;
+    background:url(/img/textfield-b-border.png) left bottom no-repeat;
+}
 .yui3-mytextfield-label{
     /* text-align:right; */
 }
 /** button */
 
-.yui3-mybtnbar-content .barButton-first{
+.yui3-button:first-child{
     -moz-border-radius:     5px 0 0 5px;
     -webkit-border-radius:  5px 0 0 5px;
     -o-border-radius:       5px 0 0 5px;
     -ms-border-radius:      5px 0 0 5px;
     border-radius:          5px 0 0 5px;
 }
-.yui3-mybtnbar-content .barButton-last{
+.yui3-button:last-child{
     -moz-border-radius:     0 5px 5px 0;
     -webkit-border-radius:  0 5px 5px 0;
     -o-border-radius:       0 5px 5px 0;
@@ -263,6 +272,7 @@
 }
     
 /** myportal */
+
 .skin-lj .yui3-myportal .yui3-myportal-content .yui3-widget-ft{
     background:transparent;
 }
@@ -298,9 +308,18 @@
 .skin-lj .yui3-myportal .yui3-myportal-content .yui3-widget-ft{
     background: transparent;
 }
+.expand-height{
+    height:100%;
+}
+.expand-height >.yui3-myportal-content{
+    position:absolute!important;
+    top:0;
+    bottom:4px;
+    width:100%;
+}
 .skin-lj .yui3-myportal .yui3-myportal-content{
     position:relative;
-    margin: 2px 0px;
+    /* margin: 2px 0px; */
     -moz-border-radius:     6px 6px 6px 6px;
     -webkit-border-radius:  6px 6px 6px 6px;
     -o-border-radius:          6px 6px 6px 6px;
@@ -583,4 +602,5 @@
     top:auto;
     bottom:4px;
 }
+
 
