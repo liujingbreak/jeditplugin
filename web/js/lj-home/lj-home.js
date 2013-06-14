@@ -165,7 +165,10 @@ YUI.add("lj-home", function(Y){
                     }
                 ]});
                 p.render(c);
-                var pn = p.getStdModNode(Y.WidgetStdMod.BODY, true);
+                var body = p.getStdModNode(Y.WidgetStdMod.BODY, true),
+                    pn = Y.Node.create('<div></div>');
+                //pn = body;
+                
                 var email = new Y.MyTextField({label:res.EMAIL, input:'',
                     labelWidth:'10em'});
                 var username = new Y.MyTextField({label:res.USERNAME, input:'',
@@ -175,7 +178,7 @@ YUI.add("lj-home", function(Y){
                 var passwordRep = new Y.MyTextField({label:res.USER_PASSWD_CONFIRM, input:'', 
                     password:true, labelWidth:'10em'});
                 var nickName = new Y.MyTextField({label:res.VIEW_NAME, input:'', 
-                    password:true, labelWidth:'10em'});
+                     labelWidth:'10em'});
                 var intro = new Y.MyTextField({label:res.SELF_INTRODUCT, input:'', 
                     password:true, labelWidth:'10em'});
                 email.render(pn);
@@ -183,27 +186,33 @@ YUI.add("lj-home", function(Y){
                 password.render(pn);
                 passwordRep.render(pn);
                 nickName.render(pn);
-                
+                this.scrollView = new Y.lj.MyScrollView({srcNode:pn});
+                //this.scrollView._prevent={
+                //    start: false,
+                //    move: false,
+                //    end: false
+                //};
+                this.scrollView.render(body);
                 
                 p.get("boundingBox").addClass("expand-height");
                 this.get('container').append(c);
             },
             onResize:function(){
                // if(!this._layouted){
-                    var p = this.portal;
-                    this._layouted = true;
-                    var hf = p.getStdModNode("footer", false).get("offsetHeight"),
-                        hh = p.getStdModNode("header", false).get("offsetHeight"),
-                        body = p.getStdModNode("body", false),
-                        content = body.ancestor(),
-                        ch = lj.parseStyleLen(content.getComputedStyle("height")),
-                        
-                        padding = lj.parseStyleLen(body.getComputedStyle("paddingTop")) + 
-                            lj.parseStyleLen(body.getComputedStyle("paddingBottom"));
-                   
-                //}
-                //lj.logVars("foot()", "h,hf,hh, jq", h,hf,hh, jQuery(p.getStdModNode(Y.WidgetStdMod.FOOTER, false).getDOMNode()).outerHeight());
-                this.portal.getStdModNode("body", false).setStyles({height: ch - padding - hf - hh + "px"});
+                var p = this.portal;
+                this._layouted = true;
+                var hf = p.getStdModNode("footer", false).get("offsetHeight"),
+                    hh = p.getStdModNode("header", false).get("offsetHeight"),
+                    body = p.getStdModNode("body", false),
+                    content = body.ancestor(),
+                    ch = lj.parseStyleLen(content.getComputedStyle("height")),
+                    
+                    padding = lj.parseStyleLen(body.getComputedStyle("paddingTop")) + 
+                        lj.parseStyleLen(body.getComputedStyle("paddingBottom"));
+                var bodyHeight = ch - padding - hf - hh;
+                this.scrollView.set('height', bodyHeight);
+                this.scrollView.refresh();
+                body.setStyle("height",bodyHeight + "px");
             }
     });
     /** @class HomeApp */

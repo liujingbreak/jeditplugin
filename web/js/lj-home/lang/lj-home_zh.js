@@ -18,7 +18,13 @@ YUI.add("lang/lj-home_zh", function(Y) {
             SIGN_UP:'新用户注册',
             IS_NEW_USER:'还没有用户名？',
             BT_SIGNUP:'注册',
-            SIGNUP:"新用户注册"
+            SIGNUP:"新用户注册",
+            USER_PASSWD_CONFIRM:"确认密码: ",
+            EMAIL:"Email: ",
+            USERNAME:"用户名: ",
+            VIEW_NAME:"显示昵称: ",
+            SELF_INTRODUCT:"自我介绍: ",
+            PASSWORD_ALT:'至少6位字符'
         }
     );
 }, "1.0.0");

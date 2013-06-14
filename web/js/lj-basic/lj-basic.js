@@ -1350,7 +1350,8 @@ YUI.add("lj-basic", function(Y){
     
     
     /** @class MyScrollView 
-        @event scrolling
+        @event scrolling deprecated, use scrollYChange/scrollXChange Event instead
+        diable native touch event binding when browser doesn't support touch event
     */
     var MyScrollView = (function(){
         var getClassName = Y.ClassNameManager.getClassName,
@@ -1407,8 +1408,20 @@ YUI.add("lj-basic", function(Y){
                 //this._contentNode = this.get("contentBox");
                 this.MyScrollView_top = 0;
                 this.MyScrollView_left = 0;
+                this._bindTouchEvent = Y.UA.touchEnabled;
+                if(!this._bindTouchEvent )
+                    this._prevent={
+                        start: false,
+                        move: false,
+                        end: false
+                    };
+            },
+            _fixIESelect:function(){
+                return;//override scrollview-base-ie.js
             },
             bindUI:function(){
+                if(!this._bindTouchEvent)
+                    this.get('boundingBox').addClass("user-select");
                 MyScrollView.superclass.bindUI.apply(this, arguments);
                 this.bindAndSyncAttr("maxWidth", function(w){
                         this.m_bb.setStyle("maxWidth", w + "px");
@@ -1435,6 +1448,14 @@ YUI.add("lj-basic", function(Y){
                     this.syncUI();
                     
                 }, null, this);
+            },
+            _bindDrag:function(){
+                if(this._bindTouchEvent)
+                    return MyScrollView.superclass._bindDrag.apply(this, arguments);
+            },
+            _bindFlick:function(){
+                if(this._bindTouchEvent)
+                    return MyScrollView.superclass._bindFlick.apply(this, arguments);
             },
             destructor:function(){
                 this.detach('myScrollView|*');
@@ -1577,9 +1598,9 @@ YUI.add("lj-basic", function(Y){
         }});
     })();
     Y.mix(MyScrollView.prototype, WidgetRenderTaskQ);
-    MyScrollView.CSS_PREFIX = 'yui3-scrollview';
+    //MyScrollView.CSS_PREFIX = 'yui3-scrollview';
     Y.MyScrollView = MyScrollView;
-    
+    lj.MyScrollView = MyScrollView;
     
     /**@class VerBox
     */

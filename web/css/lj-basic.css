@@ -43,6 +43,11 @@
 .yui3-dd-draggable{
     z-index:100;
 }
+/** scrollView */
+.yui3-myscrollview.user-select{
+    -webkit-user-select:auto;
+    -moz-user-select:auto;
+}
 /**dialog */
 .lj-dialog-hidden{
     visibility:hidden;
@@ -315,7 +320,8 @@
     position:absolute!important;
     top:0;
     bottom:4px;
-    width:100%;
+    left:2px;
+    right:2px;
 }
 .skin-lj .yui3-myportal .yui3-myportal-content{
     position:relative;
