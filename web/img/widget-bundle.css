@@ -1,0 +1,34 @@
+
+.common{
+ background-image:url(widget-bundle.png);
+}
+/* checkbox-hl.png */
+.xxx{
+ background-position: 0px 0px;
+ width:30px;
+ height:30px;
+}
+
+/* checkbox.png */
+.xxx{
+ background-position: 0px -30px;
+ width:30px;
+ height:30px;
+}
+
+.common{
+ background-image:url(widget-bundle.png);
+}
+/* checkbox-hl.png */
+.xxx{
+ background-position: 0px 0px;
+ width:30px;
+ height:30px;
+}
+
+/* checkbox.png */
+.xxx{
+ background-position: 0px -30px;
+ width:30px;
+ height:30px;
+}

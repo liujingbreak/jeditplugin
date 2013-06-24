@@ -24,7 +24,8 @@ YUI.add("lang/lj-home_zh", function(Y) {
             USERNAME:"用户名: ",
             VIEW_NAME:"显示昵称: ",
             SELF_INTRODUCT:"自我介绍: ",
-            PASSWORD_ALT:'至少6位字符'
+            PASSWORD_ALT:'至少6位字符',
+            AUTO_LOGIN:"记住登录状态"
         }
     );
 }, "1.0.0");

@@ -21,26 +21,14 @@
     <filter-mapping>/dwr/*</filter-mapping>
   </filter-mapping> -->
   
-  
+  <mime-mapping>
+    <extension>appcache</extension>
+    <mime-type>text/cache-manifest</mime-type>
+  </mime-mapping>
   <!-- Servlets -->
   <servlet>
     <servlet-name>DwrServlet</servlet-name>
     <servlet-class>org.directwebremoting.spring.DwrSpringServlet</servlet-class>
-    <!-- <init-param>
-        <param-name>classes</param-name>
-        <param-value>org.liujing.ironsword.ctl.ProjectController
-        ,org.liujing.ironsword.bean.DaoPagination
-        ,org.liujing.ironsword.bean.PagingRequest
-        ,org.liujing.ironsword.dao.ProjectDAO
-        ,org.liujing.ironsword.dao.FileTree
-        ,org.liujing.ironsword.dao.RootFolder
-        ,org.liujing.ironsword.dao.SrcFile
-        ,org.liujing.ironsword.bean.PagedVO
-        ,org.liujing.ironsword.bean.TableStyleVO
-        ,org.liujing.ironsword.bean.TableRowVO
-        ,org.liujing.ironsword.ctl.FileScanController
-        </param-value>
-    </init-param> -->
     <init-param>
         <param-name>debug</param-name>
         <param-value>true</param-value>

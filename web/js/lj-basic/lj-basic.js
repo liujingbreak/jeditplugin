@@ -1,6 +1,6 @@
 
 YUI.add("lj-basic", function(Y){
-       
+     var  isTouchEnabled = Y.UA.touchEnabled;
   try{
      var res = Y.Intl.get("lj-basic"),
      lj = Y.namespace('lj');
@@ -1547,16 +1547,20 @@ YUI.add("lj-basic", function(Y){
                     // change from YUI code
                     scrollToY = scrollY - ((e.wheelDelta) * scrollOffset);
                     //scrollToY = scrollY - ((isForward ? 1 : -1) * scrollOffset);
+               // Y.log('_mousewheel() wx='+ e._event.wheelDeltaX);
                 if(e._event && e._event.wheelDeltaX !== undefined)
                     var scrollToX = sv.get('scrollX') - (e._event.wheelDeltaX);
                 //logVars('_mousewheel()', 'scrollToX,e.wheelDeltaX', scrollToX,e._event.wheelDeltaX);
                 scrollToY = _constrain(scrollToY, sv._minScrollY, sv._maxScrollY);
-                scrollToX = _constrain(scrollToX, sv._minScrollX, sv._maxScrollX);
+                if(scrollToX != null)
+                    scrollToX = _constrain(scrollToX, sv._minScrollX, sv._maxScrollX);
                 
                 if (bb.contains(e.target) && (sv._cAxis["y"]||sv._cAxis['x'])) {
                     sv.lastScrolledAmt = 0;
+                    //Y.log('scrollY: '+ scrollToY);
                     sv.set("scrollY", scrollToY);
-                    sv.set('scrollX', scrollToX);
+                    if(scrollToX != null)
+                        sv.set('scrollX', scrollToX);
                     if (sv.scrollbars) {
                         // @TODO: The scrollbars should handle this themselves
                         sv.scrollbars._update();
@@ -1598,10 +1602,31 @@ YUI.add("lj-basic", function(Y){
         }});
     })();
     Y.mix(MyScrollView.prototype, WidgetRenderTaskQ);
-    //MyScrollView.CSS_PREFIX = 'yui3-scrollview';
+    MyScrollView.CSS_PREFIX = 'yui3-scrollview';
     Y.MyScrollView = MyScrollView;
     lj.MyScrollView = MyScrollView;
     
+    /**@class MyNiceScroll */
+    var MyNiceScroll = Y.Base.create('myNicescroll',Y.View,[],{
+            
+            render:function(){
+                var content = this.get('container');
+                var viewport = Y.Node.create('<div class="nicescroll"></div>');
+                content.replace(viewport);
+                viewport.append(content);
+                this._scl = jQuery(viewport.getDOMNode()).niceScroll(content.getDOMNode(),
+                    {touchbehavior:isTouchEnabled,
+                        cursoropacitymax:0.7,
+                    mousescrollstep:20,
+                    bouncescroll:false});
+                
+                return this;
+            },
+            resize:function(){
+                this._scl.resize();
+            }
+    });
+    lj.MyNiceScroll =MyNiceScroll;
     /**@class VerBox
     */
     var VerBox = Y.Base.create("verbox",Y.Widget, [Y.WidgetChild, Y.WidgetParent], {
@@ -1868,7 +1893,12 @@ YUI.add("lj-basic", function(Y){
     */
     var MyButtonBar = Y.Base.create('mybtnbar', Y.Widget, [Y.WidgetChild], {
             renderUI:function(){
-                //var cb = this.get('contentBox'), buttonNodes = cb.all('.yui3-button');
+                var cb = this.get('contentBox'), buttonNodes = cb.all('.yui3-button');
+                if(buttonNodes.size() > 1){
+                    cb.addClass("multi-buttons");
+                    buttonNodes.item(0).addClass('multi-button-first');
+                    buttonNodes.item(buttonNodes.size()-1).addClass('multi-button-last');
+                }
                 //(function($){
                 //        var jd = $(cb.getDOMNode());
                 //        jd.find('.yui3-button:first').addClass('barButton-first');
@@ -1886,15 +1916,15 @@ YUI.add("lj-basic", function(Y){
         render:function(){
             var cb = this.get('container'),
                 buttonNodes = cb.all('.yui3-button');
-            cb.addClass('yui3-mybtnbar-content');
-            if(buttonNodes.size() > 0){
-                    buttonNodes.item(0).addClass('barButton-first');
-                    buttonNodes.item(buttonNodes.size() - 1).addClass('barButton-last');
+            if(buttonNodes.size() > 1){
+                cb.addClass("multi-buttons");
+                buttonNodes.item(0).addClass('multi-button-first');
+                buttonNodes.item(buttonNodes.size()-1).addClass('multi-button-last');
             }
             return this;
         }
     });
-    Y.lj.ButtonVarView = ButtonBarView;
+    Y.lj.ButtonBarView = ButtonBarView;
     /** @class MyButtonGroup 
     */
     var MyButtonGroup = Y.Base.create("mybtngroup", Y.ButtonGroup, [Y.WidgetChild], {
@@ -1964,12 +1994,13 @@ YUI.add("lj-basic", function(Y){
                         this.lbDom.setHTML(label);
                         //this.get('contentBox').one('> div').setHTML(label);
                     });
-                /** @attribute required */
+                
                 this.setupUIAttr('required',
                     function(newVal, preVal){
                         if(newVal === true){
                             if(preVal != true)
-                                this.get('contentBox').insert(Y.Node.create('<font color="red">*</font>'), 1);
+                                this.get('contentBox').one("."+this.getClassName('label')).
+                                    insert(Y.Node.create('<font color="red">* </font>'), 0);
                         }else if(newVal === false){
                             if(preVal === true)
                                 this.get('contentBox').one('>font').remove(true);
@@ -1999,6 +2030,10 @@ YUI.add("lj-basic", function(Y){
                         if(nv!=null )
                             this.altNode.append(nv);
                     });
+                this.setupUIAttr("nodeAttrs", function(nv, pv){
+                        if(nv == null) return;
+                        this.inputField.setAttrs(nv);
+                });
             },
             /**
             event object:
@@ -2038,11 +2073,12 @@ YUI.add("lj-basic", function(Y){
                 this._initValueChange = true;
             },
             renderUI:function(){
-                var lbNode = Y.Node.create("<div></div>");
-                lbNode.addClass('inline-block').addClass(this.getClassName("label"));
+                var lbNode = Y.Node.create("<label></label>");
+                lbNode/* .addClass('inline-block') */.addClass(this.getClassName("label"));
                 this.lbDom = lbNode;
                 this.get('contentBox').append(this.lbDom);
                 var textbox = Y.Node.create('<input type="'+ (this._password?'password':'text')+'" value="">');
+                lbNode.setAttribute("for", textbox.generateID());
                 this.get('contentBox').append(textbox);
                 /** @property inputField */
                 this.inputField = this.get('contentBox').one('input');
@@ -2055,6 +2091,10 @@ YUI.add("lj-basic", function(Y){
                     {src:'ui'});
                 return val;
             },
+            getInput:function(){
+                this.syncInput();
+                return this.get('input');
+            },
             destructor:function(){
                 if(this._keydownHandle)
                     this._keydownHandle.detach();
@@ -2062,12 +2102,18 @@ YUI.add("lj-basic", function(Y){
                     this._valueChangeHandle.detach();
             }
         }, {ATTRS:{
+            /** @attribute required */
             'required': {value: 'false'},
             /** @attribute labelWidth*/
             'labelWidth':{value:null},
             /** @attribute inputWidth*/
             'inputWidth':{value:null},
-            alt:{value:null}
+            /** @attribute alt description info*/
+            alt:{value:null},
+            /** @attribute nodeAttrs like "name"*/
+            nodeAttrs:{
+                value:{}
+            }
         }});
     
     Y.mix(MyTextField.prototype, WidgetRenderTaskQ);
@@ -2098,8 +2144,271 @@ YUI.add("lj-basic", function(Y){
         });
     Y.mix(MyTextField.prototype, WidgetRenderTaskQ);
     Y.MySearchField = MySearchField;
-        MySearchField.CSS_PREFIX = "yui3-mytextfield";
+    MySearchField.CSS_PREFIX = "yui3-mytextfield";
     
+    /** @class MyCheckBox */
+    var MyCheckBox = Y.Base.create("mycheckbox", Y.Widget, [Y.WidgetChild],
+    {
+        initializer:function(){
+            this.setupUIAttr('label', 
+                    function(label){
+                        this.lbDom.setHTML(label);
+            });
+            this.setupUIAttr('labelWidth',
+                    function(nv, pv){
+                        if(nv!=null ) this.lbDom.setStyle('minWidth',nv);
+            });
+        },
+        
+        renderUI:function(){
+            var cb = this.get('contentBox'),
+                lbNode = Y.Node.create('<div></div>');
+            lbNode.addClass('inline-block').addClass(this.getClassName("label"));
+            this.lbDom = lbNode;
+            cb.append(this.lbDom);
+                
+            var checkboxBase = Y.Node.create('<div class="inline-block checkbox-base"></div>'),
+                checkboxTip = Y.Node.create('<div class="checkbox-tip"></div>');
+            checkboxBase.append(checkboxTip);
+            /** @property checkboxTip */
+            this.checkboxTip = checkboxTip;
+            cb.append(checkboxBase);
+        },
+        bindUI:function(){
+            var baseNode = this.get("contentBox").one('.checkbox-base');
+            var t = this.checkboxTip
+            
+            this.after('valueChange', function(e){
+                    
+                    if(e.newVal === true){
+                        t.transition({
+                            easing:"ease-out",
+                            duration: 0.15,
+                            left:'-2px',
+                        }, function(){
+                            t.removeClass("checkbox-tip-0");
+                        });
+                    }else{
+                        t.transition({
+                            easing:"ease-out",
+                            duration: 0.15,
+                            left:'32px'
+                        }, function(){
+                            t.addClass("checkbox-tip-0");
+                        });
+                    }
+                    
+            });
+            //baseNode.on('mouseup', this.toggle, this);
+            baseNode.on('mouseup', this.toggle, this);
+            baseNode.on('touchcancel', this.toggle, this);
+            
+        },
+        toggle:function(){
+            this.set('value', !this.get("value"));
+        },
+        syncUI:function(){
+            if(this.get('value')){
+                this.checkboxTip.setStyles({left:"0"});
+                this.checkboxTip.removeClass("checkbox-tip-0");
+            }
+            else{
+                this.checkboxTip.setStyles({left:"30"});
+                this.checkboxTip.addClass("checkbox-tip-0");
+            }
+        }
+    },{
+        ATTRS:{
+            /** @attribute label*/
+            label:{value: 'Label'},
+            /** @attribute labelWidth*/
+            'labelWidth':{value:null},
+            /** @attribute value */
+            value:{value:false}
+        }
+    });
+    Y.mix(MyCheckBox.prototype, WidgetRenderTaskQ);
+    lj.MyCheckBox = MyCheckBox;
+    
+    /** @class MyCheckBox2 */
+    var MyCheckBox2 = Y.Base.create("mycheckbox2", Y.Widget, [Y.WidgetChild],
+    {
+        initializer:function(){
+            this.setupUIAttr('label', 
+                    function(label){
+                        this.lbDom.setHTML(label);
+            });
+            this.setupUIAttr('labelWidth',
+                    function(nv, pv){
+                        if(nv!=null ) this.lbDom.setStyle('minWidth',nv);
+            });
+        },
+        
+        renderUI:function(){
+            var cb = this.get('contentBox'),
+                lbNode = Y.Node.create('<label></label>');
+            lbNode.addClass('inline-block').addClass(this.getClassName("label"));
+            this.lbDom = lbNode;
+            cb.append(this.lbDom);
+                
+            var checkboxBase = Y.Node.create('<div class="inline-block checkbox-base">'+
+                '<div class="trail-right"></div><div class="trail-left"></div></div>'),
+                
+                checkboxTip = Y.Node.create('<div class="checkbox-tip">OFF</div>');
+                //checkBoxOn = Y.Node.create('<div class="inline-block checkbox-on">on</div>');
+                //checkBoxOff = Y.Node.create('<div class="inline-block checkbox-off">off</div>');
+            checkboxBase.append(checkboxTip);
+            checkboxBase.append('<div class="label-on">ON</div>');
+            //checkboxBase.append(checkBoxOn);
+            //checkboxBase.append(checkBoxOff);
+            /* checkboxBase.setStyles({
+                    width:this.get('width')+'px'
+            }); */
+            /** @property checkboxTip */
+            this.checkboxTip = checkboxTip;
+            this.checkboxBase = checkboxBase;
+            cb.append(checkboxBase);
+        },
+        bindUI:function(){
+            var baseNode = this.get("contentBox").one('.checkbox-base');
+            var t = this.checkboxTip,
+                trailLeft = this.checkboxBase.one('.trail-left'),
+                labelOn = this.checkboxBase.one('.label-on');
+            this._uiTurnOn = function(e, duration){
+                    var dur = duration == null? 0.15:duration;
+                    if(e.newVal === false){
+                        t.transition({
+                            easing:"ease-out",
+                            duration: dur,
+                            left:'-5px'
+                        });
+                        trailLeft.transition({
+                                easing:"ease-out",
+                            duration: dur,
+                            width:'3px'
+                        });
+                        labelOn.transition({
+                                easing:"ease-out",
+                            duration: dur,
+                            left:'-54px'
+                        });
+                    }else{
+                        t.transition({
+                            easing:"ease-out",
+                            duration: dur,
+                            left:80-31 + 'px'
+                        });
+                        trailLeft.transition({
+                            easing:"ease-out",
+                            duration: dur,
+                            width:80 - 26 + 'px'
+                        });
+                        labelOn.transition({
+                                easing:"ease-out",
+                            duration: dur,
+                            left:'0px'
+                        });
+                    }
+                    
+            }
+            this.after('valueChange', this._uiTurnOn);
+            baseNode.on('mousedown', this.toggle, this);
+            //baseNode.on('touchcancel', this.toggle, this);
+            
+        },
+        toggle:function(){
+            this.set('value', !this.get("value"));
+        },
+        syncUI:function(){
+            this._uiTurnOn({newVal:this.get('value')}, 0);
+        }
+    },{
+        ATTRS:{
+            /** @attribute label*/
+            label:{value: 'Label'},
+            /** @attribute labelWidth*/
+            'labelWidth':{value:null},
+            /** @attribute value */
+            value:{value:false}
+        }
+    });
+    Y.mix(MyCheckBox2.prototype, WidgetRenderTaskQ);
+    lj.MyCheckBox2 = MyCheckBox2;
+    
+    /**@class MyEditor 
+    @event resized fired when CKeditor is ready or size changed
+    
+    */
+    var MyEditorView = Y.Base.create('myeditor', Y.View,[],{
+            render:function(){
+                var name = this.get('name'), view = this;
+                this.get("container").addClass("myeditor")
+                    .append('<label class="myeditor-label">'+this.get("label")+'</label>');
+                this.textarea = Y.Node.create('<textarea '+(name? 'name="'+name+'"':'')+'></textarea>');
+                this.get("container").one('label').setAttribute("for", this.textarea.generateID());
+                this.get("container").append(this.textarea);
+                //Y.use('ckeditor', Y.bind(this.renderEditor, this));
+                this.renderEditor();
+                this.on("sizeChange", this._changeSize, this);
+                return this;
+            },
+            renderEditor:function(){
+                var view = this;
+                
+                CKEDITOR.on("instanceReady", function(e){
+                        Y.log("ckeditor ready!");
+                        view.fire('resize',{src:'ui'});
+                        /** @property editor*/
+                        view.ckeditor = e.editor;
+                        view.ckeditor.on('resize',function(e){
+                                view.fire("resize");
+                        });
+                        view._changeSize({newVal:view.get("size")});
+                        this.fire("resized");
+                });
+                var size = this.get("size");
+                CKEDITOR.replace(this.textarea.getDOMNode(),{
+                        
+                        toolbarGroups: [
+                            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+                            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                            { name: 'styles' },
+                            { name: 'colors' }
+                            
+                        ],
+                        uiColor: '#606060',
+                        language: (!browser_locale)? 'en':browser_locale,
+                        height:size? size.height:null,
+                        width:size? size.width:null
+                });
+            },
+            _changeSize:function(e){
+                var size = e.newVal;
+                if(size != null){
+                    this.ckeditor.resize(size.width, size.height);
+                    
+                }
+            },
+            getInput:function(){
+                return this.ckeditor.getData();
+            },
+            destructor:function(){
+                Y.log("CKEditor :"+ this.get('name') +' is about destroied');
+                this.ckeditor.destroy();
+            }
+        },{ATTRS:{
+            /** @attribute label */
+            label:{value:null},
+            /** @attribute text */
+            text:{value:''},
+            name:{value:null},
+            /**@attribute size
+                - width
+                - height
+            */
+            size:{value:null}
+        }});
+    lj.MyEditorView = MyEditorView;
     /**@class SplitBar 
     config: 
         - direction 'v'/'h'
@@ -2166,7 +2475,7 @@ YUI.add("lj-basic", function(Y){
             }
     });
     
-    /**@class App 
+    /**@class MyApp 
     view may implement onResize(viewContainer)
     and App will set itself to view.app when a view becomes activeView
     */
@@ -2258,4 +2567,5 @@ YUI.add("lj-basic", function(Y){
     
 }, "1.0.0",{
 requires:['get','base','overlay','node','event','panel','widget','widget-parent','widget-child','jquery',
-'button','button-group','scrollview','node-focusmanager','app',"async-queue",'dd-drag','dd-proxy','dd-constrain']});
+'button','button-group','scrollview','node-focusmanager','app',"async-queue",'dd-drag','dd-proxy','dd-constrain'
+,'niceScroll','ckeditor']});

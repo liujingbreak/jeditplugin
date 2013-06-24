@@ -8,12 +8,12 @@ YUI.add("lang/lj-home", function(Y) {
         // key-value pairs for this module and language
         {
             TITLE: "Whose Site",
-            LOGO: "Whose site",
+            LOGO: "Wooden Axe",
             SIGNIN: 'Login',
             USER_NAME:'Username / Email: ',
             USER_PASSWD:'Password: ',
-            LOGIN: 'Login',
-            BT_LOGIN:'Login',
+            LOGIN: 'Sign in',
+            BT_LOGIN:'Sign in',
             BT_CANCEL:'Cancel',
             SIGN_UP:'Sign up',
             IS_NEW_USER:'New to here?',
@@ -24,7 +24,8 @@ YUI.add("lang/lj-home", function(Y) {
             USERNAME:"Username: ",
             VIEW_NAME:"Nick Name: ",
             SELF_INTRODUCT:"Simply intruduce your self: ",
-            PASSWORD_ALT:'At least 6 characters'
+            PASSWORD_ALT:'At least 6 characters',
+            AUTO_LOGIN:"Remember me"
         }
     );
 }, "1.0.0");

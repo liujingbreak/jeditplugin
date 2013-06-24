@@ -117,7 +117,7 @@ create table if not exists authorities(
     authority varchar(50) not null,
     constraint fk_authorities_users foreign key(username) references users(username)
 );
-create unique index ix_auth_username on authorities (username,authority);
+create unique index if not exists ix_auth_username on authorities (username,authority);
     
 --------------------  temporary tablers ----------------------
 create cached local temporary table if not exists SRC_FILE_UPDATED(

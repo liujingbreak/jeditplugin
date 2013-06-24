@@ -1,3 +1,4 @@
+ 
 /** SlipBar */
 .ver-dragBar{
     height:10px;
@@ -44,9 +45,22 @@
     z-index:100;
 }
 /** scrollView */
-.yui3-myscrollview.user-select{
+.yui3-scrollview.user-select{
     -webkit-user-select:auto;
     -moz-user-select:auto;
+}
+body.skin-lj .yui3-scrollview-scrollbar .yui3-scrollview-first,
+body.skin-lj .yui3-scrollview-scrollbar .yui3-scrollview-middle,
+body.skin-lj .yui3-scrollview-scrollbar .yui3-scrollview-last{
+    background-image:none;
+    background-color:#ccc;
+    background-color:rgba(255,255,255,.6);
+}
+/** niceScroll */
+.nicescroll{
+    position:relative;
+    height:100%;
+    overflow:hidden;
 }
 /**dialog */
 .lj-dialog-hidden{
@@ -154,61 +168,185 @@
 /** text_field */
 .skin-lj .yui3-mytextfield input[type=text],
 .skin-lj .yui3-mytextfield input[type=password]{
-    max-width: 20em;
-    min-width: 15em;
-    margin-left:4px;
+    width: 80%;
+    min-width: 17em;
     /* background:#606060; */
 }
-.skin-lj input[type]{
+.skin-lj input[type], .skin-lj input[type]:focus{
     position:relative;
     background: transparent;
     color: #1effff;
-    border: 1px solid #999;
+    border: 0px solid #999;
+    background:url(/img/textfield-b-border.png) left bottom no-repeat;
     height:1.5em;
-    font-size: 13px;
+    line-height:1.5em;
     -webkit-text-shadow: 0px 0px 8px   rgba(30, 255, 255, .9);
     -moz-text-shadow:    0px 0px 8px   rgba(30, 255, 255, .9);
     text-shadow:         0px 0px 8px   rgba(30, 255, 255, .9);
     behavior:url(PIE/PIE.htc);
-    -webkit-box-shadow: inset 1px 0px 5px 0px   rgba(0,0,0, .7);
-    -moz-box-shadow:    inset 1px 0px 5px 0px   rgba(0,0,0, .7);
-    -o-box-shadow:      inset 1px 0px 5px 0px   rgba(0,0,0, .7);
-    -ms-box-shadow:     inset 1px 0px 5px 0px   rgba(0,0,0, .7);
-    box-shadow:         inset 1px 0px 5px 0px   rgba(0,0,0, .7);
-    margin-left:10px;
+    /* -webkit-box-shadow: inset 0px 0px 5px 0px   rgba(0,0,0, .7);
+    -moz-box-shadow:    inset 0px 0px 5px 0px   rgba(0,0,0, .7);
+    -o-box-shadow:      inset 0px 0px 5px 0px   rgba(0,0,0, .7);
+    -ms-box-shadow:     inset 0px 0px 5px 0px   rgba(0,0,0, .7);
+    box-shadow:         inset 0px 0px 5px 0px   rgba(0,0,0, .7); */
+    
+    /* outline:0!important; */
+    -webkit-appearance: none;
 }
-.skin-lj .yui3-mytextfield{
+.skin-lj .yui3-mytextfield, .yui3-mycheckbox-content{
     padding-right: 10px;
-    line-height:2em;
+    /* line-height:2em; */
 }
 .yui3-mytextfield-content > .alt{
     padding-left: 10px;
+    height:1em;
+    vertical-align:middle;
     font-style:italic;
 }
-.yui3-myportal .yui3-mytextfield-content{
+.yui3-myportal .yui3-mytextfield-content, 
+.yui3-mycheckbox-content{
     padding-top:4px;
     padding-bottom:6px;
-    background:url(/img/textfield-b-border.png) left bottom no-repeat;
+    /* background:url(/img/textfield-b-border.png) left bottom no-repeat; */
 }
-.yui3-mytextfield-label{
-    /* text-align:right; */
+.yui3-mytextfield-label, .myeditor-label{
+    font-size:14px;
+    margin-right:2em;
+    display:block;
 }
+.yui3-mycheckbox2-label{
+    font-size:14px;
+    margin-right:2em;
+}
+textarea:focus{
+    outline:0!important;
+    -webkit-appearance: none;
+}
+
+/** myCheckBox */
+.yui3-mycheckbox .checkbox-base{
+    position:relative;
+    margin-left:4px;
+    width:60px;
+    height:30px;
+    line-height:30px;
+    background:url(/img/checkbox.png) no-repeat 0 0;
+    
+-webkit-user-select:none;
+-khtml-user-select:none;
+-moz-user-select:none;
+-o-user-select:none;
+user-select:none; 
+    cursor:pointer;
+}
+.yui3-mycheckbox .checkbox-tip{
+    position:absolute;
+    width:30px;
+    height:30px;
+    left:0;
+    background:url(/img/checkbox.png) no-repeat 0 -30px;
+    
+}
+.yui3-mycheckbox .checkbox-base:hover .checkbox-tip{
+    position:absolute;
+    width:30px;
+    height:30px;
+    left:0;
+    background:url(/img/checkbox.png) no-repeat 0 -60px;
+    
+}
+.yui3-mycheckbox .checkbox-tip-0{
+    background-position:-30px -30px;
+}
+.yui3-mycheckbox .checkbox-base:hover .checkbox-tip-0{
+    background-position:-30px -60px;
+}
+
+.yui3-mycheckbox2-content{
+    height:2em;
+    line-height:2em;
+    
+}
+
+.yui3-mycheckbox2-content .checkbox-base{
+    position:relative;
+    vertical-align:middle;
+    height:26px;
+    width:80px;
+    overflow:hidden;
+    cursor:pointer;
+    line-height:26px;
+    font-size:18px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.yui3-mycheckbox2-content .trail-right{
+    top:1px;
+    right:0;
+    width:60px;
+    height:24px;
+    position:absolute; 
+    background:url(/img/checkbox2.png) right -24px;
+}
+.yui3-mycheckbox2-content .trail-left{
+    top:1px;
+    left:0px;
+    width:3px;
+    height:24px;
+    position:absolute;
+    background:url(/img/checkbox2.png) 0 0;
+}
+.yui3-mycheckbox2-content .checkbox-tip{
+    color:#303030;
+    padding-left:36px;
+    width:80px;
+    height:26px;
+    top:0;
+    left:-5px;
+    position:absolute;
+    background:url(/img/checkbox2.png) 0 -49px;
+}
+.yui3-mycheckbox2-content .label-on{
+    position:absolute;
+    width:54px;
+    height:24px;
+    top:1px;
+    left:-54px;
+    color:black;
+    text-align:center;
+}
+.checkbox-mid{
+    position:absolute;
+    left:6px;
+    right:6px;
+    overflow:hidden;
+}
+/** myEditor */
+.my-ckeditor{
+    background:transparent;
+}
+
 /** button */
 
-.yui3-button:first-child{
+.skin-lj .multi-buttons .multi-button-first{
     -moz-border-radius:     5px 0 0 5px;
     -webkit-border-radius:  5px 0 0 5px;
     -o-border-radius:       5px 0 0 5px;
     -ms-border-radius:      5px 0 0 5px;
     border-radius:          5px 0 0 5px;
 }
-.yui3-button:last-child{
+.skin-lj .multi-buttons .multi-button-last{
     -moz-border-radius:     0 5px 5px 0;
     -webkit-border-radius:  0 5px 5px 0;
     -o-border-radius:       0 5px 5px 0;
     -ms-border-radius:      0 5px 5px 0;
     border-radius:          0 5px 5px 0;
 }
+
 .yui3-mybtnbar-content .yui3-button{
     min-width:90px;
 }
@@ -238,7 +376,11 @@
     -webkit-text-shadow: -1px -1px 0px   rgba(0,0,0, .8);
     -moz-text-shadow:    -1px -1px 0px   rgba(0,0,0, .8);
     text-shadow:         -1px -1px 0px   rgba(0,0,0, .8);
-    
+    -moz-border-radius:     5px 5px 5px 5px;
+    -webkit-border-radius:  5px 5px 5px 5px;
+    -o-border-radius:       5px 5px 5px 5px;
+    -ms-border-radius:      5px 5px 5px 5px;
+    border-radius:          5px 5px 5px 5px;
     margin: 3px 1px;
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#20ffffff',endColorstr='#00ffffff',GradientType=0);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(255,255,255, 0.20)), color-stop(40%, rgba(255,255,255, 0.1)), to(transparent));
@@ -275,7 +417,8 @@
     -ms-border-radius:  none;
     border-radius:          none;
 }
-    
+
+ 
 /** myportal */
 
 .skin-lj .yui3-myportal .yui3-myportal-content .yui3-widget-ft{
@@ -410,14 +553,14 @@
      -webkit-border-radius:  4px 4px 4px 4px;
      border-radius:          4px 4px 4px 4px;
      /* border:1px solid #909090; */
-     background: rgba(255,255,255,.1);
+     background: rgba(0,0,0,.5);
      /* behavior: url(PIE/PIE.htc); */
  }
 
  
  .skin-lj .yui3-scrollgrid-header-scroll{
      position:relative;
-     background:url(/img/header-bg.png) repeat-x #d18f4f;
+     background:url(/img/header-bg.png) repeat-x #c0c0c0;
      -moz-border-radius:     4px 4px 0px 0px;
      -webkit-border-radius:  4px 4px 0px 0px;
      -o-border-radius:      4px 4px 0px 0px;
@@ -436,8 +579,14 @@
      border-right:1px solid #666666;
  }
  .skin-lj .yui3-scrollgrid-header-scroll th{
-     color: rgb(6,6,6);
      padding: 4px 4px;
+     font:medium Arial;
+     color:black;
+     -o-text-shadow:      0px -1px 0px   rgba(255, 255, 255, .7);
+     -ms-text-shadow:     0px -1px 0px   rgba(255, 255, 255, .7);
+     -webkit-text-shadow: 0px -1px 0px   rgba(255, 255, 255, .7);
+     -moz-text-shadow:    0px -1px 0px   rgba(255, 255, 255, .7);
+     text-shadow:         0px -1px 0px   rgba(255, 255, 255, .7);
  }
 
 

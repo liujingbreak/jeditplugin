@@ -37,7 +37,14 @@ YUI_config = {
                 },
                 jquery:{
                     async:false,
-                    path:"jquery-1.10.0.js"
+                    path:"ext/jquery-1.10.0.js"
+                },
+                niceScroll:{
+                    async:false,
+                    path:"ext/jquery.nicescroll.js"
+                },
+                ckeditor:{
+                    fullpath:'/ckeditor/ckeditor.js'
                 }
             }
         }
@@ -102,39 +109,36 @@ YUI({lang:browser_locale}).use('lj-init','intl','transition', function(Y){
 function initHome(){
     var Y = globalY, ua = Y.UA;
     //Y.lj.hideLoading();
-    
+    var container = Y.one('body');
     if((ua.ie>0 && ua.ie<10)  ||
         (ua.webkit >0 && ua.webkit <= 534) ){
         /**@property lj.OLD_FASION_BROWSER */
         Y.lj.OLD_FASION_BROWSER = true;
-        var b = Y.one('body').append('<div class="leftBackbg"></div>');
-        var container = b.one('.leftBackbg');
+        //var b = Y.one('body').append('<div class="leftBackbg"></div>');
+        //var container = b.one('.leftBackbg');
         
-    }else{
-        var container = Y.one('body');
     }
     
     var homeApp = new Y.lj.HomeApp({container:container});
     homeApp.once('loaded', function(){
             Y.lj.hideLoading();
-    });;
+    });
     homeApp.render().navigate('/');
     
     
-    //Y.log(Y.JSON.stringify(Y.UA));
 }
 
 function initWoo() {
-try{
-    var Y = globalY;
-    var woo = new Y.lj.WoodenaxeView({container:'body'});
-    woo.on('loaded', Y.lj.hideLoading);
-    woo.render();
-    
-    
-}catch(e){
-    Y.log("erro: "+ e.stack);
-    throw e;
-}
+    try{
+        var Y = globalY;
+        var woo = new Y.lj.WoodenaxeView({container:'body'});
+        woo.on('loaded', Y.lj.hideLoading);
+        woo.render();
+        
+        
+    }catch(e){
+        Y.log("erro: "+ e.stack);
+        throw e;
+    }
 }
 

@@ -58,13 +58,13 @@
     background: rgb(30,255,255);
     color:black;
 }
-.home-header .header-right button:hover{
+/* .home-header .header-right button:hover{
     -ms-box-shadow:     0px 0px 15px 1px rgba(30,255,255,.9);
     -webkit-box-shadow: 0px 0px 15px 1px rgba(30,255,255,.9);
     -moz-box-shadow:    0px 0px 15px 1px rgba(30,255,255,.9);
     -o-box-shadow:      0px 0px 15px 1px rgba(30,255,255,.9);
     box-shadow:         0px 0px 15px 1px rgba(30,255,255,.9);
-}
+} */
 .home-header .header-right .hover-ie8{
     background:#404040;
 }
@@ -99,19 +99,22 @@
 }
 /** sign up */
 .signupLayer{
-    color:black;
+    position:relative;
+    color:white;
     behavior:url(PIE/PIE.htc);
     margin-top:30px;
-    padding-left:15px;
+    padding:5px 0 5px 15px;
     font-weight:bold;
     font-size:2em;
-    background:rgb(0,102,204);
+    background:rgba(255,255,255, .3);
+    -pie-background:rgba(255,255,255, .3);
+    /* background:rgb(0,102,204); */
     /* background:rgb(244,137,1); */
-    -moz-border-radius:     4px 4px 4px 4px;
+    /* -moz-border-radius:     4px 4px 4px 4px;
     -webkit-border-radius:  4px 4px 4px 4px;
     -o-border-radius:       4px 4px 4px 4px;
     -ms-border-radius:      4px 4px 4px 4px;
-    border-radius:          4px 4px 4px 4px;
+    border-radius:          4px 4px 4px 4px; */
     /* -pie-background:rgba(0,102,204,0.5); */
 }
 
@@ -140,18 +143,27 @@ body.skin-lj .home-view-c{
     /* margin:10px auto; */
     position:absolute;
     top:66px;
-    bottom:0;
+    bottom:3px;
+}
+body.skin-lj .home-view-atop{
+    top:4px!important;
 }
 .home-view-c > *{
     height:100%;
     max-width:1200px;
     margin:0 auto;
 }
-.home-view-layout{
-    position:relative;
-    
-    
+.home-view-c > * > .yui3-scrollview{
     height:100%;
+}
+/* .home-view-layout{
+    position:relative;
+    height:100%;
+    overflow:hidden;
+} */
+.signup-bg{
+    background:url('/img/1.jpg') center top/cover;
+    color:#c9c9c9;
 }
 ::selection { background: #009999; }
 ::-moz-selection { background: #009999; }
