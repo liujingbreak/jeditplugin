@@ -2278,33 +2278,33 @@ YUI.add("lj-basic", function(Y){
                     var dur = duration == null? 0.15:duration;
                     if(e.newVal === false){
                         t.transition({
-                            easing:"ease-out",
+                            easing:"linear",
                             duration: dur,
                             left:'-5px'
                         });
                         trailLeft.transition({
-                                easing:"ease-out",
+                                easing:"linear",
                             duration: dur,
                             width:'3px'
                         });
                         labelOn.transition({
-                                easing:"ease-out",
+                                easing:"linear",
                             duration: dur,
                             left:'-54px'
                         });
                     }else{
                         t.transition({
-                            easing:"ease-out",
+                            easing:"linear",
                             duration: dur,
                             left:80-31 + 'px'
                         });
                         trailLeft.transition({
-                            easing:"ease-out",
+                            easing:"linear",
                             duration: dur,
                             width:80 - 26 + 'px'
                         });
                         labelOn.transition({
-                                easing:"ease-out",
+                                easing:"linear",
                             duration: dur,
                             left:'0px'
                         });
@@ -2393,8 +2393,12 @@ YUI.add("lj-basic", function(Y){
                 return this.ckeditor.getData();
             },
             destructor:function(){
-                Y.log("CKEditor :"+ this.get('name') +' is about destroied');
-                this.ckeditor.destroy();
+                try{
+                    if(this.ckeditor)
+                        this.ckeditor.destroy();
+                }catch(e){
+                    alert(e.stack);
+                }
             }
         },{ATTRS:{
             /** @attribute label */
