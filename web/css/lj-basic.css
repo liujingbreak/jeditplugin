@@ -202,6 +202,7 @@ body.skin-lj .yui3-scrollview-scrollbar .yui3-scrollview-last{
     height:1em;
     vertical-align:middle;
     font-style:italic;
+    font-size:80%;
 }
 .yui3-myportal .yui3-mytextfield-content, 
 .yui3-mycheckbox-content{
@@ -213,6 +214,43 @@ body.skin-lj .yui3-scrollview-scrollbar .yui3-scrollview-last{
     font-size:14px;
     margin-right:2em;
     display:block;
+}
+.yui3-mytextfield .hl-Box{
+    position:relative;
+}
+.hl-Box .arrow-up{
+    position:absolute;
+    left:30px;
+    top:0;
+    height:1px;
+    width:1px;
+    line-height:1px;
+    border:8px solid transparent;
+    border-top:0;
+    border-bottom:10px solid rgb(218, 21, 44);
+}
+.hl-msg{
+    position:relative;
+    top:10px;
+    padding: 4px 6px;
+    background:rgb(218, 21, 44);
+    color:white;
+    -webkit-text-shadow: 0px 1px 1px   rgba(0,0,0, .9);
+    -moz-text-shadow:    0px 1px 1px   rgba(0,0,0, .9);
+    text-shadow:         0px 1px 1px   rgba(0,0,0, .9);
+    min-height:10px;
+    border-radius:3px 3px 3px 3px;
+    -ms-border-radius:3px 3px 3px 3px;
+    -o-border-radius:3px 3px 3px 3px;
+    -webkit-border-radius:3px 3px 3px 3px;
+    -moz-border-radius:3px 3px 3px 3px;
+    -webkit-box-shadow: 0px 1px 5px 1px   rgba(0,0,0, .8);
+    -moz-box-shadow:    0px 1px 5px 1px   rgba(0,0,0, .8);
+    -o-box-shadow:      0px 1px 5px 1px   rgba(0,0,0, .8);
+    -ms-box-shadow:     0px 1px 5px 1px   rgba(0,0,0, .8);
+    box-shadow:         0px 1px 5px 1px   rgba(0,0,0, .8);
+    behavior: url(PIE/PIE.htc);
+    margin:0 0 4px 8px;
 }
 .myeditor-label{
     padding-bottom:5px;

@@ -1979,6 +1979,7 @@ YUI.add("lj-basic", function(Y){
     var MyTextField = Y.Base.create("mytextfield", Y.Widget, [Y.WidgetChild],
         {
             initializer:function(config){
+                this.validationFn = config.validation;
                 this._textLabel = config.label;
                 /**@property _password */
                 this._password = config.password;
@@ -2095,6 +2096,31 @@ YUI.add("lj-basic", function(Y){
                 this.syncInput();
                 return this.get('input');
             },
+            validate:function(){
+                this.hlBox && this.hlBox.remove();
+                
+                this.syncInput();
+                if(this.get("required")){
+                    if(this.get("input") == ""){
+                        this.highlight(res.REQUIRED_FIELD);
+                        throw new ValidationFail(res.REQUIRED_FIELD);
+                    }
+                }
+                if(!this.validationFn) return;
+                this.validationFun(this.get('input'), function(errMsg){
+                        if(errMsg){
+                            this.highlight(errMsg);
+                            throw new ValidationFail(errMsg);
+                        }
+                });
+                
+            },
+            highlight:function(msg){
+                /**@property hlBox */
+                this.hlBox = Y.Node.create('<div class="hl-Box"><div class="hl-msg inline-block">'+
+                    msg + '</div><div class="arrow-up"></div></div>');
+                this.inputField.insert(this.hlBox,'after');
+            },
             destructor:function(){
                 if(this._keydownHandle)
                     this._keydownHandle.detach();
@@ -2118,6 +2144,10 @@ YUI.add("lj-basic", function(Y){
     
     Y.mix(MyTextField.prototype, WidgetRenderTaskQ);
     Y.MyTextField = MyTextField;
+    function ValidationFail(msg){
+        this.msg = msg;
+    }
+    Y.extend(ValidationFail, Error);
     
     /** @class MySearchField */
     var MySearchField = Y.Base.create("mytextfield", MyTextField, [Y.WidgetChild],

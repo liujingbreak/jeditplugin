@@ -8,8 +8,8 @@ YUI.add("lang/lj-basic", function(Y) {
         // key-value pairs for this module and language
         {
             ADD: "+",
-            DELETE:'-'
-            
+            DELETE:'-',
+            REQUIRED_FIELD:"Can't be empty"
         }
     );
 }, "1.0.0");

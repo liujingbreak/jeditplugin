@@ -191,7 +191,12 @@ YUI.add("lj-home", function(Y){
                     {   value:res.BT_SIGNUP, 
                         //section:"header",
                         action:function(){
-                            this.getButton(0).set("disabled",true);
+                            //this.getButton(0).set("disabled",true);
+                            try{
+                            view.email.validate();
+                            }catch(e){
+                                Y.log(e);
+                            }
                         }
                     },
                     {   value:res.BT_CANCEL,
@@ -208,7 +213,7 @@ YUI.add("lj-home", function(Y){
                 new lj.ButtonBarView({container:p.getStdModNode("footer", false).one('.yui3-widget-buttons')}).render();
                 //pn = body;
                 
-                var email = new Y.MyTextField({label:res.EMAIL, input:'',
+                this.email = new Y.MyTextField({label:res.EMAIL, input:'',
                     labelWidth:'10em', required:true, nodeAttrs:{name:'email'}});
                 var username = new Y.MyTextField({label:res.USERNAME, input:'',
                     labelWidth:'10em', required:true, nodeAttrs:{name:'username'}});
@@ -220,7 +225,7 @@ YUI.add("lj-home", function(Y){
                      labelWidth:'10em'});
                 
                 
-                email.render(pn);
+                this.email.render(pn);
                 username.render(pn);
                 password.render(pn);
                 passwordRep.render(pn);
