@@ -1975,6 +1975,10 @@ YUI.add("lj-basic", function(Y){
     /**@class MyTextField 
         @event enter
         @event valueChange
+        <pre>
+        config - validation function(value, deferred)
+            deferred - jQuery deferred
+        </pre>
     */
     var MyTextField = Y.Base.create("mytextfield", Y.Widget, [Y.WidgetChild],
         {
