@@ -348,22 +348,39 @@ user-select:none;
 }
 .yui3-mycheckbox2-content .checkbox-tip{
     color:#303030;
-    padding-left:36px;
+    /* padding-left:36px;
+    width:36px; */
+    height:26px;
+    top:0;
+    left:-5px;
+    width:160px;
+    position:absolute;
+    /* background:url(/img/checkbox2.png) 0 -49px no-repeat; */
+}
+/* .checkbox-tip .button{
+    color:#303030;
     width:80px;
     height:26px;
     top:0;
     left:-5px;
-    position:absolute;
-    background:url(/img/checkbox2.png) 0 -49px;
-}
+    background:url(/img/checkbox2.png) 0 -49px no-repeat;
+} */
 .yui3-mycheckbox2-content .label-on{
-    position:absolute;
-    width:54px;
+    position:relative;
+    width:49px;
     height:24px;
     top:1px;
-    left:-54px;
+    /* left:-54px; */
     color:black;
     text-align:center;
+    
+}
+.yui3-mycheckbox2-content .label-off{
+    position:relative;
+    padding-left:36px;
+    width:49px;
+    text-align:center;
+    background:url(/img/checkbox2.png) 0 -49px no-repeat;
 }
 .checkbox-mid{
     position:absolute;

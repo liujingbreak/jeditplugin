@@ -2153,6 +2153,29 @@ YUI.add("lj-basic", function(Y){
     }
     Y.extend(ValidationFail, Error);
     
+    /** @class MyForm 
+    In purpose of perform validation for mutiple input widgets
+    config:
+        fields - array of input widgets
+    */
+    function MyForm(config){
+        MyForm.superclass.constructor.apply(this, arguments);
+    }
+    Y.extend(MyForm, Y.Base,{
+        initializer:function(config){
+            this.fields = config.fields;
+        },
+        addField:function(widget){
+            if(this.fields == null)
+                this.fields = [];
+            this.fields.push(widget);
+        },
+        validate:function(){
+            
+        }
+    });
+    
+    
     /** @class MySearchField */
     var MySearchField = Y.Base.create("mytextfield", MyTextField, [Y.WidgetChild],
         {
@@ -2287,17 +2310,9 @@ YUI.add("lj-basic", function(Y){
                 
             var checkboxBase = Y.Node.create('<div class="inline-block checkbox-base">'+
                 '<div class="trail-right"></div><div class="trail-left"></div></div>'),
-                
-                checkboxTip = Y.Node.create('<div class="checkbox-tip">OFF</div>');
-                //checkBoxOn = Y.Node.create('<div class="inline-block checkbox-on">on</div>');
-                //checkBoxOff = Y.Node.create('<div class="inline-block checkbox-off">off</div>');
+                checkboxTip = Y.Node.create('<div class="checkbox-tip"><div class="label-on inline-block">'+ res.ON+'</div><div class="label-off inline-block">'+res.OFF+'</div></div>');
+
             checkboxBase.append(checkboxTip);
-            checkboxBase.append('<div class="label-on">ON</div>');
-            //checkboxBase.append(checkBoxOn);
-            //checkboxBase.append(checkBoxOff);
-            /* checkboxBase.setStyles({
-                    width:this.get('width')+'px'
-            }); */
             /** @property checkboxTip */
             this.checkboxTip = checkboxTip;
             this.checkboxBase = checkboxBase;
@@ -2314,34 +2329,35 @@ YUI.add("lj-basic", function(Y){
                         t.transition({
                             easing:"linear",
                             duration: dur,
-                            left:'-5px'
+                            left:'-54px'
                         });
                         trailLeft.transition({
                                 easing:"linear",
                             duration: dur,
                             width:'3px'
                         });
-                        labelOn.transition({
-                                easing:"linear",
-                            duration: dur,
-                            left:'-54px'
-                        });
+                        //labelOn.transition({
+                        //        easing:"linear",
+                        //    duration: dur,
+                        //    left:'-54px'
+                        //});
                     }else{
                         t.transition({
                             easing:"linear",
                             duration: dur,
-                            left:80-31 + 'px'
+                            //left:80-31 + 'px'
+                            left:'0px'
                         });
                         trailLeft.transition({
                             easing:"linear",
                             duration: dur,
                             width:80 - 26 + 'px'
                         });
-                        labelOn.transition({
-                                easing:"linear",
-                            duration: dur,
-                            left:'0px'
-                        });
+                        //labelOn.transition({
+                        //        easing:"linear",
+                        //    duration: dur,
+                        //    left:'0px'
+                        //});
                     }
                     
             }

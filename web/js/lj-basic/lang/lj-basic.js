@@ -9,7 +9,9 @@ YUI.add("lang/lj-basic", function(Y) {
         {
             ADD: "+",
             DELETE:'-',
-            REQUIRED_FIELD:"Can't be empty"
+            REQUIRED_FIELD:"Can't be empty",
+            ON:'\u2713',
+            OFF:'\u2718'
         }
     );
 }, "1.0.0");
