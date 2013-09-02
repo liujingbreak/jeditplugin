@@ -73,7 +73,7 @@ YUI({lang:browser_locale}).use('lj-init','intl','transition', function(Y){
       var lj = Y.namespace("lj");
       var res = Y.Intl.get("lj-init"),
       loading = Y.one('#loading-mask');
-      loading.one('div').setHTML(res.LOADING);
+      loading.one('.loading-text').setHTML(res.LOADING);
       Y.log("main start "+ browser_locale+ ", "+res.LOADING);
       Y.lj.hideLoading = function(){
         loading.hide({duration: 0.75});

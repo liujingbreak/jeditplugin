@@ -24,16 +24,18 @@ public class ServerController {
             String base = System.getProperty("webres");
             String yui = System.getProperty("yui");
             
+            
             server = new Server(19815);
             XmlConfiguration configPlus = new XmlConfiguration(
                 new File(base+"/WEB-INF/jetty-plus.xml").toURI().toURL()
                 );
             configPlus.configure(server);
             
-            WebAppContext context0 = new WebAppContext();
-            context0.setResourceBase(yui);
-            context0.setContextPath("/yui");
-            context0.setParentLoaderPriority(true);
+            WebAppContext yuiCtx = new WebAppContext();
+            yuiCtx.setResourceBase(yui);
+            yuiCtx.setContextPath("/yui");
+            yuiCtx.setParentLoaderPriority(true);
+            
             
             WebAppContext jsContext = new WebAppContext();
             jsContext.setResourceBase(base+"/js");
@@ -48,12 +50,14 @@ public class ServerController {
             context.setContextPath("/");
             
             ContextHandlerCollection handlers = new ContextHandlerCollection();
+            
             //HandlerList handlers = new HandlerList();
-            handlers.addHandler(context0);
+            handlers.addHandler(yuiCtx);
+            
             handlers.addHandler(context);
             handlers.addHandler(jsContext);
             server.setHandler(handlers);
-            
+            add3rdPartyContext(handlers);
         }
         if(server.isStopped() ||  server.isFailed()){
             server.start();
@@ -61,6 +65,17 @@ public class ServerController {
         }else{
             log.info("web server has already started");
             return false;
+        }
+    }
+    
+    private static void add3rdPartyContext(ContextHandlerCollection handlers){
+        String angular = System.getProperty("angularJS");
+        if(angular != null && angular.trim().length()>0){
+            WebAppContext angularCtx = new WebAppContext();
+            angularCtx.setResourceBase(angular);
+            angularCtx.setContextPath("/angular");
+            angularCtx.setParentLoaderPriority(true);
+            handlers.addHandler(angularCtx);
         }
     }
     

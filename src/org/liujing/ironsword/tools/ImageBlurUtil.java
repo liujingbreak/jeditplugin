@@ -2,6 +2,8 @@ package org.liujing.ironsword.tools;
 
 import java.io.*;
 import java.awt.image.*;
+import javax.imageio.*;
+import org.liujing.ironsword.IronException;
 
 public class ImageBlurUtil{
     

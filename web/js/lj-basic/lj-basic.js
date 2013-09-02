@@ -169,15 +169,9 @@ YUI.add("lj-basic", function(Y){
     function _GlobalEventMgr(){
         var context = this;
         Y.on("windowresize", function(e){
-        //Y.Event.attach("resize", function(e){
                 Y.log("window resized");
                 context.fire("resize", e);
         });
-        //var t = this;
-        //window.onresize = function(e){
-        //        Y.log("window on resized");
-        //        t.fire("resize", e);
-        //}
     };
     _GlobalEventMgr.prototype = {
         onWindowResize:function(fn, context){
