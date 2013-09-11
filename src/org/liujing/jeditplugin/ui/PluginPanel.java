@@ -67,7 +67,7 @@ public class PluginPanel extends MyPanel{
 		bufferPopup.add(closeBufMi);
 		closeBufMi.addActionListener(bufferListHandler);
 		try{
-		    setBackgroundImg("Perast1920x12009-16-2010 9_32_46 AM.JPG", true,true,true);
+		    setBackgroundImg("pluginPanel-background.jpg", true,true,true);
 		}catch(Exception e){
 		    log.log(Level.WARNING, "failed to load background image", e);
 		}
