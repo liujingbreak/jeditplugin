@@ -65,13 +65,16 @@ cssRule
     @after{
         if(agh != null) agh.onRuleStop($stop);
     }
-    : '@' cssRuleHeader '{' cssUnit* '}'
+    : '@' cssRuleHeader ( '{' cssUnit* '}' | ':' lessValue ';' |';')
     ;
+lessValue:
+	(~(';'))+
+	;
 cssRuleHeader
     @after{
         if(agh != null) agh.setName("@"+ ruleText($start, $stop));
     }
-    : (~'{')+ ;
+    : (~('{'|':'|';'))+ ;
     
     
 cssUnit
@@ -83,12 +86,19 @@ cssUnit
         if(agh != null) agh.onRuleStop($stop);
     }
     :
-    selector '{' (~'}')* '}'
+    selector 	'{' (('@')=> cssRule| (selector '{')=>cssUnit | style)* '}'
+    //selector '{' cssUnit* '}'
     ;
 selector
     @after{ if(agh != null) agh.setName(ruleText($start, $stop)); }:
     ~('@'|'{'|'}')(~('{'|'}'))*
     ;
+    
+style:
+	((~('{'|'}'|'@'|';')) (~('{'|'}'|';'))* )? ';'
+	;
+	
+
 STRING_LITERAL: (
     '"' DOUBLE_STRING_CHARACTERS '"'
     | '\'' SINGLE_STRING_CHARACTERS '\'');
@@ -103,6 +113,8 @@ fragment USP: '\u2000'..'\u200b' | '\u3000';
 LBRACE: '{';
 RBRACE: '}';
 AT:'@';
+SiComma:';';
+COMMA:':';
 MultiLineComment
     @init{
             boolean isJavaDoc = false;
