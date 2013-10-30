@@ -107,7 +107,7 @@ fragment DOUBLE_STRING_CHARACTERS: (~('"'|'\\'|'\n'|'\r'|'\u2028'|'\u2029')
 fragment SINGLE_STRING_CHARACTERS:(~('\''|'\\'|'\n'|'\r'|'\u2028'|'\u2029')
         | '\\' ~('\n'|'\r'|'\u2028'|'\u2029'))*;
 WHITE_SPACE // Tab, vertical tab, form feed, space, non-breaking space and any other unicode "space separator".
-	: ('\r'|'\n'|'\t' | '\u000b' | '' |'f'| ' ' | '\u00a0'|USP)	{skip();}
+	: ('\r'|'\n'|'\t' | '\u000b' | ' ' | '\u00a0'|USP)	{skip();}
 	;
 fragment USP: '\u2000'..'\u200b' | '\u3000';
 LBRACE: '{';

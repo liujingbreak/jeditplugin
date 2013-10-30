@@ -207,6 +207,7 @@ callChoiceOption:
 callRules:
     (   (ID ('='|'+='))? '~'? callRule ('?'|'*'| '+'|'^'|'!')*
         | action
+        
     )+
     ;
 callRule:
@@ -232,8 +233,8 @@ action:
     ;
 callSingleRule:
     
-    
-        id=ID ParamList?  ('[' (~']')+ ']')?  
+    	  '[' (~']')+ ']'		//regular expresssion
+        | id=ID ParamList?  (('[')=> '[' (~']')+ ']')?  
         | str=STRING_LITERAL  ('..' STRING_LITERAL)?  
         | '.'
         | EOF_KEY
