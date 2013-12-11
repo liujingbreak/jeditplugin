@@ -167,6 +167,7 @@ statement //options{k=2;}
     | throwStatement ((L* ';')=>L!* ';'!)?                            // | ('throw')=>throwStatement
     | tryStatement                                 // | ('try')=>tryStatement
     | expression ((L* ';')=>L!* ';'!)?
+    | 'debugger' ((L* ';')=>L!* ';'!)?
     //| 'delete' expression ((L* ';')=>L!* ';'!)?
 
     //| statementExpression
