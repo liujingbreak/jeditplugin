@@ -254,7 +254,7 @@ treeRewriter:
     ;
 treeRewriteElement:
     '(' treeRewriter ')'
-    | ID ParamList?
+    | ID ('<' ID '>')? ParamList?
     | STRING_LITERAL
     | EOF_KEY
     | action
